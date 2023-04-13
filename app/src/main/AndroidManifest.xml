@@ -15,25 +15,26 @@
         android:theme="@style/Theme.Projet2023"
         tools:targetApi="31">
         <activity
-            android:name=".activity.Pieces"
-            android:exported="false" />
+            android:name=".activity.main_page.ActivityAffichagePieces"
+            android:exported="true">
+        </activity>
         <activity
             android:name=".activity.main_page.ListEssai"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false" >
         </activity>
         <activity
             android:name=".activity.main_page.MainPage"
             android:exported="false" />
         <activity
             android:name=".activity.ChoixLocalActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_choix_local"
-            android:theme="@style/Theme.Projet2023.NoActionBar" />
+            android:theme="@style/Theme.Projet2023.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.LoginActivity"
             android:exported="false">

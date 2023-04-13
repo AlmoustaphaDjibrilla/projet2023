@@ -15,7 +15,7 @@ import com.adi.projet2023.model.local.TypeLocal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdapterChoixLocal extends BaseAdapter {
+public abstract class AdapterChoixLocal extends BaseAdapter {
 
     /**
      * Propriétés de la liste

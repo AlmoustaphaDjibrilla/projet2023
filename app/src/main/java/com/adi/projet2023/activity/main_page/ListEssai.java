@@ -39,7 +39,6 @@ public class ListEssai extends AppCompatActivity {
 
         locals.add(new Maison("maison", "maison", "maison"));
         locals.add(new Entreprise("enterprise", "niamey", "niamey"));
-        AdapterChoixLocal adp= new AdapterChoixLocal(getApplicationContext(), locals);
 
         AdapterLocal adapterLocal= new AdapterLocal(getApplicationContext(), locals);
 

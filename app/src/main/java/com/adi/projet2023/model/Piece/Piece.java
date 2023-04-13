@@ -1,6 +1,8 @@
 package com.adi.projet2023.model.Piece;
 
-public abstract class Piece {
+import java.io.Serializable;
+
+public abstract class Piece implements Serializable {
     String idPiece;
     String nomPiece;
     TypePieces typePiece;

@@ -1,4 +1,4 @@
-package com.adi.projet2023.activity;
+package com.adi.projet2023.activity.main_page;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,13 +19,13 @@ import com.adi.projet2023.model.Piece.Salon;
 
 import java.util.ArrayList;
 import java.util.List;
-public class Pieces extends AppCompatActivity {
+public class ActivityAffichagePieces extends AppCompatActivity {
     List<Piece> piecesList;
     GridLayout gridPiece;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pieces);
+        setContentView(R.layout.activity_affichage_pieces);
         init();
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
         piecesList = List.of(new Chambre("Ma Chambre"),

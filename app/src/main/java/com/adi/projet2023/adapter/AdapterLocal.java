@@ -1,6 +1,7 @@
 package com.adi.projet2023.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adi.projet2023.R;
+import com.adi.projet2023.activity.main_page.MainPage;
 import com.adi.projet2023.model.local.Local;
 
 import java.util.ArrayList;
@@ -39,7 +41,11 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(context.getApplicationContext(), local.toString(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context.getApplicationContext(), local.toString(), Toast.LENGTH_SHORT).show();
+                        Intent sendLocal= new Intent(context.getApplicationContext(), MainPage.class);
+                        sendLocal.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        sendLocal.putExtra("envoiLocal", local);
+                        context.startActivity(sendLocal);
                     }
                 }
         );
