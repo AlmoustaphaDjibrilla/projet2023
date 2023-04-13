@@ -40,6 +40,7 @@ public class ListEssai extends AppCompatActivity {
         locals.add(new Maison("maison", "maison", "maison"));
         locals.add(new Entreprise("enterprise", "niamey", "niamey"));
 /**/
+        //Bonjour
         AdapterLocal adapterLocal= new AdapterLocal(getApplicationContext(), locals);
 
         listEssai.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
