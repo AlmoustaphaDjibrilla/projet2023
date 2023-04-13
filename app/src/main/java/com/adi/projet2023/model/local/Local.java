@@ -5,7 +5,7 @@ import com.adi.projet2023.model.user.UserModel;
 import java.io.Serializable;
 import java.util.List;
 
-public abstract class Local implements Serializable {
+public abstract class Local{
 
     String idLocal;
     TypeLocal typeLocal;

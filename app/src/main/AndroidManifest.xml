@@ -18,7 +18,16 @@
             android:name=".activity.Pieces"
             android:exported="false" />
         <activity
-            android:name=".activity.MainPageActivity"
+            android:name=".activity.main_page.ListEssai"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.main_page.MainPage"
             android:exported="false" />
         <activity
             android:name=".activity.ChoixLocalActivity"
@@ -27,12 +36,8 @@
             android:theme="@style/Theme.Projet2023.NoActionBar" />
         <activity
             android:name=".activity.LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
