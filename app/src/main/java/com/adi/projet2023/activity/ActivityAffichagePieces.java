@@ -1,4 +1,4 @@
-package com.adi.projet2023.activity.main_page;
+package com.adi.projet2023.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,6 +27,13 @@ public class ActivityAffichagePieces extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_affichage_pieces);
         init();
+
+    }
+    private void init(){
+        gridPiece= findViewById(R.id.GridPieces);
+        piecesList= new ArrayList<>();
+
+        //Initialisation des pieces
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
         piecesList = List.of(new Chambre("Ma Chambre"),
                 new Salon("Cuisine 1"),
@@ -60,16 +67,12 @@ public class ActivityAffichagePieces extends AppCompatActivity {
                     img.setImageResource(R.drawable.douche);
                     break;
                 case "AUTRE":
-                    img.setImageResource(R.drawable.img_autre);
+                    img.setImageResource(R.drawable.autre_piece);
                     break;
                 default:
                     break;
             }
             gridPiece.addView(cardView);
         }
-    }
-    private void init(){
-        gridPiece= findViewById(R.id.GridPieces);
-        piecesList= new ArrayList<>();
     }
 }
