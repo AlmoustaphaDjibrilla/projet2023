@@ -7,6 +7,6 @@ public class Douche extends Piece implements Serializable {
 
     }
     public Douche(String nom){
-        super(TypePieces.DOUCHE, nom);
+        super(TypePiece.DOUCHE, nom);
     }
 }

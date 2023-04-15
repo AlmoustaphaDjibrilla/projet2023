@@ -7,6 +7,6 @@ public class Autre extends Composant implements Serializable {
 
     }
     public Autre(String nom){
-        super(nom, TypeComposants.AUTRE);
+        super(nom, TypeComposant.AUTRE);
     }
 }

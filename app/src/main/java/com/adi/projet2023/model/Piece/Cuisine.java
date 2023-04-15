@@ -7,6 +7,6 @@ public class Cuisine extends Piece implements Serializable {
 
     }
     public Cuisine(String nom){
-        super(TypePieces.CUISINE, nom);
+        super(TypePiece.CUISINE, nom);
     }
 }

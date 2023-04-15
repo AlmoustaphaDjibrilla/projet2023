@@ -7,7 +7,7 @@ public class Refrigerateur extends Composant implements Serializable {
 
     }
     public Refrigerateur(String nom){
-        super(nom, TypeComposants.REFRIGERATEUR);
+        super(nom, TypeComposant.REFRIGERATEUR);
     }
 
 }

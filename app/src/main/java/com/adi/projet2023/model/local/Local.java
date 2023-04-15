@@ -1,5 +1,6 @@
 package com.adi.projet2023.model.local;
 
+import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.user.UserModel;
 
 import java.io.Serializable;
@@ -8,12 +9,14 @@ import java.util.List;
 public abstract class Local implements Serializable{
 
     String idLocal;
+    String adresseLocal;
     TypeLocal typeLocal;
     String designationLocal;
     String nomLocal;
     String quartierLocal;
     String villeLocal;
     List<UserModel> lesUsers;
+    List<Piece> lesPieces;
 
     /**
      * Default constructor
@@ -90,6 +93,22 @@ public abstract class Local implements Serializable{
 
     public void setLesUsers(List<UserModel> lesUsers) {
         this.lesUsers = lesUsers;
+    }
+
+    public List<Piece> getLesPieces() {
+        return lesPieces;
+    }
+
+    public void setLesPieces(List<Piece> lesPieces) {
+        this.lesPieces = lesPieces;
+    }
+
+    public String getAdresseLocal() {
+        return adresseLocal;
+    }
+
+    public void setAdresseLocal(String adresseLocal) {
+        this.adresseLocal = adresseLocal;
     }
 
     @Override

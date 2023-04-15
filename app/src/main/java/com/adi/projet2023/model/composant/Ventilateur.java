@@ -7,6 +7,6 @@ public class Ventilateur extends Composant implements Serializable {
 
     }
     public Ventilateur(String nom){
-        super(nom, TypeComposants.VENTILATEUR);
+        super(nom, TypeComposant.VENTILATEUR);
     }
 }

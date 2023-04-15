@@ -1,6 +1,6 @@
 package com.adi.projet2023.model.Piece;
 
-public enum TypePieces {
+public enum TypePiece {
     CHAMBRE,
     CUISINE,
     SALON,

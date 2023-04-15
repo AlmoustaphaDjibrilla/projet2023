@@ -7,6 +7,6 @@ public class Salon extends Piece implements Serializable {
 
     }
     public Salon(String nom){
-        super(TypePieces.SALON, nom);
+        super(TypePiece.SALON, nom);
     }
 }

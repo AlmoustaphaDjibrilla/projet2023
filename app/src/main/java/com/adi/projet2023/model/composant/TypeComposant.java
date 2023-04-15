@@ -1,6 +1,6 @@
 package com.adi.projet2023.model.composant;
 
-public enum TypeComposants {
+public enum TypeComposant {
     AMPOULE,
     CLIMATISEUR,
     VENTILATEUR,

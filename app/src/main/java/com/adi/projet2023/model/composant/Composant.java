@@ -1,13 +1,16 @@
 package com.adi.projet2023.model.composant;
 
-public abstract class Composant {
+import java.io.Serializable;
+
+public abstract class Composant implements Serializable {
     String idComposant;
+    String adresseComposant;
     String nomComposant;
-    TypeComposants typeComposant;
+    TypeComposant typeComposant;
     public Composant(){
 
     }
-    public Composant(String nom, TypeComposants type){
+    public Composant(String nom, TypeComposant type){
         this.nomComposant=nom;
         this.typeComposant=type;
     }
@@ -28,11 +31,11 @@ public abstract class Composant {
         this.nomComposant = nomComposant;
     }
 
-    public TypeComposants getTypeComposant() {
+    public TypeComposant getTypeComposant() {
         return typeComposant;
     }
 
-    public void setTypeComposant(TypeComposants typeComposant) {
+    public void setTypeComposant(TypeComposant typeComposant) {
         this.typeComposant = typeComposant;
     }
 }
