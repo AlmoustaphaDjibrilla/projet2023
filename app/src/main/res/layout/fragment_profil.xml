@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1194AA"
-    tools:context=".activity.main_page.fragment.FragmentHome">
+    android:background="@color/purple_200"
+    tools:context=".activity.main_page.fragment.FragmentProfil">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
@@ -14,6 +14,6 @@
         android:textStyle="bold"
         android:textSize="20sp"
         android:textColor="@color/white"
-        android:text="Home" />
+        android:text="Profil" />
 
 </FrameLayout>

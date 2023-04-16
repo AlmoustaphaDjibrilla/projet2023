@@ -1,35 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="#FFFFFF"
     tools:context=".activity.main_page.MainPage">
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/conteneurFragment"
         android:layout_width="match_parent"
-        android:background="@color/white"
         android:layout_height="match_parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        android:layout_above="@id/navigation"/>
 
-    </FrameLayout>
+    <LinearLayout
+        android:id="@+id/navigation"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_margin="5dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:layout_alignParentBottom="true"
+        android:elevation="10dp"
+        android:gravity="center"
+        android:background="@drawable/nav_corner">
+        <LinearLayout
+            android:background="@drawable/round_corner"
+            android:id="@+id/home"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/imageHome"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/icon_home"/>
+
+            <TextView
+                android:id="@+id/textHome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Home"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"
+                android:textSize="16sp"
+                android:textColor="#1194AA"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/profil"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/imageProfil"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_person"/>
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/textProfil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profil"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"
+                android:textSize="16sp"
+                android:textColor="#1194AA"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admin"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/imageAdmin"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/icon_admin"/>
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/textAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Admin"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"
+                android:textSize="16sp"
+                android:textColor="#1194AA"/>
+
+        </LinearLayout>
 
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/lavender"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+</RelativeLayout>
