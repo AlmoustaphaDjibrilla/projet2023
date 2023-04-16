@@ -18,7 +18,7 @@
         android:layout_marginBottom="5dp"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:background="@drawable/white_background"
+        android:background="@color/colorGrise"
         android:fontFamily="@font/gotham"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -28,12 +28,12 @@
         android:layout_marginTop="50dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/addlocal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@android:drawable/ic_input_add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
