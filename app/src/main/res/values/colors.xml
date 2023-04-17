@@ -19,6 +19,10 @@
 
     <color name="colorGrise">#D3D3D3</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="midnight_express">#10101C</color>
+    <color name="ebony_clay">#212436</color>
+    <color name="comel">#5F6488</color>
+
 
 
 </resources>

@@ -63,7 +63,7 @@ public class MainPage extends AppCompatActivity {
                     //activer home
                     textHome.setVisibility(View.VISIBLE);
                     homeImage.setImageResource(R.drawable.icon_home);
-                    home.setBackgroundResource(R.drawable.round_corner);
+                    home.setBackgroundResource(R.drawable.round_navbar);
 
                     //creer animation
                     ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f,1.0f,1f,1f, Animation.RELATIVE_TO_SELF,0.0f,Animation.RELATIVE_TO_SELF,0.0f);
@@ -98,7 +98,7 @@ public class MainPage extends AppCompatActivity {
                     //activer profil
                     textProfil.setVisibility(View.VISIBLE);
                     profilImage.setImageResource(R.drawable.ic_person);
-                    profil.setBackgroundResource(R.drawable.round_corner);
+                    profil.setBackgroundResource(R.drawable.round_navbar);
 
                     //creer animation
                     ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f,1.0f,1f,1f, Animation.RELATIVE_TO_SELF,0.0f,Animation.RELATIVE_TO_SELF,0.0f);
@@ -133,7 +133,7 @@ public class MainPage extends AppCompatActivity {
                     //activer profil
                     textAdmin.setVisibility(View.VISIBLE);
                     adminImage.setImageResource(R.drawable.icon_admin);
-                    admin.setBackgroundResource(R.drawable.round_corner);
+                    admin.setBackgroundResource(R.drawable.round_navbar);
 
                     //creer animation
                     ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f,1.0f,1f,1f, Animation.RELATIVE_TO_SELF,0.0f,Animation.RELATIVE_TO_SELF,0.0f);

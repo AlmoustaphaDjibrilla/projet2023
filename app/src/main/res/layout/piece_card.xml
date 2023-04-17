@@ -6,7 +6,7 @@
     android:layout_marginLeft="15dp"
     android:layout_marginRight="15dp"
     android:layout_marginBottom="15dp"
-    app:cardBackgroundColor="#512da8"
+    app:cardBackgroundColor="@color/ebony_clay"
     app:cardCornerRadius="10dp"
     app:cardElevation="8dp">
         <LinearLayout
@@ -30,8 +30,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="Test"
+                android:fontFamily="@font/montserrat_semibold"
                 android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="14sp"></TextView>
+                android:textColor="@color/comel"
+                android:textSize="18sp">
+            </TextView>
         </LinearLayout>
 </androidx.cardview.widget.CardView>

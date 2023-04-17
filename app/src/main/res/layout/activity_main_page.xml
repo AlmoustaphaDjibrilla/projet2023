@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
+    android:background="@color/midnight_express"
     tools:context=".activity.main_page.MainPage">
 
     <androidx.fragment.app.FragmentContainerView
@@ -27,9 +27,9 @@
         android:layout_alignParentBottom="true"
         android:elevation="10dp"
         android:gravity="center"
-        android:background="@drawable/nav_corner">
+        android:background="@drawable/round_corner">
         <LinearLayout
-            android:background="@drawable/round_corner"
+            android:background="@drawable/round_navbar"
             android:id="@+id/home"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
@@ -53,7 +53,7 @@
                 android:textStyle="bold"
                 android:layout_marginStart="10dp"
                 android:textSize="16sp"
-                android:textColor="#1194AA"/>
+                android:textColor="@color/comel"/>
 
         </LinearLayout>
 
@@ -83,7 +83,7 @@
                 android:textStyle="bold"
                 android:layout_marginStart="10dp"
                 android:textSize="16sp"
-                android:textColor="#1194AA"/>
+                android:textColor="@color/comel"/>
 
         </LinearLayout>
 
@@ -113,7 +113,7 @@
                 android:textStyle="bold"
                 android:layout_marginStart="10dp"
                 android:textSize="16sp"
-                android:textColor="#1194AA"/>
+                android:textColor="@color/comel"/>
 
         </LinearLayout>
 
