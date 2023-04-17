@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activity.LoginActivity"
     android:background="#f2f2f2">
 
     <pl.droidsonroids.gif.GifImageView
@@ -55,7 +56,7 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginRight="15dp"
                 android:gravity="center"
-                android:text="Completer vos informations de connexion afin d'acceder a votrer maison"
+                android:text="Completer vos informations de connexion afin d'acceder à votrer maison"
                 android:textColor="@color/black" />
 
             <EditText

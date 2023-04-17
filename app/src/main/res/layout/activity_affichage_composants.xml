@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/midnight_express"
-    tools:context=".activity.Composants">
+    tools:context=".activity.main_page.fragment.FragmentHome">
+<!--    tools:context=".activity.ActivityAffichageComposants">-->
 
     <LinearLayout
         android:id="@+id/composant"

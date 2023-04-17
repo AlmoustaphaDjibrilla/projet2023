@@ -24,6 +24,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.adi.projet2023.R;
+import com.adi.projet2023.model.user.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
@@ -35,20 +36,26 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class LoginActivity extends Activity implements Serializable {
 
-    private final String PATH_USER_DATABASE= "Users";
-    private final String PATH_PRESENCE_PERSONNE= "test/presence_personne";
+    final String PATH_USER_DATABASE= "Users";
+    private CollectionReference collectionUsers;
+
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseUser firebaseUser;
+
 
     TextView txtPasswordOublie;
     EditText txtMailLogin, txtPasswordLogin;
@@ -57,12 +64,30 @@ public class LoginActivity extends Activity implements Serializable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        FirebaseApp.initializeApp(this);
-//        lancerNotification();
 
-        //initialisation des différents composants de l'interface graphique
+        FirebaseApp.initializeApp(this);
+        setContentView(R.layout.activity_login);
+        initFirebaseComponents();
         init();
+
+        collectionUsers
+                .get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                ArrayList<UserModel> lesUsers= new ArrayList<>();
+                                for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                                    lesUsers.add(documentSnapshot.toObject(UserModel.class));
+                                }
+                                if (lesUsers.size()==0){
+
+                                    // S'il n'y a aucun User, ajouter un premier, qui sera l'admin
+                                    startActivity(new Intent(getApplicationContext(), ActivityRegisterAdmin.class));
+                                    finish();
+                                    Toast.makeText(getApplicationContext(), "Ajouter un compte Administrateur", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
 
 
 
@@ -121,15 +146,19 @@ public class LoginActivity extends Activity implements Serializable {
      */
     private void init(){
         //Initialisation Firebase Auth
-        mAuth= FirebaseAuth.getInstance();
-
-        firebaseFirestore = FirebaseFirestore.getInstance();
 
         btnLogin= findViewById(R.id.btnLoginAdmin);
         txtPasswordOublie= findViewById(R.id.txtPasswordOublieAdmin);
 
         txtMailLogin=findViewById(R.id.txtMailLoginAdmin);
         txtPasswordLogin= findViewById(R.id.txtPasswordLoginAdmin);
+    }
+
+    private void initFirebaseComponents() {
+        mAuth= FirebaseAuth.getInstance();
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        collectionUsers= firebaseFirestore.collection(PATH_USER_DATABASE);
     }
 
 

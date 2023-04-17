@@ -28,7 +28,7 @@ public class Composants extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_composants);
+        setContentView(R.layout.activity_affichage_composants);
         init();
     }
 
