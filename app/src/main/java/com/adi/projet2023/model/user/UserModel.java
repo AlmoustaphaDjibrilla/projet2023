@@ -28,43 +28,16 @@ public class UserModel implements Serializable {
     public UserModel() {
     }
 
-    public UserModel(String email, String nom) {
-        this.email = email;
-        this.nom = nom;
-        this.isAdmin=false;
-        this.isUser=true;
-        this.dateEnregistrement= LocalDate.now().toString();
-    }
-
-    public UserModel(String uid, String email, String nom) {
-        Uid = uid;
-        this.email = email;
-        this.nom = nom;
-        this.isAdmin=false;
-        this.isUser=true;
-        this.dateEnregistrement= LocalDate.now().toString();
-    }
-
-    public UserModel(String uid, String email, String nom, String password) {
-        Uid = uid;
+    public UserModel( String email, String password, String nom, String telephone){
         this.email = email;
         this.nom = nom;
         this.password = password;
+        this.telephone= telephone;
         this.isAdmin=false;
         this.isUser=true;
         this.dateEnregistrement= LocalDate.now().toString();
     }
 
-    public UserModel(String uid, String telephone, String email, String nom, String password) {
-        Uid = uid;
-        this.telephone = telephone;
-        this.email = email;
-        this.nom = nom;
-        this.password = password;
-        this.isAdmin=false;
-        this.isUser=true;
-        this.dateEnregistrement= LocalDate.now().toString();
-    }
 
     public String getUid() {
         return Uid;
