@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/midnight_express"
+    android:background="@color/white"
     tools:context=".activity.main_page.MainPage">
 
     <androidx.fragment.app.FragmentContainerView

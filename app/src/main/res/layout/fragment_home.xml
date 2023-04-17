@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/midnight_express"
+    android:background="@color/white"
     tools:context=".activity.main_page.fragment.FragmentHome">
 
 
@@ -17,8 +17,7 @@
             android:layout_height="100dp"
             android:text="Welcome"
             android:layout_margin="16dp"
-            android:textColor="@color/comel"
-            android:fontFamily="@font/montserrat_semibold"
+            android:textColor="@color/black"
             android:textSize="30sp"/>
 
         <RelativeLayout
@@ -68,13 +67,19 @@
                     android:text="28%"
                     android:textColor="@color/comel"
                     android:textSize="30sp" />
+
+                <ImageView
+                    android:layout_width="71dp"
+                    android:layout_height="81dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="234dp"
+                    android:layout_marginBottom="44dp"
+                    android:src="@drawable/humidite" />
             </RelativeLayout>
-            <pl.droidsonroids.gif.GifImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/humidite"
-                android:layout_marginTop="-0dp"
-                android:layout_alignParentRight="true"/>
+
         </RelativeLayout>
         <GridLayout
             android:id="@+id/GridPieces"

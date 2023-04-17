@@ -85,7 +85,7 @@ public class Composants extends AppCompatActivity {
                 nom.setText(composantList.get(i).getNomComposant());
                 switch (composantList.get(i).getTypeComposant().toString()){
                     case "AMPOULE":
-                        img.setImageResource(R.drawable.ampoules);
+                        img.setImageResource(R.drawable.ampoule_animee);
                         break;
                     case "CLIMATISEUR":
                         img.setImageResource(R.drawable.clim);
