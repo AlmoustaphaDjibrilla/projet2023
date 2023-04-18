@@ -11,7 +11,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardAjoutLocal"
         android:layout_width="395dp"
-        android:layout_height="420dp"
+        android:layout_height="460dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="15dp"
         android:layout_marginRight="8dp"
@@ -62,6 +62,47 @@
                     android:layout_marginBottom="16dp"
                     android:orientation="vertical">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|fill_horizontal|center_vertical"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_gravity="center_horizontal|fill_horizontal|center_vertical"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/rdBtnMaison"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/gotham"
+                                android:text="Maison" />
+
+                            <RadioButton
+                                android:id="@+id/rdBtnEntreprise"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:fontFamily="@font/gotham"
+                                android:layout_marginStart="10dp"
+                                android:text="Entreprise" />
+
+                            <RadioButton
+                                android:id="@+id/rdBtnAutre"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/gotham"
+                                android:layout_marginStart="10dp"
+                                android:text="Autre" />
+
+                        </RadioGroup>
+                    </LinearLayout>
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -69,7 +110,7 @@
                         android:textColorHint="#FF8A99AF">
 
                         <EditText
-                            android:id="@+id/txtMailSearchUser"
+                            android:id="@+id/txtNomAjoutLocal"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:drawablePadding="16dp"
@@ -88,7 +129,7 @@
                         android:textColorHint="#FF8A99AF">
 
                         <EditText
-                            android:id="@+id/txtNomSearchUser"
+                            android:id="@+id/txtQuartierAjoutLocal"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:drawablePadding="16dp"
@@ -107,7 +148,7 @@
                         android:textColorHint="#FF8A99AF">
 
                         <EditText
-                            android:id="@+id/txtDateEnregisrementSearchUser"
+                            android:id="@+id/txtVilleAjoutLocal"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:drawablePadding="16dp"
@@ -124,7 +165,7 @@
             </androidx.cardview.widget.CardView>
 
             <Button
-                android:id="@+id/btnSearchUser"
+                android:id="@+id/btnEnregistrerLocal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

@@ -4,6 +4,7 @@ import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.user.UserModel;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 public abstract class Local implements Serializable{
@@ -15,6 +16,7 @@ public abstract class Local implements Serializable{
     String nomLocal;
     String quartierLocal;
     String villeLocal;
+    String dateEnregistrement;
     List<UserModel> lesUsers;
     List<Piece> lesPieces;
 
@@ -37,6 +39,9 @@ public abstract class Local implements Serializable{
         this.nomLocal = nomLocal;
         this.quartierLocal = quartierLocal;
         this.villeLocal = villeLocal;
+        this.dateEnregistrement= LocalDate.now().toString();
+        this.adresseLocal= nomLocal.toLowerCase().replaceAll(" ", "");
+        this.idLocal= adresseLocal;
     }
 
     public String getIdLocal() {
@@ -110,6 +115,7 @@ public abstract class Local implements Serializable{
     public void setAdresseLocal(String adresseLocal) {
         this.adresseLocal = adresseLocal;
     }
+
 
     @Override
     public String toString() {

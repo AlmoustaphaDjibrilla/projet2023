@@ -116,6 +116,7 @@ public class LoginActivity extends Activity implements Serializable {
                     @Override
                     public void onClick(View v) {
                         String mail= txtMailLogin.getText().toString();
+                        resetPasswordMethod(mail);
                     }
                 }
         );
@@ -125,19 +126,16 @@ public class LoginActivity extends Activity implements Serializable {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        lancerNotification();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-//        lancerNotification();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-//        lancerNotification();
     }
 
 
@@ -183,7 +181,7 @@ public class LoginActivity extends Activity implements Serializable {
 
 
         if (mail==null || password==null || mail.equals("") || password.equals("")){
-            Toast.makeText(LoginActivity.this, "Veuillez saisir tous les champs", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Veuillez saisir tous les champs", Toast.LENGTH_SHORT).show();
         }
         else {
             mAuth.signInWithEmailAndPassword(mail, password)
@@ -191,8 +189,8 @@ public class LoginActivity extends Activity implements Serializable {
                         @Override
                         public void onSuccess(AuthResult authResult) {
                             firebaseUser= mAuth.getCurrentUser();
-                            Toast.makeText(LoginActivity.this, "Reussi", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), ChoixLocalActivity.class));
+                            finish();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -204,6 +202,36 @@ public class LoginActivity extends Activity implements Serializable {
         }
     }
 
+    /**
+     * envoyer un mail pour pouvoir réinitialiser le mot de passe
+     * du user ayant le mail spécifié
+     * @param mail
+     */
+    private void resetPasswordMethod(String mail){
+        if (mail==null || mail.equals("")){
+            txtMailLogin.setError("Veuillez saisir votre mail");
+        }
+        else {
+            mAuth.sendPasswordResetEmail(mail)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(getApplicationContext(), "Consultez votre messagerie électronique", Toast.LENGTH_SHORT).show();
+                            Intent mailClient = new Intent(Intent.ACTION_VIEW);
+                            mailClient.setClassName("com.google.android.gm", "com.google.android.gm.ConversationListActivityGmail");
+                            if (mailClient !=null){
+                                startActivity(mailClient);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "Echec d'envoi de mail", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
 
 
 }
