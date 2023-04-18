@@ -16,6 +16,7 @@ import android.os.Vibrator;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class LoginActivity extends Activity implements Serializable {
 
@@ -55,6 +58,9 @@ public class LoginActivity extends Activity implements Serializable {
     private FirebaseAuth mAuth;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseUser firebaseUser;
+
+    ProgressBar progressBarLogin;
+    int counter=0;
 
 
     TextView txtPasswordOublie;
@@ -98,11 +104,11 @@ public class LoginActivity extends Activity implements Serializable {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         String mail= txtMailLogin.getText().toString();
                         String password= txtPasswordLogin.getText().toString();
 
                         loginMethod(mail, password);
-
                     }
                 }
         );
@@ -143,13 +149,14 @@ public class LoginActivity extends Activity implements Serializable {
      * Initialisation des différents composants de l'interface graphique
      */
     private void init(){
-        //Initialisation Firebase Auth
-
         btnLogin= findViewById(R.id.btnLoginAdmin);
         txtPasswordOublie= findViewById(R.id.txtPasswordOublieAdmin);
 
         txtMailLogin=findViewById(R.id.txtMailLoginAdmin);
         txtPasswordLogin= findViewById(R.id.txtPasswordLoginAdmin);
+
+        progressBarLogin= findViewById(R.id.progressBarLogin);
+        progressBarLogin.setVisibility(View.INVISIBLE);
     }
 
     private void initFirebaseComponents() {
@@ -184,6 +191,25 @@ public class LoginActivity extends Activity implements Serializable {
             Toast.makeText(getApplicationContext(), "Veuillez saisir tous les champs", Toast.LENGTH_SHORT).show();
         }
         else {
+            progressBarLogin.setVisibility(View.VISIBLE);
+            Timer timer= new Timer();
+            TimerTask timerTask= new TimerTask() {
+                @Override
+                public void run() {
+
+                    counter++;
+
+                    progressBarLogin.setProgress(counter);
+
+                    if (counter==100){
+                        timer.cancel();
+
+//                        loginMethod(mail, password);
+                    }
+
+                }
+            };
+            timer.schedule(timerTask, 100, 100);
             mAuth.signInWithEmailAndPassword(mail, password)
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
@@ -197,6 +223,7 @@ public class LoginActivity extends Activity implements Serializable {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(getApplicationContext(), "Données non correspondants", Toast.LENGTH_SHORT).show();
+                            progressBarLogin.setVisibility(View.INVISIBLE);
                         }
                     });
         }
