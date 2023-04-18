@@ -12,6 +12,7 @@ public abstract class Local implements Serializable{
     String idLocal;
     String adresseLocal;
     TypeLocal typeLocal;
+
     String designationLocal;
     String nomLocal;
     String quartierLocal;
