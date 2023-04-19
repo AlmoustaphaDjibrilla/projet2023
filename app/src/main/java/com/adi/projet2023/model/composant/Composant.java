@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public abstract class Composant implements Serializable {
     String idComposant;
-    String adresseComposant;
+    String chemin;
     String nomComposant;
     TypeComposant typeComposant;
     public Composant(){
@@ -37,5 +37,13 @@ public abstract class Composant implements Serializable {
 
     public void setTypeComposant(TypeComposant typeComposant) {
         this.typeComposant = typeComposant;
+    }
+
+    public String getChemin() {
+        return chemin;
+    }
+
+    public void setChemin(String chemin) {
+        this.chemin = chemin;
     }
 }

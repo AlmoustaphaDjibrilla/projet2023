@@ -1,6 +1,7 @@
 package com.adi.projet2023.model.Piece;
 
 import com.adi.projet2023.model.composant.Composant;
+import com.adi.projet2023.model.local.Local;
 import com.adi.projet2023.model.user.UserModel;
 
 import java.io.Serializable;
@@ -10,13 +11,13 @@ public abstract class Piece implements Serializable {
     String idPiece;
     String adressePiece;
     String nomPiece;
-    TypePiece typePiece;
+    String typePiece;
     List<UserModel> lesUsers;
     List<Composant> lesComposants;
 
     public Piece(){
     }
-    public Piece(TypePiece type, String nom){
+    public Piece(String type, String nom){
         this.typePiece=type;
         this.nomPiece=nom;
     }
@@ -28,11 +29,11 @@ public abstract class Piece implements Serializable {
         return idPiece;
     }
 
-    public void setTypePiece(TypePiece typePiece) {
+    public void setTypePiece(String typePiece) {
         this.typePiece = typePiece;
     }
 
-    public TypePiece getTypePiece() {
+    public String getTypePiece() {
         return typePiece;
     }
 
