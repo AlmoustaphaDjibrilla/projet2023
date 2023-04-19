@@ -7,7 +7,7 @@ public class Chambre extends Piece implements Serializable {
 
     }
     public Chambre(String nom){
-        super(TypePiece.CHAMBRE, nom);
+        super(TypePiece.CHAMBRE.toString(), nom);
     }
 
 }

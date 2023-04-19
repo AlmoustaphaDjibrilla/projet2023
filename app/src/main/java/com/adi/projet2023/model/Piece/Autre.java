@@ -7,7 +7,7 @@ public class Autre extends Piece implements Serializable {
 
     }
     public Autre(String nom){
-        super(TypePiece.AUTRE, nom);
+        super(TypePiece.AUTRE.toString(), nom);
     }
 
 }
