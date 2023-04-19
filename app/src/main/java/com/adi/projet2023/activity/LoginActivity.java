@@ -232,7 +232,8 @@ public class LoginActivity extends Activity implements Serializable {
     /**
      * envoyer un mail pour pouvoir réinitialiser le mot de passe
      * du user ayant le mail spécifié
-     * @param mail
+     * @param mail represente le mail de celui
+     *             qui voudrait réinitialiser son mot de passe
      */
     private void resetPasswordMethod(String mail){
         if (mail==null || mail.equals("")){
