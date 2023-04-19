@@ -1,18 +1,8 @@
 package com.adi.projet2023.activity;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,8 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.adi.projet2023.R;
 import com.adi.projet2023.model.user.UserModel;
@@ -32,14 +20,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;

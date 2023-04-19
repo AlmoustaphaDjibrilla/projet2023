@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public abstract class Local implements Serializable{
+public class Local implements Serializable{
 
     String idLocal;
     String adresseLocal;
@@ -35,7 +35,7 @@ public abstract class Local implements Serializable{
      * @param villeLocal désigne la ville du local
      */
     public Local(TypeLocal typeLocal, String nomLocal, String quartierLocal, String villeLocal) {
-        this.typeLocal = typeLocal;
+//        this.typeLocal = typeLocal;
         this.designationLocal= typeLocal.toString();
         this.nomLocal = nomLocal;
         this.quartierLocal = quartierLocal;
@@ -121,7 +121,7 @@ public abstract class Local implements Serializable{
     @Override
     public String toString() {
         return "Local{" +
-                "typeLocal=" + typeLocal +
+//                "typeLocal=" + typeLocal +
                 ", nomLocal='" + nomLocal + '\'' +
                 ", quartierLocal='" + quartierLocal + '\'' +
                 ", villeLocal='" + villeLocal + '\'' +

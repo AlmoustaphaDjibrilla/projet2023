@@ -24,6 +24,7 @@ import com.adi.projet2023.adapter.AdapterChoixLocal;
 import com.adi.projet2023.adapter.AdapterLocal;
 import com.adi.projet2023.creation.CreationLocal;
 import com.adi.projet2023.databinding.ActivityChoixLocalBinding;
+import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.local.AutreLocal;
 import com.adi.projet2023.model.local.Entreprise;
 import com.adi.projet2023.model.local.Local;
@@ -39,6 +40,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.checkerframework.checker.units.qual.A;
 
@@ -63,7 +66,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityChoixLocalBinding binding;
     RecyclerView listLocaux;
-    ArrayList<Local> lesLocaux;
+//    ArrayList<Local> lesLocaux;
     Dialog dialog;
 
     /**
@@ -111,18 +114,46 @@ public class ChoixLocalActivity extends AppCompatActivity {
             }
         });
 
+        collectionLocal.get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                ArrayList<Local> lesLocaux= new ArrayList<>();
+                                for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
 
-        lesLocaux.add(new Maison("maison secondaire", "Cite El khadra", "Tunis"));
-        lesLocaux.add(new AutreLocal("jardin", "Île de Nice", "Djerba"));
-        lesLocaux.add(new Maison("maison Parents", "Cite caisse", "Mahdia"));
-        lesLocaux.add(new Entreprise("Fac des sciences", "Cite el Omrane", "Monastir"));
-        lesLocaux.add(new Maison ("maison copine", "avenue CDG", "Paris"));
+                                    //Récuperer manuellement tous les attributs du local
+                                    String designationLocal= documentSnapshot.getString("designationLocal");
+                                    String adresseLocal= documentSnapshot.getString("adresseLocal");
+                                    String idLocal= documentSnapshot.getString("idLocal");
+                                    List<Piece> lesPieces= (List<Piece>) documentSnapshot.get("lesPieces");
+                                    List<UserModel> lesUsers= (List<UserModel>) documentSnapshot.get("lesUsers");
+                                    String nomLocal= documentSnapshot.getString("nomLocal");
+                                    String quartierLocal= documentSnapshot.getString("quartierLocal");
+                                    TypeLocal typeLocal= TypeLocal.valueOf(documentSnapshot.getString("typeLocal"));
+                                    String villeLocal= documentSnapshot.getString("villeLocal");
 
-        AdapterLocal adapterLocal= new AdapterLocal(getApplicationContext(), lesLocaux);
+                                    //creer un nouvel local et lui affecter les attributs recuperés ci-dessus
+                                    Local local= new Local();
+                                    local.setDesignationLocal(designationLocal);
+                                    local.setAdresseLocal(adresseLocal);
+                                    local.setIdLocal(idLocal);
+                                    local.setLesPieces(lesPieces);
+                                    local.setLesUsers(lesUsers);
+                                    local.setNomLocal(nomLocal);
+                                    local.setQuartierLocal(quartierLocal);
+                                    local.setTypeLocal(typeLocal);
+                                    local.setVilleLocal(villeLocal);
 
-        listLocaux.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        listLocaux.setAdapter(adapterLocal);
+                                    //Ajouter le local créé à la liste des locaux
+                                    lesLocaux.add(local);
+                                }
 
+                                //afficher la liste des locaux dans la liste
+                                AdapterLocal adapterLocal= new AdapterLocal(getApplicationContext(), lesLocaux);
+                                listLocaux.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                                listLocaux.setAdapter(adapterLocal);
+                            }
+                        });
     }
 
     /**
@@ -130,7 +161,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
      */
     private void init(){
         listLocaux= findViewById(R.id.listChoixLocal);
-        lesLocaux= new ArrayList<>();
+        //lesLocaux= new ArrayList<>();
     }
 
     private void initFirebaseComponents(){

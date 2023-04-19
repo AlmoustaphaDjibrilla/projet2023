@@ -123,7 +123,7 @@ public abstract class AdapterChoixLocal extends BaseAdapter {
             String ville= local.getVilleLocal();
                 txtVilleLocal.setText(ville);
 
-            TypeLocal typeLocal= local.getTypeLocal();
+            TypeLocal typeLocal= TypeLocal.valueOf(local.getDesignationLocal());
             if (typeLocal!=null)
                 txtTypeLocal.setText(typeLocal.toString());
         }
