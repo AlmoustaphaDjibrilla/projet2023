@@ -106,6 +106,7 @@ public class MainPage extends AppCompatActivity {
                     //creer animation
                     ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f,1.0f,1f,1f, Animation.RELATIVE_TO_SELF,0.0f,Animation.RELATIVE_TO_SELF,0.0f);
                     scaleAnimation.setDuration(200);
+                    scaleAnimation.setDuration(300);
                     scaleAnimation.setFillAfter(true);
                     profil.startAnimation(scaleAnimation);
 

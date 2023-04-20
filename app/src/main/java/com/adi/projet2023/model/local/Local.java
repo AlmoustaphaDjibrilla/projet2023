@@ -35,12 +35,13 @@ public class Local implements Serializable{
      * @param villeLocal désigne la ville du local
      */
     public Local(TypeLocal typeLocal, String nomLocal, String quartierLocal, String villeLocal) {
-//        this.typeLocal = typeLocal;
+        this.typeLocal = typeLocal;
         this.designationLocal= typeLocal.toString();
         this.nomLocal = nomLocal;
         this.quartierLocal = quartierLocal;
         this.villeLocal = villeLocal;
-        this.dateEnregistrement= LocalDate.now().toString();
+        LocalDate date= LocalDate.now();
+        this.dateEnregistrement= date.toString();
         this.adresseLocal= nomLocal.toLowerCase().replaceAll(" ", "");
         this.idLocal= adresseLocal;
     }
@@ -117,6 +118,13 @@ public class Local implements Serializable{
         this.adresseLocal = adresseLocal;
     }
 
+    public String getDateEnregistrement() {
+        return dateEnregistrement;
+    }
+
+    public void setDateEnregistrement(String dateEnregistrement) {
+        this.dateEnregistrement = dateEnregistrement;
+    }
 
     @Override
     public String toString() {

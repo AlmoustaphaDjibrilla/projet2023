@@ -1,43 +1,33 @@
 package com.adi.projet2023.activity;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adi.projet2023.R;
 import com.adi.projet2023.activity.main_page.MainPage;
-import com.adi.projet2023.activity.main_page.fragment.FragmentHome;
-import com.adi.projet2023.adapter.AdapterChoixLocal;
 import com.adi.projet2023.adapter.AdapterLocal;
 import com.adi.projet2023.creation.CreationLocal;
 import com.adi.projet2023.databinding.ActivityChoixLocalBinding;
 import com.adi.projet2023.model.Piece.Piece;
-import com.adi.projet2023.model.local.AutreLocal;
-import com.adi.projet2023.model.local.Entreprise;
 import com.adi.projet2023.model.local.Local;
-import com.adi.projet2023.model.local.Maison;
 import com.adi.projet2023.model.local.TypeLocal;
 import com.adi.projet2023.model.user.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -47,9 +37,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.checkerframework.checker.units.qual.A;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +57,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityChoixLocalBinding binding;
     RecyclerView listLocaux;
-//    ArrayList<Local> lesLocaux;
+    //    ArrayList<Local> lesLocaux;
     Dialog dialog;
 
     /**
@@ -119,54 +106,54 @@ public class ChoixLocalActivity extends AppCompatActivity {
         });
 
         collectionLocal.get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        ArrayList<Local> lesLocaux= new ArrayList<>();
+                        for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+
+                            //Récuperer manuellement tous les attributs du local
+                            String designationLocal= documentSnapshot.getString("designationLocal");
+                            String adresseLocal= documentSnapshot.getString("adresseLocal");
+                            String idLocal= documentSnapshot.getString("idLocal");
+                            List<Piece> lesPieces= (List<Piece>) documentSnapshot.get("lesPieces");
+                            List<UserModel> lesUsers= (List<UserModel>) documentSnapshot.get("lesUsers");
+                            String nomLocal= documentSnapshot.getString("nomLocal");
+                            String quartierLocal= documentSnapshot.getString("quartierLocal");
+                            TypeLocal typeLocal= TypeLocal.valueOf(documentSnapshot.getString("typeLocal"));
+                            String villeLocal= documentSnapshot.getString("villeLocal");
+
+                            //creer un nouvel local et lui affecter les attributs recuperés ci-dessus
+                            Local local= new Local();
+                            local.setDesignationLocal(designationLocal);
+                            local.setAdresseLocal(adresseLocal);
+                            local.setIdLocal(idLocal);
+                            local.setLesPieces(lesPieces);
+                            local.setLesUsers(lesUsers);
+                            local.setNomLocal(nomLocal);
+                            local.setQuartierLocal(quartierLocal);
+                            local.setTypeLocal(typeLocal);
+                            local.setVilleLocal(villeLocal);
+
+                            //Ajouter le local créé à la liste des locaux
+                            lesLocaux.add(local);
+                        }
+
+                        //afficher la liste des locaux dans la liste
+                        AdapterLocal adapterLocal= new AdapterLocal(getApplicationContext(), lesLocaux);
+                        adapterLocal.setOnItemClickListener(new AdapterLocal.OnItemClickListener() {
                             @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                ArrayList<Local> lesLocaux= new ArrayList<>();
-                                for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
-
-                                    //Récuperer manuellement tous les attributs du local
-                                    String designationLocal= documentSnapshot.getString("designationLocal");
-                                    String adresseLocal= documentSnapshot.getString("adresseLocal");
-                                    String idLocal= documentSnapshot.getString("idLocal");
-                                    List<Piece> lesPieces= (List<Piece>) documentSnapshot.get("lesPieces");
-                                    List<UserModel> lesUsers= (List<UserModel>) documentSnapshot.get("lesUsers");
-                                    String nomLocal= documentSnapshot.getString("nomLocal");
-                                    String quartierLocal= documentSnapshot.getString("quartierLocal");
-                                    TypeLocal typeLocal= TypeLocal.valueOf(documentSnapshot.getString("typeLocal"));
-                                    String villeLocal= documentSnapshot.getString("villeLocal");
-
-                                    //creer un nouvel local et lui affecter les attributs recuperés ci-dessus
-                                    Local local= new Local();
-                                    local.setDesignationLocal(designationLocal);
-                                    local.setAdresseLocal(adresseLocal);
-                                    local.setIdLocal(idLocal);
-                                    local.setLesPieces(lesPieces);
-                                    local.setLesUsers(lesUsers);
-                                    local.setNomLocal(nomLocal);
-                                    local.setQuartierLocal(quartierLocal);
-                                    local.setTypeLocal(typeLocal);
-                                    local.setVilleLocal(villeLocal);
-
-                                    //Ajouter le local créé à la liste des locaux
-                                    lesLocaux.add(local);
-                                }
-
-                                //afficher la liste des locaux dans la liste
-                                AdapterLocal adapterLocal= new AdapterLocal(getApplicationContext(), lesLocaux);
-                                adapterLocal.setOnItemClickListener(new AdapterLocal.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(String localId) {
-                                         Intent intent = new Intent(getApplicationContext(), MainPage.class);
-                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                         intent.putExtra("localId", localId);
-                                         getApplicationContext().startActivity(intent);
-                                    }
-                                });
-                                listLocaux.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                                listLocaux.setAdapter(adapterLocal);
+                            public void onItemClick(String localId) {
+                                Intent intent = new Intent(getApplicationContext(), MainPage.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("localId", localId);
+                                getApplicationContext().startActivity(intent);
                             }
                         });
+                        listLocaux.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        listLocaux.setAdapter(adapterLocal);
+                    }
+                });
     }
 
     /**
@@ -194,7 +181,6 @@ public class ChoixLocalActivity extends AppCompatActivity {
         txtQuartierLocal= dialog.findViewById(R.id.txtQuartierAjoutLocal);
         txtVilleLocal= dialog.findViewById(R.id.txtVilleAjoutLocal);
 
-        btnAjouterLocal= dialog.findViewById(R.id.btnEnregistrerLocal);
     }
 
     /**
