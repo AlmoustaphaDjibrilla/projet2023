@@ -28,6 +28,9 @@ public class MainPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
 
+        String idLocal = getIntent().getStringExtra("localId");
+
+
         final LinearLayout home = findViewById(R.id.home);
         final LinearLayout profil = findViewById(R.id.profil);
         final LinearLayout admin = findViewById(R.id.admin);
@@ -41,14 +44,14 @@ public class MainPage extends AppCompatActivity {
         final TextView textAdmin=findViewById(R.id.textAdmin);
 
         //Fragment par defaut
-        remplacementFragment(new FragmentHome());
+        remplacementFragment(FragmentHome.newInstance(idLocal));
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Verifier si layout selectionner ou pas
                 if(selection!=1){
                     //afficher home
-                    remplacementFragment(new FragmentHome());
+                    remplacementFragment(FragmentHome.newInstance(idLocal));
 
                     //deselection des autres sauf home
                     textProfil.setVisibility(View.GONE);

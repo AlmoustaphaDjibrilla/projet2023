@@ -1,6 +1,7 @@
 package com.adi.projet2023.activity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,11 +16,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adi.projet2023.R;
+import com.adi.projet2023.activity.main_page.MainPage;
+import com.adi.projet2023.activity.main_page.fragment.FragmentHome;
 import com.adi.projet2023.adapter.AdapterChoixLocal;
 import com.adi.projet2023.adapter.AdapterLocal;
 import com.adi.projet2023.creation.CreationLocal;
@@ -150,6 +154,15 @@ public class ChoixLocalActivity extends AppCompatActivity {
 
                                 //afficher la liste des locaux dans la liste
                                 AdapterLocal adapterLocal= new AdapterLocal(getApplicationContext(), lesLocaux);
+                                adapterLocal.setOnItemClickListener(new AdapterLocal.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(String localId) {
+                                         Intent intent = new Intent(getApplicationContext(), MainPage.class);
+                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                         intent.putExtra("localId", localId);
+                                         getApplicationContext().startActivity(intent);
+                                    }
+                                });
                                 listLocaux.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                                 listLocaux.setAdapter(adapterLocal);
                             }
