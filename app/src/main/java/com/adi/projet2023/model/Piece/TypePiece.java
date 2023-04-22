@@ -5,6 +5,5 @@ public enum TypePiece {
     CUISINE,
     SALON,
     DOUCHE,
-    BUREAU,
     AUTRE,
 }
