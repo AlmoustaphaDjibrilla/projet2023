@@ -10,8 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class CreationLocal {
     final static String PATH_LOCAL_DATABASES= "Local";
 
-    public static void creationMaison(String nomMaison, String quartierMaison, String villeMaison){
-        Maison maison= new Maison(nomMaison, quartierMaison, villeMaison);
+    public static void creationMaison(Maison maison){
         DocumentReference docMaison=
                 FirebaseFirestore.getInstance()
                         .collection(PATH_LOCAL_DATABASES)
@@ -19,8 +18,7 @@ public class CreationLocal {
         docMaison.set(maison);
     }
 
-    public static void creationEntreprise(String nomEntreprise, String quartierEntreprise, String villeEntreprise){
-        Entreprise entreprise= new Entreprise(nomEntreprise, quartierEntreprise, villeEntreprise);
+    public static void creationEntreprise(Entreprise entreprise){
         DocumentReference docEntreprise=
                 FirebaseFirestore.getInstance()
                         .collection(PATH_LOCAL_DATABASES)
@@ -28,8 +26,7 @@ public class CreationLocal {
         docEntreprise.set(entreprise);
     }
 
-    public static void creationAutreLocal(String nomAutreLocal, String quartierAutreLocal, String villeAutreLocal){
-        AutreLocal autreLocal= new AutreLocal(nomAutreLocal, quartierAutreLocal, villeAutreLocal);
+    public static void creationAutreLocal(AutreLocal autreLocal){
         DocumentReference docAutreLocal=
                 FirebaseFirestore.getInstance()
                         .collection(PATH_LOCAL_DATABASES)

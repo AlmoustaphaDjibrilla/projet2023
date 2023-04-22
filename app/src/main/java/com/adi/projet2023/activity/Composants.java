@@ -30,20 +30,7 @@ public class Composants extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_affichage_composants);
         init();
-    }
-
-    private void init(){
-        layout=findViewById(R.id.composant);
-        composantList = new ArrayList<>();
-        composantList = List.of(new Ampoule("Lampe"),
-                new Climatiseur("clim 1"),
-                new Refrigerateur("frigo 4"),
-                new Ventilateur("venti 2"),
-                new Porte("porte 2"),
-                new Autre("Machine a laver"),
-                new Ampoule("lampe 2"),
-                new Climatiseur("clim salon"));
-
+        composantList = (List<Composant>) getIntent().getSerializableExtra("composants");
         //Initialisation des composants
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
         for(int i =0; i<composantList.size(); i++){
@@ -109,5 +96,9 @@ public class Composants extends AppCompatActivity {
             }
 
         }
+    }
+
+    private void init(){
+        layout=findViewById(R.id.composant);
     }
 }

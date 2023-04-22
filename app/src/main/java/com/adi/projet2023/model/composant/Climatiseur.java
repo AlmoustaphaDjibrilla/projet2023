@@ -7,6 +7,6 @@ public class Climatiseur extends Composant implements Serializable {
 
     }
     public Climatiseur(String nom){
-        super(nom, TypeComposant.CLIMATISEUR);
+        super(nom, TypeComposant.CLIMATISEUR.toString());
     }
 }

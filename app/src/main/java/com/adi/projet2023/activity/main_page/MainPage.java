@@ -17,6 +17,10 @@ import com.adi.projet2023.R;
 import com.adi.projet2023.activity.main_page.fragment.FragmentAdmin;
 import com.adi.projet2023.activity.main_page.fragment.FragmentHome;
 import com.adi.projet2023.activity.main_page.fragment.FragmentProfil;
+import com.adi.projet2023.model.Piece.Piece;
+import com.adi.projet2023.model.local.Local;
+
+import java.util.List;
 
 public class MainPage extends AppCompatActivity {
 
@@ -28,7 +32,7 @@ public class MainPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
 
-        String idLocal = getIntent().getStringExtra("localId");
+        Local local = (Local) getIntent().getSerializableExtra("localId");
 
 
         final LinearLayout home = findViewById(R.id.home);
@@ -44,14 +48,14 @@ public class MainPage extends AppCompatActivity {
         final TextView textAdmin=findViewById(R.id.textAdmin);
 
         //Fragment par defaut
-        remplacementFragment(FragmentHome.newInstance(idLocal));
+        remplacementFragment(FragmentHome.newInstance(local));
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Verifier si layout selectionner ou pas
                 if(selection!=1){
                     //afficher home
-                    remplacementFragment(FragmentHome.newInstance(idLocal));
+                    remplacementFragment(FragmentHome.newInstance(local));
 
                     //deselection des autres sauf home
                     textProfil.setVisibility(View.GONE);

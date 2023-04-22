@@ -7,7 +7,7 @@ public class Porte extends Composant implements Serializable {
 
     }
     public Porte(String nom){
-        super(nom, TypeComposant.PORTE);
+        super(nom, TypeComposant.PORTE.toString());
     }
 
 }

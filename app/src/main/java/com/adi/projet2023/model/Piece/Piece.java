@@ -5,21 +5,35 @@ import com.adi.projet2023.model.local.Local;
 import com.adi.projet2023.model.user.UserModel;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public abstract class Piece implements Serializable {
+public class Piece implements Serializable {
     String idPiece;
     String adressePiece;
     String nomPiece;
     String typePiece;
-    List<UserModel> lesUsers;
     List<Composant> lesComposants;
 
     public Piece(){
     }
-    public Piece(String type, String nom){
+    public Piece(String type, String nom, List<HashMap<String, Object>> listHashMap){
         this.typePiece=type;
         this.nomPiece=nom;
+        this.lesComposants = convertirListHashMapEnListCustomObject(listHashMap);
+    }
+    private List<Composant> convertirListHashMapEnListCustomObject(List<HashMap<String, Object>> listHashMap) {
+        List<Composant> composantList = new ArrayList<>();
+        for (HashMap<String, Object> hashMap : listHashMap) {
+            Composant composant = new Composant();
+            composant.setNomComposant((String) hashMap.get("nom"));
+            composant.setChemin((String) hashMap.get("chemin"));
+            composant.setTypeComposant((String) hashMap.get("typeComposant"));
+            // etc.
+            composantList.add(composant);
+        }
+        return composantList;
     }
     public void setIdPiece(String idPiece){
         this.idPiece =idPiece;
@@ -53,14 +67,6 @@ public abstract class Piece implements Serializable {
         this.adressePiece = adressePiece;
     }
 
-    public List<UserModel> getLesUsers() {
-        return lesUsers;
-    }
-
-    public void setLesUsers(List<UserModel> lesUsers) {
-        this.lesUsers = lesUsers;
-    }
-
     public List<Composant> getLesComposants() {
         return lesComposants;
     }
@@ -77,7 +83,6 @@ public abstract class Piece implements Serializable {
                 ", adressePiece='" + adressePiece + '\'' +
                 ", nomPiece='" + nomPiece + '\'' +
                 ", typePiece=" + typePiece +
-                ", lesUsers=" + lesUsers +
                 ", lesComposants=" + lesComposants +
                 '}';
     }

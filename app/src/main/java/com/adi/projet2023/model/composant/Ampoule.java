@@ -8,7 +8,7 @@ public class Ampoule extends Composant implements Serializable {
 
     }
     public Ampoule(String nom){
-        super(nom, TypeComposant.AMPOULE);
+        super(nom, TypeComposant.AMPOULE.toString());
     }
 
 }

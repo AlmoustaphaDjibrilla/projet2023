@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.service.controls.actions.FloatAction;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,11 +25,15 @@ import com.adi.projet2023.adapter.AdapterLocal;
 import com.adi.projet2023.creation.CreationLocal;
 import com.adi.projet2023.databinding.ActivityChoixLocalBinding;
 import com.adi.projet2023.model.Piece.Piece;
+import com.adi.projet2023.model.local.AutreLocal;
+import com.adi.projet2023.model.local.Entreprise;
 import com.adi.projet2023.model.local.Local;
+import com.adi.projet2023.model.local.Maison;
 import com.adi.projet2023.model.local.TypeLocal;
 import com.adi.projet2023.model.user.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -37,7 +43,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ChoixLocalActivity extends AppCompatActivity {
@@ -57,8 +65,9 @@ public class ChoixLocalActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityChoixLocalBinding binding;
     RecyclerView listLocaux;
-    //    ArrayList<Local> lesLocaux;
+    ArrayList<Local> lesLocaux;
     Dialog dialog;
+    TextView titreChoixLocal;
 
     /**
      * Les composants du dialog qui va s'afficher
@@ -66,7 +75,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
      */
     RadioButton rdMaison, rdEntreprise, rdAutre;
     EditText txtNomLocal, txtQuartierLocal, txtVilleLocal;
-    Button btnAjouterLocal;
+    FloatingActionButton btnAjouterLocal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,19 +118,32 @@ public class ChoixLocalActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        ArrayList<Local> lesLocaux= new ArrayList<>();
                         for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
 
                             //Récuperer manuellement tous les attributs du local
                             String designationLocal= documentSnapshot.getString("designationLocal");
                             String adresseLocal= documentSnapshot.getString("adresseLocal");
                             String idLocal= documentSnapshot.getString("idLocal");
-                            List<Piece> lesPieces= (List<Piece>) documentSnapshot.get("lesPieces");
+
+                            //Ne pas toucher!!
+                            List<HashMap<String, Object>> list= (List<HashMap<String, Object>>) documentSnapshot.get("lesPieces");
+                            List<Piece> lesPieces = new ArrayList<>();
+                            if(list != null){
+                                for (HashMap<String, Object> hashMap : list) {
+                                    String nom = (String) hashMap.get("nom");
+                                    String type = (String) hashMap.get("typePiece");
+                                    List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("composants");
+                                    lesPieces.add(new Piece(type,nom,listHashMap));
+                                }
+                            }
+
                             List<UserModel> lesUsers= (List<UserModel>) documentSnapshot.get("lesUsers");
+
                             String nomLocal= documentSnapshot.getString("nomLocal");
                             String quartierLocal= documentSnapshot.getString("quartierLocal");
                             TypeLocal typeLocal= TypeLocal.valueOf(documentSnapshot.getString("typeLocal"));
                             String villeLocal= documentSnapshot.getString("villeLocal");
+                            String dateEnregistrementLocal = documentSnapshot.getString("dateEnregistrement");
 
                             //creer un nouvel local et lui affecter les attributs recuperés ci-dessus
                             Local local= new Local();
@@ -134,24 +156,15 @@ public class ChoixLocalActivity extends AppCompatActivity {
                             local.setQuartierLocal(quartierLocal);
                             local.setTypeLocal(typeLocal);
                             local.setVilleLocal(villeLocal);
+                            local.setDateEnregistrement(dateEnregistrementLocal);
 
                             //Ajouter le local créé à la liste des locaux
                             lesLocaux.add(local);
                         }
 
                         //afficher la liste des locaux dans la liste
-                        AdapterLocal adapterLocal= new AdapterLocal(getApplicationContext(), lesLocaux);
-                        adapterLocal.setOnItemClickListener(new AdapterLocal.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(String localId) {
-                                Intent intent = new Intent(getApplicationContext(), MainPage.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.putExtra("localId", localId);
-                                getApplicationContext().startActivity(intent);
-                            }
-                        });
-                        listLocaux.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        listLocaux.setAdapter(adapterLocal);
+                        updateListViewOfLocals();
+
                     }
                 });
     }
@@ -161,7 +174,8 @@ public class ChoixLocalActivity extends AppCompatActivity {
      */
     private void init(){
         listLocaux= findViewById(R.id.listChoixLocal);
-        //lesLocaux= new ArrayList<>();
+        lesLocaux= new ArrayList<>();
+        titreChoixLocal=findViewById(R.id.titreChoixLocal);
     }
 
     private void initFirebaseComponents(){
@@ -171,6 +185,26 @@ public class ChoixLocalActivity extends AppCompatActivity {
         collectionUsers= firebaseFirestore.collection(PATH_USERS_DATABASE);
     }
 
+    public void updateListViewOfLocals(){
+        AdapterLocal adapterLocal= new AdapterLocal(this, lesLocaux);
+        adapterLocal.setOnItemClickListener(new AdapterLocal.OnItemClickListener() {
+            @Override
+            public void onItemClick(Local local) {
+                Intent intent = new Intent(getApplicationContext(), MainPage.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("localId",local);
+                getApplicationContext().startActivity(intent);
+            }
+        });
+        listLocaux.setLayoutManager(new LinearLayoutManager(this));
+        listLocaux.setAdapter(adapterLocal);
+
+        if (lesLocaux.size()==0)
+            titreChoixLocal.setText("Aucun local...");
+        else{
+            titreChoixLocal.setText("Choisissez un local");
+        }
+    }
     private void initComponentsOfDialog(){
         rdMaison= dialog.findViewById(R.id.rdBtnMaison);
         rdMaison.setChecked(true);
@@ -180,6 +214,8 @@ public class ChoixLocalActivity extends AppCompatActivity {
         txtNomLocal= dialog.findViewById(R.id.txtNomAjoutLocal);
         txtQuartierLocal= dialog.findViewById(R.id.txtQuartierAjoutLocal);
         txtVilleLocal= dialog.findViewById(R.id.txtVilleAjoutLocal);
+
+        btnAjouterLocal=findViewById(R.id.addlocal);
 
     }
 
@@ -193,7 +229,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
         initComponentsOfDialog();
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        dialog.show();
+        dialog.show();
     }
 
     /**
@@ -270,19 +306,28 @@ public class ChoixLocalActivity extends AppCompatActivity {
 
         switch (typeLocal){
             case MAISON:
-                CreationLocal.creationMaison(nomLocal, quartierLocal, villeLocal);
+                Maison maison= new Maison(nomLocal, quartierLocal, villeLocal);
+                CreationLocal.creationMaison(maison);
+                lesLocaux.add(maison);
+                updateListViewOfLocals();
                 Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 break;
 
             case ENTREPRISE:
-                CreationLocal.creationEntreprise(nomLocal, quartierLocal, villeLocal);
+                Entreprise entreprise= new Entreprise(nomLocal, quartierLocal, villeLocal);
+                CreationLocal.creationEntreprise(entreprise);
+                lesLocaux.add(entreprise);
+                updateListViewOfLocals();
                 Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 break;
 
             case AUTRE:
-                CreationLocal.creationAutreLocal(nomLocal, quartierLocal, villeLocal);
+                AutreLocal autreLocal= new AutreLocal(nomLocal, quartierLocal, villeLocal);
+                CreationLocal.creationAutreLocal(autreLocal);
+                lesLocaux.add(autreLocal);
+                updateListViewOfLocals();
                 Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 break;

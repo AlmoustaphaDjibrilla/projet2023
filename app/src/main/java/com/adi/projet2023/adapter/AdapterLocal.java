@@ -2,7 +2,6 @@ package com.adi.projet2023.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
@@ -16,9 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adi.projet2023.R;
-import com.adi.projet2023.activity.ChoixLocalActivity;
-import com.adi.projet2023.activity.main_page.MainPage;
 import com.adi.projet2023.creation.CreationLocal;
+import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.local.Local;
 import com.adi.projet2023.model.user.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -29,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
 
@@ -48,7 +47,7 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
         this.lesLocaux = lesLocaux;
     }
     public interface  OnItemClickListener{
-        void onItemClick(String localId);
+        void onItemClick(Local local);
     }
     private OnItemClickListener listener;
     public void setOnItemClickListener(OnItemClickListener listener){
@@ -75,14 +74,12 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
         Local local= lesLocaux.get(position);
         holder.remplirChamps(local);
 
-
-
         holder.layoutLocal.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if(listener != null){
-                        listener.onItemClick(local.getIdLocal());
+                        listener.onItemClick(local);
                      }
                     }
                 }
