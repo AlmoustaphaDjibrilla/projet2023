@@ -15,10 +15,12 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.adi.projet2023.R;
+import com.adi.projet2023.activity.Ajout_Piece;
 import com.adi.projet2023.activity.Composants;
 import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.composant.Composant;
 import com.adi.projet2023.model.local.Local;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
 import java.util.List;
@@ -26,7 +28,7 @@ import java.util.List;
 public class FragmentHome extends Fragment {
     GridLayout gridPiece;
     private static final String ARG_PARAM1 = "param1";
-    private Local localEnCours;
+    private Local mParam1;
     public FragmentHome() {
         // Required empty public constructor
     }
@@ -43,7 +45,7 @@ public class FragmentHome extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
-            localEnCours = (Local) getArguments().getSerializable(ARG_PARAM1);
+            mParam1 = (Local) getArguments().getSerializable(ARG_PARAM1);
         }
     }
 
@@ -51,11 +53,19 @@ public class FragmentHome extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_home,null);
-        List<Piece> piecesList = localEnCours.getLesPieces();
-
+        FloatingActionButton addPiece = root.findViewById(R.id.addPiece);
+        List<Piece> piecesList = mParam1.getLesPieces();
+        addPiece.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), Ajout_Piece.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
         gridPiece = (GridLayout) root.findViewById(R.id.GridPieces);
         int marginPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
-        if(piecesList != null){
+        if(piecesList != null || piecesList.size()!=0){
             int numColumns = 2; // Nombre de colonnes de la grille
             int numRows = (int) Math.ceil(piecesList.size() / (float) numColumns); // Nombre de lignes de la grille
             gridPiece.setColumnCount(numColumns); // Définir le nombre de colonnes de la grille
