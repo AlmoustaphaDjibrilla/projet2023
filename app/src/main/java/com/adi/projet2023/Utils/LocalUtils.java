@@ -6,15 +6,18 @@ import com.adi.projet2023.model.local.TypeLocal;
 import com.adi.projet2023.model.user.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LocalUtils {
 
@@ -31,15 +34,16 @@ public class LocalUtils {
                 String adresseLocal= documentSnapshot.getString("adresseLocal");
                 String idLocal= documentSnapshot.getString("idLocal");
 
-                //Ne pas toucher!!
                 List<HashMap<String, Object>> list= (List<HashMap<String, Object>>) documentSnapshot.get("lesPieces");
                 List<Piece> lesPieces = new ArrayList<>();
                 if(list != null){
                     for (HashMap<String, Object> hashMap : list) {
+                        String idPiece = (String) hashMap.get("idPiece");
                         String nom = (String) hashMap.get("nom");
                         String type = (String) hashMap.get("typePiece");
+                        String chemin = (String) hashMap.get("chemin");
                         List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("composants");
-                        lesPieces.add(new Piece(type,nom,listHashMap));
+                        lesPieces.add(new Piece(idPiece,type,nom,chemin,listHashMap));
                     }
                 }
 
@@ -70,4 +74,5 @@ public class LocalUtils {
             }
         }).addOnFailureListener(failureListener);
     }
+
 }

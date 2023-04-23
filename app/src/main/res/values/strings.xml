@@ -19,6 +19,15 @@
         <item>AUTRE</item>
     </string-array>
 
+    <string-array name="type_composant">
+        <item>VENTILATEUR</item>
+        <item>CLIMATISEUR</item>
+        <item>PORTE</item>
+        <item>REFRIGERATEUR</item>
+        <item>AMPOULE</item>
+        <item>AUTRE</item>
+    </string-array>
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus

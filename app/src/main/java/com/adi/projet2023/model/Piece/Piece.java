@@ -11,16 +11,18 @@ import java.util.List;
 
 public class Piece implements Serializable {
     String idPiece;
-    String adressePiece;
+    String chemin;
     String nomPiece;
     String typePiece;
     List<Composant> lesComposants;
 
     public Piece(){
     }
-    public Piece(String type, String nom, List<HashMap<String, Object>> listHashMap){
+    public Piece(String idPiece,String type, String nom,String chemin, List<HashMap<String, Object>> listHashMap){
+        this.idPiece=idPiece;
         this.typePiece=type;
         this.nomPiece=nom;
+        this.chemin=chemin;
         this.lesComposants = convertirListHashMapEnListCustomObject(listHashMap);
     }
     private List<Composant> convertirListHashMapEnListCustomObject(List<HashMap<String, Object>> listHashMap) {
@@ -60,11 +62,11 @@ public class Piece implements Serializable {
     }
 
     public String getAdressePiece() {
-        return adressePiece;
+        return chemin;
     }
 
     public void setAdressePiece(String adressePiece) {
-        this.adressePiece = adressePiece;
+        this.chemin = adressePiece;
     }
 
     public List<Composant> getLesComposants() {
@@ -74,13 +76,16 @@ public class Piece implements Serializable {
     public void setLesComposants(List<Composant> lesComposants) {
         this.lesComposants = lesComposants;
     }
+    public void setLesComposants2(List<HashMap<String, Object>> listHashMap){
+        this.lesComposants = convertirListHashMapEnListCustomObject(listHashMap);
+    }
 
 
     @Override
     public String toString() {
         return "Piece{" +
                 "idPiece='" + idPiece + '\'' +
-                ", adressePiece='" + adressePiece + '\'' +
+                ", adressePiece='" + chemin + '\'' +
                 ", nomPiece='" + nomPiece + '\'' +
                 ", typePiece=" + typePiece +
                 ", lesComposants=" + lesComposants +

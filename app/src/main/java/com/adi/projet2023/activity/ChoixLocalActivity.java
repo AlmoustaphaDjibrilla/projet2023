@@ -136,10 +136,12 @@ public class ChoixLocalActivity extends AppCompatActivity {
                             List<Piece> lesPieces = new ArrayList<>();
                             if(list != null){
                                 for (HashMap<String, Object> hashMap : list) {
+                                    String id=(String) hashMap.get("idPiece");
                                     String nom = (String) hashMap.get("nom");
                                     String type = (String) hashMap.get("typePiece");
+                                    String adresse = (String) hashMap.get("chemin");
                                     List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("composants");
-                                    lesPieces.add(new Piece(type,nom,listHashMap));
+                                    lesPieces.add(new Piece(id,type,nom,adresse,listHashMap));
                                 }
                             }
 

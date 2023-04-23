@@ -8,10 +8,12 @@ public class Composant implements Serializable {
     String nomComposant;
     String typeComposant;
     public Composant(){
-
     }
-    public Composant(String nom, String type){
+
+    public Composant(String id, String nom, String chemin, String type){
+        this.idComposant=id;
         this.nomComposant=nom;
+        this.chemin=chemin;
         this.typeComposant=type;
     }
 

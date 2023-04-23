@@ -19,14 +19,17 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.AjouterComposant"
+            android:exported="false" />
+        <activity
             android:name=".activity.AjoutPieceActivity"
             android:exported="false" />
         <activity
             android:name=".activity.Composants"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".activity.main_page.MainPage"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activity.ActivityRegisterAdmin"
             android:exported="false" />
@@ -34,7 +37,7 @@
             android:name=".activity.ChoixLocalActivity"
             android:exported="false"
             android:label="@string/title_activity_choix_local"
-            android:theme="@style/Theme.Projet2023.NoActionBar"></activity>
+            android:theme="@style/Theme.Projet2023.NoActionBar" />
         <activity
             android:name=".activity.LoginActivity"
             android:exported="true">

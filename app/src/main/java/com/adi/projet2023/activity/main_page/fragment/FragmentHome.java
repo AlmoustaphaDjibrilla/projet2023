@@ -75,6 +75,7 @@ public class FragmentHome extends Fragment {
             gridPiece.setRowCount(numRows); // Définir le nombre de lignes de la grille
             for (int i = 0; i < piecesList.size(); i++) {
                 List<Composant> composants = piecesList.get(i).getLesComposants();
+                Piece pieceEncours = piecesList.get(i);
                 View cardView = inflater.inflate(R.layout.piece_card, gridPiece, false);
                 GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
                 layoutParams.columnSpec = GridLayout.spec(i % numColumns, 1f);
@@ -110,6 +111,8 @@ public class FragmentHome extends Fragment {
                         Intent intent = new Intent(getActivity(), Composants.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("composants",(Serializable) composants) ;
+                        intent.putExtra("localEnCours",(Serializable) localEnCours) ;
+                        intent.putExtra("pieceEnCours",(Serializable) pieceEncours) ;
                         startActivity(intent);
                     }
                 });

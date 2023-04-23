@@ -78,7 +78,7 @@ public class AjoutPieceActivity extends AppCompatActivity {
         String nomPiece = nomPieceEdit.getText().toString().trim();
         typePiece = autoCompleteTextView.getText().toString();
         String c ="/";
-        String chemin = c+localEnCours.getNomLocal().toLowerCase()+c+nomPiece;
+        String chemin = c+localEnCours.getNomLocal().toLowerCase()+c+nomPiece.toLowerCase();
 
         if(verifier_champ(nomPiece,typePiece)){
             // Créer un objet Map pour représenter les données de la nouvelle pièce
@@ -123,7 +123,7 @@ public class AjoutPieceActivity extends AppCompatActivity {
                                                 }, new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-                                                        // Erreur lors de la recuperstion du local mis a jour
+                                                        // Erreur lors de la recuperation du local mis a jour
                                                         Toast.makeText(AjoutPieceActivity.this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
