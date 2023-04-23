@@ -10,7 +10,7 @@ import android.widget.AutoCompleteTextView;
 
 import com.adi.projet2023.R;
 
-public class Ajout_Piece extends AppCompatActivity {
+public class AjoutPieceActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
@@ -31,5 +31,9 @@ public class Ajout_Piece extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ajout_piece);
+    }
+
+    private void init(){
+
     }
 }

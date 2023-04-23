@@ -82,17 +82,17 @@ public class ChoixLocalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choix_local);
 
-        if (lesLocaux.size()==0)
-            titreChoixLocal.setText("Aucun local...");
-        else{
-            titreChoixLocal.setText("Choisissez un local");
-        }
         dialog= new Dialog(this);
 
         binding = ActivityChoixLocalBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initFirebaseComponents();
         init();
+        if (lesLocaux.size()==0)
+            titreChoixLocal.setText("Aucun local...");
+        else{
+            titreChoixLocal.setText("Choisissez un local");
+        }
 //        initComponentsOfDialog();
 
         binding.addlocal.setOnClickListener(new View.OnClickListener() {
@@ -193,15 +193,6 @@ public class ChoixLocalActivity extends AppCompatActivity {
 
     public void updateListViewOfLocals(){
         AdapterLocal adapterLocal= new AdapterLocal(this, lesLocaux);
-//        adapterLocal.setOnItemClickListener(new AdapterLocal.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(Local local) {
-//                Intent intent = new Intent(getApplicationContext(), MainPage.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                intent.putExtra("localId",local);
-//                getApplicationContext().startActivity(intent);
-//            }
-//        });
         listLocaux.setLayoutManager(new LinearLayoutManager(this));
         listLocaux.setAdapter(adapterLocal);
 
