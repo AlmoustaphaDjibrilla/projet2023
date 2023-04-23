@@ -32,6 +32,10 @@ public class FragmentHome extends Fragment {
 
     FloatingActionButton btnAddPiece;
 
+    public FragmentHome(){
+
+    }
+
     public FragmentHome(Local local) {
         // Required empty public constructor
         this.localEnCours= local;
@@ -56,6 +60,8 @@ public class FragmentHome extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), AjoutPieceActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("localEnCours",localEnCours);
                 startActivity(intent);
             }
         });
