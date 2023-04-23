@@ -75,12 +75,18 @@ public class ChoixLocalActivity extends AppCompatActivity {
      */
     RadioButton rdMaison, rdEntreprise, rdAutre;
     EditText txtNomLocal, txtQuartierLocal, txtVilleLocal;
-    FloatingActionButton btnAjouterLocal;
+    Button btnAjouterLocal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choix_local);
+
+        if (lesLocaux.size()==0)
+            titreChoixLocal.setText("Aucun local...");
+        else{
+            titreChoixLocal.setText("Choisissez un local");
+        }
         dialog= new Dialog(this);
 
         binding = ActivityChoixLocalBinding.inflate(getLayoutInflater());
@@ -187,15 +193,15 @@ public class ChoixLocalActivity extends AppCompatActivity {
 
     public void updateListViewOfLocals(){
         AdapterLocal adapterLocal= new AdapterLocal(this, lesLocaux);
-        adapterLocal.setOnItemClickListener(new AdapterLocal.OnItemClickListener() {
-            @Override
-            public void onItemClick(Local local) {
-                Intent intent = new Intent(getApplicationContext(), MainPage.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("localId",local);
-                getApplicationContext().startActivity(intent);
-            }
-        });
+//        adapterLocal.setOnItemClickListener(new AdapterLocal.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(Local local) {
+//                Intent intent = new Intent(getApplicationContext(), MainPage.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intent.putExtra("localId",local);
+//                getApplicationContext().startActivity(intent);
+//            }
+//        });
         listLocaux.setLayoutManager(new LinearLayoutManager(this));
         listLocaux.setAdapter(adapterLocal);
 
@@ -215,8 +221,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
         txtQuartierLocal= dialog.findViewById(R.id.txtQuartierAjoutLocal);
         txtVilleLocal= dialog.findViewById(R.id.txtVilleAjoutLocal);
 
-        btnAjouterLocal=findViewById(R.id.addlocal);
-
+        btnAjouterLocal=dialog.findViewById(R.id.btnAjoutLocal);
     }
 
     /**

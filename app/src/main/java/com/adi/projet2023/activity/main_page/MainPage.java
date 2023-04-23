@@ -27,12 +27,14 @@ public class MainPage extends AppCompatActivity {
     //Nombre pour la selection, valeur par defaut 1 pour home
     private int selection=1;
 
+    Local localEnCours;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
 
-        Local local = (Local) getIntent().getSerializableExtra("localId");
+        localEnCours = (Local) getIntent().getSerializableExtra("localId");
 
 
         final LinearLayout home = findViewById(R.id.home);
@@ -48,14 +50,14 @@ public class MainPage extends AppCompatActivity {
         final TextView textAdmin=findViewById(R.id.textAdmin);
 
         //Fragment par defaut
-        remplacementFragment(FragmentHome.newInstance(local));
+        remplacementFragment(FragmentHome.newInstance(localEnCours));
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Verifier si layout selectionner ou pas
                 if(selection!=1){
                     //afficher home
-                    remplacementFragment(FragmentHome.newInstance(local));
+                    remplacementFragment(FragmentHome.newInstance(localEnCours));
 
                     //deselection des autres sauf home
                     textProfil.setVisibility(View.GONE);

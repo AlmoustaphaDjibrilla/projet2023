@@ -126,6 +126,14 @@ public class Local implements Serializable{
         this.dateEnregistrement = dateEnregistrement;
     }
 
+    public boolean ajouterPiece(Piece nouvellePiece){
+        return lesPieces.add(nouvellePiece);
+    }
+
+    public boolean supprimerPiece(Piece pieceASupprimer){
+        return lesPieces.remove(pieceASupprimer);
+    }
+
     @Override
     public String toString() {
         return "Local{" +

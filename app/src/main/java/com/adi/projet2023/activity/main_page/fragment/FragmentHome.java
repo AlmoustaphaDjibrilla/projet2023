@@ -26,7 +26,7 @@ import java.util.List;
 public class FragmentHome extends Fragment {
     GridLayout gridPiece;
     private static final String ARG_PARAM1 = "param1";
-    private Local mParam1;
+    private Local localEnCours;
     public FragmentHome() {
         // Required empty public constructor
     }
@@ -43,7 +43,7 @@ public class FragmentHome extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
-            mParam1 = (Local) getArguments().getSerializable(ARG_PARAM1);
+            localEnCours = (Local) getArguments().getSerializable(ARG_PARAM1);
         }
     }
 
@@ -51,7 +51,7 @@ public class FragmentHome extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_home,null);
-        List<Piece> piecesList = mParam1.getLesPieces();
+        List<Piece> piecesList = localEnCours.getLesPieces();
 
         gridPiece = (GridLayout) root.findViewById(R.id.GridPieces);
         int marginPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());

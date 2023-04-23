@@ -164,7 +164,7 @@
             </androidx.cardview.widget.CardView>
 
             <Button
-                android:id="@+id/btnSupprimerLocal"
+                android:id="@+id/btnAjoutLocal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
