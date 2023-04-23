@@ -131,17 +131,23 @@ public class ChoixLocalActivity extends AppCompatActivity {
                             String adresseLocal= documentSnapshot.getString("adresseLocal");
                             String idLocal= documentSnapshot.getString("idLocal");
 
+                            HashMap<String, Piece> lesPieces;
+                            lesPieces= (HashMap<String, Piece>) documentSnapshot.get("lesPieces");
+
+
                             //Ne pas toucher!!
-                            List<HashMap<String, Object>> list= (List<HashMap<String, Object>>) documentSnapshot.get("lesPieces");
-                            List<Piece> lesPieces = new ArrayList<>();
-                            if(list != null){
-                                for (HashMap<String, Object> hashMap : list) {
-                                    String nom = (String) hashMap.get("nom");
-                                    String type = (String) hashMap.get("typePiece");
-                                    List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("composants");
-                                    lesPieces.add(new Piece(type,nom,listHashMap));
-                                }
-                            }
+//                            List<HashMap<String, Object>> list= (List<HashMap<String, Object>>) documentSnapshot.get("lesPieces");
+//                            List<Piece> lesPieces = new ArrayList<>();
+//                            if(list != null){
+//                                for (HashMap<String, Object> hashMap : list) {
+//                                    String nom = (String) hashMap.get("nom");
+//                                    String type = (String) hashMap.get("typePiece");
+//                                    List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("composants");
+//                                    lesPieces.add(new Piece(type,nom,listHashMap));
+//                                }
+//                            }
+
+//                            List<Piece> lesPieces= (List<Piece>) documentSnapshot.get("lesPieces");
 
                             List<UserModel> lesUsers= (List<UserModel>) documentSnapshot.get("lesUsers");
 
@@ -151,12 +157,13 @@ public class ChoixLocalActivity extends AppCompatActivity {
                             String villeLocal= documentSnapshot.getString("villeLocal");
                             String dateEnregistrementLocal = documentSnapshot.getString("dateEnregistrement");
 
-                            //creer un nouvel local et lui affecter les attributs recuperés ci-dessus
+                            //creer un nouveu local et lui affecter les attributs recuperés ci-dessus
                             Local local= new Local();
                             local.setDesignationLocal(designationLocal);
                             local.setAdresseLocal(adresseLocal);
                             local.setIdLocal(idLocal);
-                            local.setLesPieces(lesPieces);
+                            local.setHashMapPieces(lesPieces);
+//                            local.setLesPieces(lesPieces);
                             local.setLesUsers(lesUsers);
                             local.setNomLocal(nomLocal);
                             local.setQuartierLocal(quartierLocal);

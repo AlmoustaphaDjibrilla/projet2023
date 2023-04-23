@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 public class Composant implements Serializable {
     String idComposant;
+
+    String adresseComposant;
+    String adressePieceEnCours;
     String chemin;
     String nomComposant;
     String typeComposant;
@@ -45,5 +48,21 @@ public class Composant implements Serializable {
 
     public void setChemin(String chemin) {
         this.chemin = chemin;
+    }
+
+    public String getAdresseComposant() {
+        return adresseComposant;
+    }
+
+    public void setAdresseComposant(String adresseComposant) {
+        this.adresseComposant = adresseComposant;
+    }
+
+    public String getAdressePieceEnCours() {
+        return adressePieceEnCours;
+    }
+
+    public void setAdressePieceEnCours(String adressePieceEnCours) {
+        this.adressePieceEnCours = adressePieceEnCours;
     }
 }

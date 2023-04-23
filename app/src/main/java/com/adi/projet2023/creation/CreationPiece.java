@@ -1,23 +1,21 @@
 package com.adi.projet2023.creation;
 
 import com.adi.projet2023.model.Piece.Piece;
+import com.adi.projet2023.model.local.Local;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.List;
-
 public class CreationPiece {
-    final static String PATH_LOCAL_DATABASES= "Piece";
+    final static String PATH_PIECE_DATABASES = "Piece";
+    final static String PATH_LOCAL_DATABASES= "Local";
 
-    public static void creationPiece(String nom,String type, List<HashMap<String, Object>> listHashMap){
-        Piece piece= new Piece(type, nom,listHashMap);
 
+    public static void creationPiece(Piece nouvellePiece){
         DocumentReference docMaison=
                 FirebaseFirestore.getInstance()
-                        .collection(PATH_LOCAL_DATABASES)
-                        .document(piece.getIdPiece());
-        docMaison.set(piece);
+                        .collection(PATH_PIECE_DATABASES)
+                        .document(nouvellePiece.getIdPiece());
+        docMaison.set(nouvellePiece);
     }
 
 }

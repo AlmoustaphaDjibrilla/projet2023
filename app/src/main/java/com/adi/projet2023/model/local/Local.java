@@ -5,6 +5,7 @@ import com.adi.projet2023.model.user.UserModel;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 public class Local implements Serializable{
@@ -19,12 +20,14 @@ public class Local implements Serializable{
     String villeLocal;
     String dateEnregistrement;
     List<UserModel> lesUsers;
-    List<Piece> lesPieces;
+//    List<Piece> lesPieces;
+    HashMap<String, Piece> hashMapPieces;
 
     /**
      * Default constructor
      */
     public Local(){
+        this.hashMapPieces= new HashMap<>();
     }
 
     /**
@@ -44,6 +47,7 @@ public class Local implements Serializable{
         this.dateEnregistrement= date.toString();
         this.adresseLocal= nomLocal.toLowerCase().replaceAll(" ", "");
         this.idLocal= adresseLocal;
+        hashMapPieces= new HashMap<>();
     }
 
     public String getIdLocal() {
@@ -102,14 +106,6 @@ public class Local implements Serializable{
         this.lesUsers = lesUsers;
     }
 
-    public List<Piece> getLesPieces() {
-        return lesPieces;
-    }
-
-    public void setLesPieces(List<Piece> lesPieces) {
-        this.lesPieces = lesPieces;
-    }
-
     public String getAdresseLocal() {
         return adresseLocal;
     }
@@ -126,12 +122,31 @@ public class Local implements Serializable{
         this.dateEnregistrement = dateEnregistrement;
     }
 
-    public boolean ajouterPiece(Piece nouvellePiece){
-        return lesPieces.add(nouvellePiece);
+//    public boolean ajouterPiece(Piece nouvellePiece){
+//        return lesPieces.add(nouvellePiece);
+//    }
+//
+//    public boolean supprimerPiece(Piece pieceASupprimer){
+//        return lesPieces.remove(pieceASupprimer);
+//    }
+
+    public Piece getPiece(String adressePiece){
+        return hashMapPieces.get(adressePiece);
     }
 
-    public boolean supprimerPiece(Piece pieceASupprimer){
-        return lesPieces.remove(pieceASupprimer);
+    public void addNewPiece(Piece nouvellePiece){
+        if (hashMapPieces==null || hashMapPieces.isEmpty()) {
+            hashMapPieces= new HashMap<>();
+            hashMapPieces.put(nouvellePiece.getIdPiece(), nouvellePiece);
+        }
+    }
+
+    public HashMap<String, Piece> getHashMapPieces() {
+        return hashMapPieces;
+    }
+
+    public void setHashMapPieces(HashMap<String, Piece> hashMapPieces) {
+        this.hashMapPieces = hashMapPieces;
     }
 
     @Override

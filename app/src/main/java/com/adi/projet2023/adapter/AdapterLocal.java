@@ -74,6 +74,9 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("localId",local);
                     context.startActivity(intent);
+
+
+//                        Toast.makeText(context, local.getHashMapPieces().get(0).toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
         );
