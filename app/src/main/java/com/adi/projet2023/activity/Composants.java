@@ -1,5 +1,6 @@
 package com.adi.projet2023.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,20 +11,19 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.adi.projet2023.R;
-import com.adi.projet2023.model.composant.Ampoule;
-import com.adi.projet2023.model.composant.Autre;
-import com.adi.projet2023.model.composant.Climatiseur;
+import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.composant.Composant;
-import com.adi.projet2023.model.composant.Porte;
-import com.adi.projet2023.model.composant.Refrigerateur;
-import com.adi.projet2023.model.composant.Ventilateur;
+import com.adi.projet2023.model.local.Local;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Composants extends AppCompatActivity {
     LinearLayout layout;
     List<Composant> composantList;
+    Local localEnCours;
+    Piece pieceEnCours;
+    FloatingActionButton btnAddComposant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,21 @@ public class Composants extends AppCompatActivity {
         setContentView(R.layout.activity_affichage_composants);
         init();
         composantList = (List<Composant>) getIntent().getSerializableExtra("composants");
+        localEnCours = (Local) getIntent().getSerializableExtra("localEnCours");
+        pieceEnCours = (Piece) getIntent().getSerializableExtra("pieceEnCours");
+
+
+        btnAddComposant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AjouterComposant.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("localEnCours",localEnCours);
+                intent.putExtra("pieceEnCours",pieceEnCours);
+                startActivity(intent);
+            }
+        });
+
         //Initialisation des composants
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
         for(int i =0; i<composantList.size(); i++){
@@ -100,5 +115,6 @@ public class Composants extends AppCompatActivity {
 
     private void init(){
         layout=findViewById(R.id.composant);
+        btnAddComposant = findViewById(R.id.addComposant);
     }
 }
