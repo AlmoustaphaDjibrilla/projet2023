@@ -80,6 +80,8 @@ public class ChoixLocalActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        lesLocaux.clear();
+        recuperer_locaux();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +125,18 @@ public class ChoixLocalActivity extends AppCompatActivity {
                 );
             }
         });
+    }
 
+    /**
+     * Initialisation des composants
+     */
+    private void init(){
+        listLocaux= findViewById(R.id.listChoixLocal);
+        lesLocaux= new ArrayList<>();
+        titreChoixLocal=findViewById(R.id.titreChoixLocal);
+    }
+
+    private void recuperer_locaux(){
         collectionLocal.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -173,24 +186,10 @@ public class ChoixLocalActivity extends AppCompatActivity {
                             //Ajouter le local créé à la liste des locaux
                             lesLocaux.add(local);
                         }
-
                         //afficher la liste des locaux dans la liste
                         updateListViewOfLocals();
-
                     }
                 });
-    }
-
-    /**
-     * Initialisation des composants
-     */
-    private void init(){
-        listLocaux= findViewById(R.id.listChoixLocal);
-        lesLocaux= new ArrayList<>();
-        titreChoixLocal=findViewById(R.id.titreChoixLocal);
-    }
-
-    private void recuperer_locaux(){
 
     }
 
