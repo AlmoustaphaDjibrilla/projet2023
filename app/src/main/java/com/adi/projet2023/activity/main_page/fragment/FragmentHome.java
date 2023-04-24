@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,13 +22,17 @@ import androidx.fragment.app.Fragment;
 import com.adi.projet2023.R;
 import com.adi.projet2023.activity.AjoutPieceActivity;
 import com.adi.projet2023.activity.Composants;
+import com.adi.projet2023.creation.CreationPiece;
 import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.composant.Composant;
 import com.adi.projet2023.model.local.Local;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -40,6 +45,8 @@ import java.util.List;
 public class FragmentHome extends Fragment {
     final String PATH_PIECE_DATABASES = "Piece";
     final String PATH_COMPOSANT_DATABASE= "Composant";
+    final String PATH_USERS_DATABASES = "Users";
+
     GridLayout gridPiece;
     Local localEnCours;
     ArrayList<Piece> piecesList;
@@ -48,6 +55,12 @@ public class FragmentHome extends Fragment {
 //    HashMap<String, Composant> composants;
 
     FloatingActionButton btnAddPiece;
+
+
+    Dialog dialogSupprimerPiece;
+    TextView txtTypePiece, txtNomPiece, txtNomLocal, txtCheminPiece;
+    Button btnSupprimerPiece;
+
 
     public FragmentHome(Local local) {
         // Required empty public constructor
@@ -61,6 +74,7 @@ public class FragmentHome extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dialogSupprimerPiece= new Dialog(this.getContext());
 
         CollectionReference collectionPiece=
                 FirebaseFirestore.getInstance()
@@ -179,7 +193,7 @@ public class FragmentHome extends Fragment {
                                         break;
                                 }
                                 gridPiece.addView(cardView);
-                                    cardView.setOnClickListener(new View.OnClickListener() {
+                                cardView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         Intent intent = new Intent(getActivity(), Composants.class);
@@ -188,6 +202,28 @@ public class FragmentHome extends Fragment {
                                         startActivity(intent);
                                     }
                                 });
+
+                                /**
+                                 * Pour supprimer une piece
+                                 * sur un long click
+                                 */
+                                cardView.setOnLongClickListener(
+                                        l->{
+                                            dialogSupprimerPiece.setContentView(R.layout.layout_supprimer_piece);
+                                            initComponentsOfDialog();
+                                            dialogSupprimerPiece.show();
+
+                                            remplirChampsDialog(pieceActuelle);
+
+                                            btnSupprimerPiece.setOnClickListener(
+                                                    v->{
+                                                        supprimerPiece(pieceActuelle);
+                                                    }
+                                            );
+
+                                            return true;
+                                        }
+                                );
                             }
                         } else {
                             Log.d("TAG", "Aucune piece");
@@ -198,8 +234,45 @@ public class FragmentHome extends Fragment {
     }
 
 
-    private void afficherLesPieces(List<Piece> lesPieces){
+    private void initComponentsOfDialog(){
+        txtTypePiece= dialogSupprimerPiece.findViewById(R.id.txtTypePieceSupprimer);
+        txtNomPiece= dialogSupprimerPiece.findViewById(R.id.txtNomPieceSupprimerPiece);
+        txtNomLocal= dialogSupprimerPiece.findViewById(R.id.txtNomLocalSupprimerPiece);
+        txtCheminPiece= dialogSupprimerPiece.findViewById(R.id.txtCheminPieceSupprimerComposant);
 
+        btnSupprimerPiece= dialogSupprimerPiece.findViewById(R.id.btnSupprimerPiece);
+    }
+
+    private void remplirChampsDialog(Piece piece){
+        if (piece!=null){
+            txtTypePiece.setText(piece.getLeTypePiece().toString());
+            txtNomPiece.setText(piece.getNomPiece());
+            txtNomLocal.setText(piece.getAdresseLocalEnCours());
+            txtCheminPiece.setText(piece.getAdressePiece());
+        }
+    }
+
+    private void supprimerPiece(Piece pieceSuppimer){
+        CollectionReference collectionUsers=
+                FirebaseFirestore.getInstance().collection(PATH_USERS_DATABASES);
+
+        DocumentReference docUser=
+                collectionUsers
+                        .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        docUser.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.getBoolean("admin")){
+                            CreationPiece.supprimerPiece(pieceSuppimer);
+                            Toast.makeText(getContext(), pieceSuppimer.getNomPiece()+" supprimé...", Toast.LENGTH_SHORT).show();
+                            dialogSupprimerPiece.dismiss();
+                        }else{
+                            Toast.makeText(getContext(), "Désolé vous n'êtes pas administrateur", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
 }

@@ -18,4 +18,13 @@ public class CreationPiece {
         docMaison.set(nouvellePiece);
     }
 
+
+    public static void supprimerPiece(Piece pieceSupprimer){
+        DocumentReference docPiece=
+                FirebaseFirestore.getInstance()
+                        .collection(PATH_PIECE_DATABASES)
+                        .document(pieceSupprimer.getIdPiece());
+        docPiece.delete();
+    }
+
 }

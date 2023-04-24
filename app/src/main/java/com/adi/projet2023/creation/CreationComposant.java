@@ -18,14 +18,14 @@ public class CreationComposant {
 
         docComposant.set(composant);
 
-//        DatabaseReference dbRef=
-//                FirebaseDatabase.getInstance()
-//                .getReference()
-//                .child(composant.getAdresseLocalEnCours())
-//                .child(composant.getAdressePieceEnCours())
-//                .child(composant.getChemin());
+        DatabaseReference dbRef=
+                FirebaseDatabase.getInstance()
+                .getReference("Composant")
+                .child(composant.getAdresseLocalEnCours())
+                .child(composant.getAdressePieceEnCours())
+                .child(composant.getChemin());
 //
-//        dbRef.setValue("ON");
+        dbRef.push().setValue("ON");
     }
 
 }
