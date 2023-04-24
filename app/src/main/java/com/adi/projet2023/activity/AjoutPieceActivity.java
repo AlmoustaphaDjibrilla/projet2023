@@ -2,44 +2,55 @@ package com.adi.projet2023.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.adi.projet2023.R;
-import com.adi.projet2023.creation.CreationPiece;
-import com.adi.projet2023.model.Piece.Piece;
-import com.adi.projet2023.model.Piece.TypePiece;
+import com.adi.projet2023.Utils.LocalUtils;
+import com.adi.projet2023.activity.main_page.MainPage;
 import com.adi.projet2023.model.local.Local;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AjoutPieceActivity extends AppCompatActivity {
-
-    final String PATH_USERS_DATABASE= "Users";
-
-
+    private String typePiece;
+    private Button addPiece;
     Local localEnCours;
-    EditText txtNomPiece;
-    AutoCompleteTextView txtTypePiece;
-    String [] lesTypesPiece;
-    TypePiece []lesTypesPieces;
-
-    Button btnAjouterPiece;
+    EditText nomPieceEdit;
+    AutoCompleteTextView autoCompleteTextView;
     @Override
     protected void onResume() {
         super.onResume();
+        init();
+        String []type = getResources().getStringArray(R.array.type_piece);
+        ArrayAdapter<String> adapter= new ArrayAdapter<>(this,R.layout.type_pieces, type);
 
+        autoCompleteTextView.setAdapter(adapter);
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                typePiece = adapterView.getItemAtPosition(i).toString().toUpperCase();
+            }
+        });
     }
 
     @Override
@@ -47,86 +58,112 @@ public class AjoutPieceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ajout_piece);
         init();
-
-        Intent intentGetLocal= getIntent();
-        localEnCours= (Local) intentGetLocal.getSerializableExtra("localEnCours");
-
-        btnAjouterPiece.setOnClickListener(
-                v->{
-
-
-
-                    String nomPiece= txtNomPiece.getText().toString();
-                    String choix= txtTypePiece.getText().toString();
-
-                    ajouterPiece(choix, nomPiece);
-                }
-        );
+        localEnCours = (Local) getIntent().getSerializableExtra("localEnCours");
+        addPiece.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ajouterPiece();
+            }
+        });
     }
 
     private void init(){
-        txtNomPiece= findViewById(R.id.txtNomAjoutPiece);
-        txtTypePiece= findViewById(R.id.txtTypeAjoutPiece);
-
-        lesTypesPieces= TypePiece.values();
-
-//        lesTypesPiece= getResources().getStringArray(R.array.type_piece);
-//        ArrayAdapter<String> adapter= new ArrayAdapter<>(this,R.layout.type_pieces, lesTypesPiece);
-
-        ArrayAdapter<TypePiece> adapter= new ArrayAdapter<>(this, R.layout.type_pieces, lesTypesPieces);
-        txtTypePiece.setAdapter(adapter);
-
-        btnAjouterPiece= findViewById(R.id.btnAjouterPiece);
+        autoCompleteTextView=findViewById(R.id.txtTypeAjoutPiece);
+        addPiece=findViewById(R.id.btnAjouterPiece);
+        nomPieceEdit=findViewById(R.id.txtNomAjoutPiece);
     }
 
-    private void ajouterPiece(String typePiece, String nomPiece){
-        if (typePiece==null || typePiece.equals("")){
-            txtTypePiece.setError("Veuillez Choisir le type de piece");
-            return;
-        }
-        if (nomPiece==null || nomPiece.equals("")){
-            txtNomPiece.setError("Veuillez saisir le nom de la pièce");
-            return;
-        }
+    private void ajouterPiece() {
+        String nomPiece = nomPieceEdit.getText().toString().trim();
+        typePiece = autoCompleteTextView.getText().toString();
+        String c ="/";
+        String chemin = c+localEnCours.getNomLocal().toLowerCase()+c+nomPiece.toLowerCase();
 
-        CollectionReference collectionUsers=
-                FirebaseFirestore.getInstance().collection(PATH_USERS_DATABASE);
+        if(verifier_champ(nomPiece,typePiece)){
+            // Créer un objet Map pour représenter les données de la nouvelle pièce
+            Map<String, Object> piece = new HashMap<>();
+            piece.put("idPiece",nomPiece.replaceAll("\\s", "").toLowerCase());
+            piece.put("nom", nomPiece);
+            piece.put("chemin",chemin);
+            piece.put("typePiece", typePiece);
+            piece.put("composants", new ArrayList<Map<String, Object>>());
 
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            CollectionReference localRef = db.collection("Local");
 
-        DocumentReference docUsermodel=
-                collectionUsers
-                        .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-        docUsermodel.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.getBoolean("admin")){
-
-                            Piece nouvellePiece= new Piece(TypePiece.valueOf(typePiece), nomPiece);
-
-                            String nouvelIdPiece= localEnCours.getAdresseLocal()+"_"+nouvellePiece.getAdressePiece();
-
-                            nouvellePiece.setIdPiece(nouvelIdPiece);
-                            nouvellePiece.setAdressePiece(nouvelIdPiece);
-                            nouvellePiece.setAdresseLocalEnCours(localEnCours.getAdresseLocal());
-
-                            CreationPiece.creationPiece(nouvellePiece);
-                            Toast.makeText(getApplicationContext(), nouvellePiece.getNomPiece()+" ajouté...", Toast.LENGTH_SHORT).show();
-                            finish();
-
-                        }else{
-                            Toast.makeText(getApplicationContext(), "Désolé vous n'êtes pas administrateur", Toast.LENGTH_SHORT).show();
+            // Ajouter la nouvelle pièce à la liste "lesPieces" du document "Local" correspondant à l'ID "test"
+            localRef.whereEqualTo("idLocal", localEnCours.getIdLocal())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                DocumentSnapshot localDoc = queryDocumentSnapshots.getDocuments().get(0);
+                                List<Map<String, Object>> lesPieces = (List<Map<String, Object>>) localDoc.get("lesPieces");
+                                if (lesPieces == null) {
+                                    lesPieces = new ArrayList<>();
+                                }
+                                lesPieces.add(piece);
+                                localDoc.getReference().update("lesPieces", lesPieces)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(AjoutPieceActivity.this, "Nouvelle pièce ajoutée avec succès", Toast.LENGTH_SHORT).show();
+                                                //Aller vers MainPage
+                                                LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
+                                                    @Override
+                                                    public void onSuccess(Local local) {
+                                                        // Aller vers Main Page avec local mis a jour
+                                                        Intent intent = new Intent(getApplicationContext(), MainPage.class);
+                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                        intent.putExtra("localId",local);
+                                                        startActivity(intent);
+                                                    }
+                                                }, new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        // Erreur lors de la recuperation du local mis a jour
+                                                        Toast.makeText(AjoutPieceActivity.this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(AjoutPieceActivity.this, "Erreur lors de l'ajout de la pièce : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            } else {
+                                Toast.makeText(AjoutPieceActivity.this, "Local introuvable", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Aucune réponse", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(AjoutPieceActivity.this, "Erreur lors de la récupération Local : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        else {
+            return;
+        }
 
     }
+
+    private boolean verifier_champ(String nomPiece, String typePiece){
+        Boolean check = true;
+        if (TextUtils.isEmpty(nomPiece)) {
+            nomPieceEdit.setError("Nom de la pièce requis",null);
+            check=false;
+        }
+
+        else if (TextUtils.isEmpty(typePiece)) {
+            autoCompleteTextView.setError("Type de la pièce requis");
+            check = false;
+        }
+        return check;
+    }
+
 }

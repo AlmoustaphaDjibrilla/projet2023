@@ -135,19 +135,19 @@ public class AjouterComposant extends AppCompatActivity {
                     List<Map<String, Object>> composants = (List<Map<String, Object>>) pieceActu.get("composants");
                     composants.add(nouveauComposant);
 
-                    List<Composant> composantsList = new ArrayList<>();
-                    for (Map<String, Object> map : composants) {
-                        Composant composant = new Composant();
-                        String nom = (String) map.get("nom");
-                        String id = (String) map.get("idComposant");
-                        String type = (String) map.get("typeComposant");
-                        String chemin = (String) map.get("chemin");
-                        composant.setIdComposant(id);
-                        composant.setNomComposant(nom);
-                        composant.setTypeComposant(type);
-                        composant.setChemin(chemin);
-                        composantsList.add(composant);
-                    }
+//                    List<Composant> composantsList = new ArrayList<>();
+//                    for (Map<String, Object> map : composants) {
+//                        Composant composant = new Composant();
+//                        String nom = (String) map.get("nom");
+//                        String id = (String) map.get("idComposant");
+//                        String type = (String) map.get("typeComposant");
+//                        String chemin = (String) map.get("chemin");
+//                        composant.setIdComposant(id);
+//                        composant.setNomComposant(nom);
+//                        composant.setTypeComposant(type);
+//                        composant.setChemin(chemin);
+//                        composantsList.add(composant);
+//                    }
 
                     Map<String, Object> data = new HashMap<>();
                     data.put("lesPieces", lesPieces);

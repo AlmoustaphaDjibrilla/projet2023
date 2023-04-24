@@ -4,28 +4,17 @@ import java.io.Serializable;
 
 public class Composant implements Serializable {
     String idComposant;
-    String adresseComposant;
-    String adressePieceEnCours;
-    String adresseLocalEnCours;
     String chemin;
     String nomComposant;
     String typeComposant;
     public Composant(){
     }
 
-    public Composant(String nom, String chemin, String type){
-        this.idComposant= nom.toLowerCase().replaceAll(" ", "");
+    public Composant(String id, String nom, String chemin, String type){
+        this.idComposant=id;
         this.nomComposant=nom;
         this.chemin=chemin;
         this.typeComposant=type;
-    }
-
-    public Composant(TypeComposant typeComposant, String nom){
-        this.typeComposant= typeComposant.toString();
-        this.nomComposant= nom;
-        this.adresseComposant= nomComposant.toLowerCase().replaceAll(" ", "");
-        this.idComposant= adresseComposant;
-        this.chemin= idComposant;
     }
 
     public String getIdComposant() {
@@ -58,41 +47,5 @@ public class Composant implements Serializable {
 
     public void setChemin(String chemin) {
         this.chemin = chemin;
-    }
-
-    public String getAdresseComposant() {
-        return adresseComposant;
-    }
-
-    public void setAdresseComposant(String adresseComposant) {
-        this.adresseComposant = adresseComposant;
-    }
-
-    public String getAdressePieceEnCours() {
-        return adressePieceEnCours;
-    }
-
-    public void setAdressePieceEnCours(String adressePieceEnCours) {
-        this.adressePieceEnCours = adressePieceEnCours;
-    }
-
-    public String getAdresseLocalEnCours() {
-        return adresseLocalEnCours;
-    }
-
-    public void setAdresseLocalEnCours(String adresseLocalEnCours) {
-        this.adresseLocalEnCours = adresseLocalEnCours;
-    }
-
-    @Override
-    public String toString() {
-        return "Composant{" +
-                "idComposant='" + idComposant + '\'' +
-                ", adresseComposant='" + adresseComposant + '\'' +
-                ", adressePieceEnCours='" + adressePieceEnCours + '\'' +
-                ", chemin='" + chemin + '\'' +
-                ", nomComposant='" + nomComposant + '\'' +
-                ", typeComposant='" + typeComposant + '\'' +
-                '}';
     }
 }
