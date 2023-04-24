@@ -162,6 +162,7 @@ public class AjouterComposant extends AppCompatActivity {
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.putExtra("localId",local);
                                     startActivity(intent);
+                                    finish();
                                 }
                             }, new OnFailureListener() {
                                 @Override

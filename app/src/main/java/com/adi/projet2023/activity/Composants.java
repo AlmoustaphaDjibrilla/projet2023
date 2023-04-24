@@ -43,6 +43,7 @@ public class Composants extends AppCompatActivity {
                 intent.putExtra("localEnCours",localEnCours);
                 intent.putExtra("pieceEnCours",pieceEnCours);
                 startActivity(intent);
+                finish();
             }
         });
 

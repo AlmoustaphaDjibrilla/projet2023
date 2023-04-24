@@ -78,6 +78,10 @@ public class ChoixLocalActivity extends AppCompatActivity {
     Button btnAjouterLocal;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choix_local);
@@ -184,6 +188,10 @@ public class ChoixLocalActivity extends AppCompatActivity {
         listLocaux= findViewById(R.id.listChoixLocal);
         lesLocaux= new ArrayList<>();
         titreChoixLocal=findViewById(R.id.titreChoixLocal);
+    }
+
+    private void recuperer_locaux(){
+
     }
 
     private void initFirebaseComponents(){
