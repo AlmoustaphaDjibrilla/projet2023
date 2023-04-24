@@ -85,9 +85,6 @@ public class FragmentHome extends Fragment {
                     }
                 });
 
-        Toast.makeText(getContext(),"Taille: "+ piecesList.size(), Toast.LENGTH_SHORT).show();
-
-
     }
 
     @Override
@@ -182,12 +179,12 @@ public class FragmentHome extends Fragment {
                                         break;
                                 }
                                 gridPiece.addView(cardView);
-                                cardView.setOnClickListener(new View.OnClickListener() {
+                                    cardView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         Intent intent = new Intent(getActivity(), Composants.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        intent.putExtra("composants", (Serializable) composants);
+                                        intent.putExtra("pieceActuelle", (Serializable) pieceActuelle);
                                         startActivity(intent);
                                     }
                                 });

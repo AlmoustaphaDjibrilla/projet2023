@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.adi.projet2023.R;
@@ -15,8 +16,18 @@ import com.adi.projet2023.creation.CreationPiece;
 import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.Piece.TypePiece;
 import com.adi.projet2023.model.local.Local;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AjoutPieceActivity extends AppCompatActivity {
+
+    final String PATH_USERS_DATABASE= "Users";
+
 
     Local localEnCours;
     EditText txtNomPiece;
@@ -43,18 +54,10 @@ public class AjoutPieceActivity extends AppCompatActivity {
         btnAjouterPiece.setOnClickListener(
                 v->{
 
+
+
                     String nomPiece= txtNomPiece.getText().toString();
                     String choix= txtTypePiece.getText().toString();
-//                    TypePiece typePiece;
-//
-//                    if (choix==null || choix.equals("")){
-//                        typePiece= TypePiece.AUTRE;
-//                    }
-//                    else {
-//                        typePiece= TypePiece.valueOf(choix);
-//                    }
-//                    Piece nouvellePiece= new Piece(typePiece, nomPiece);
-//                    Toast.makeText(this, nouvellePiece.toString(), Toast.LENGTH_SHORT).show();
 
                     ajouterPiece(choix, nomPiece);
                 }
@@ -86,10 +89,44 @@ public class AjoutPieceActivity extends AppCompatActivity {
             return;
         }
 
-        Piece nouvellePiece= new Piece(TypePiece.valueOf(typePiece), nomPiece);
-        nouvellePiece.setAdresseLocalEnCours(localEnCours.getAdresseLocal());
-        CreationPiece.creationPiece(nouvellePiece);
-        Toast.makeText(this, nouvellePiece.getNomPiece()+" ajouté...", Toast.LENGTH_SHORT).show();
-        finish();
+        CollectionReference collectionUsers=
+                FirebaseFirestore.getInstance().collection(PATH_USERS_DATABASE);
+
+
+        DocumentReference docUsermodel=
+                collectionUsers
+                        .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        docUsermodel.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.getBoolean("admin")){
+
+                            Piece nouvellePiece= new Piece(TypePiece.valueOf(typePiece), nomPiece);
+
+                            String nouvelIdPiece= localEnCours.getAdresseLocal()+"_"+nouvellePiece.getAdressePiece();
+
+                            nouvellePiece.setIdPiece(nouvelIdPiece);
+                            nouvellePiece.setAdressePiece(nouvelIdPiece);
+                            nouvellePiece.setAdresseLocalEnCours(localEnCours.getAdresseLocal());
+
+                            CreationPiece.creationPiece(nouvellePiece);
+                            Toast.makeText(getApplicationContext(), nouvellePiece.getNomPiece()+" ajouté...", Toast.LENGTH_SHORT).show();
+                            finish();
+
+                        }else{
+                            Toast.makeText(getApplicationContext(), "Désolé vous n'êtes pas administrateur", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Aucune réponse", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
     }
 }

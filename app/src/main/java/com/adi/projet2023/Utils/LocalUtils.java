@@ -42,8 +42,8 @@ public class LocalUtils {
                         String nom = (String) hashMap.get("nom");
                         String type = (String) hashMap.get("typePiece");
                         String chemin = (String) hashMap.get("chemin");
-                        List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("composants");
-                        lesPieces.add(new Piece(idPiece,type,nom,chemin,listHashMap));
+//                        List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("composants");
+//                        lesPieces.add(new Piece(idPiece,type,nom,chemin,listHashMap));
                     }
                 }
 
@@ -60,7 +60,7 @@ public class LocalUtils {
                 local.setDesignationLocal(designationLocal);
                 local.setAdresseLocal(adresseLocal);
                 local.setIdLocal(idLocal);
-                local.setLesPieces(lesPieces);
+             //   local.setLesPieces(lesPieces);
                 local.setLesUsers(lesUsers);
                 local.setNomLocal(nomLocal);
                 local.setQuartierLocal(quartierLocal);
