@@ -40,7 +40,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="290dp"
                     android:layout_gravity="top|end"
-                    app:srcCompat="@android:drawable/ic_input_add" />
+                    app:srcCompat="@drawable/icon_add_person" />
 
             </RelativeLayout>
 
