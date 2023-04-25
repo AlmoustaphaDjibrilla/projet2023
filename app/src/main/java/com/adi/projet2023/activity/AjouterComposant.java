@@ -135,20 +135,6 @@ public class AjouterComposant extends AppCompatActivity {
                     List<Map<String, Object>> composants = (List<Map<String, Object>>) pieceActu.get("composants");
                     composants.add(nouveauComposant);
 
-//                    List<Composant> composantsList = new ArrayList<>();
-//                    for (Map<String, Object> map : composants) {
-//                        Composant composant = new Composant();
-//                        String nom = (String) map.get("nom");
-//                        String id = (String) map.get("idComposant");
-//                        String type = (String) map.get("typeComposant");
-//                        String chemin = (String) map.get("chemin");
-//                        composant.setIdComposant(id);
-//                        composant.setNomComposant(nom);
-//                        composant.setTypeComposant(type);
-//                        composant.setChemin(chemin);
-//                        composantsList.add(composant);
-//                    }
-
                     Map<String, Object> data = new HashMap<>();
                     data.put("lesPieces", lesPieces);
                     localref.document(localDoc.getId()).update(data).addOnCompleteListener(updateTask -> {
@@ -159,10 +145,9 @@ public class AjouterComposant extends AppCompatActivity {
                                 public void onSuccess(Local local) {
                                     // Aller vers Main Page avec local mis a jour
                                     Intent intent = new Intent(getApplicationContext(), MainPage.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     intent.putExtra("localId",local);
                                     startActivity(intent);
-                                    finish();
                                 }
                             }, new OnFailureListener() {
                                 @Override
@@ -175,6 +160,11 @@ public class AjouterComposant extends AppCompatActivity {
 
                         } else {
                             Toast.makeText(getApplicationContext(), "Erreur Ajout", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(), MainPage.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.putExtra("localId",localEnCours);
+                            startActivity(intent);
+                            finish();
                         }
                     });
                 }

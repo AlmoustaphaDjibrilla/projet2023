@@ -28,15 +28,21 @@ public class Piece implements Serializable {
         }
         private List<Composant> convertirListHashMapEnListCustomObject(List<HashMap<String, Object>> listHashMap) {
             List<Composant> composantList = new ArrayList<>();
-            for (HashMap<String, Object> hashMap : listHashMap) {
-                Composant composant = new Composant();
-                composant.setNomComposant((String) hashMap.get("nom"));
-                composant.setChemin((String) hashMap.get("chemin"));
-                composant.setTypeComposant((String) hashMap.get("typeComposant"));
-                // etc.
-                composantList.add(composant);
+            if (listHashMap!=null){
+                for (HashMap<String, Object> hashMap : listHashMap) {
+                    Composant composant = new Composant();
+                    composant.setIdComposant((String) hashMap.get("idComposant"));
+                    composant.setNomComposant((String) hashMap.get("nom"));
+                    composant.setChemin((String) hashMap.get("chemin"));
+                    composant.setTypeComposant((String) hashMap.get("typeComposant"));
+                    // etc.
+                    composantList.add(composant);
+                }
+                return composantList;
             }
-            return composantList;
+            else{
+                return composantList;
+            }
         }
         public void setIdPiece(String idPiece){
             this.idPiece =idPiece;

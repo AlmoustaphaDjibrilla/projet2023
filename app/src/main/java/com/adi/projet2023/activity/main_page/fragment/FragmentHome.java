@@ -68,7 +68,6 @@ public class FragmentHome extends Fragment {
         }
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +87,6 @@ public class FragmentHome extends Fragment {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("localEnCours",localEnCours);
                 startActivity(intent);
-                getActivity().finish();
             }
         });
 
@@ -239,7 +237,7 @@ public class FragmentHome extends Fragment {
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Toast.makeText(getActivity(), id + " supprimée avec succès", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), "Piece supprimée avec succès", Toast.LENGTH_SHORT).show();
                                             //Aller vers MainPage
                                             LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
                                                 @Override

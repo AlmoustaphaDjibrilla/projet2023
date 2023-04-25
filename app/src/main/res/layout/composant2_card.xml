@@ -19,14 +19,14 @@
         app:cardUseCompatPadding="true">
 
         <ImageView
-            android:id="@+id/img_composant"
+            android:id="@+id/img_composant2"
             android:layout_width="170dp"
             android:layout_height="200dp"
             android:layout_marginLeft="20dp"
             android:src="@drawable/ventilateur" />
 
         <TextView
-            android:id="@+id/nom_composant"
+            android:id="@+id/nom_composant2"
             android:layout_width="115dp"
             android:layout_height="41dp"
             android:layout_gravity="right|center_horizontal"

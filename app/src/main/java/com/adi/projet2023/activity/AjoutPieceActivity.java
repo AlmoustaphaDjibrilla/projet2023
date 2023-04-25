@@ -63,6 +63,7 @@ public class AjoutPieceActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ajouterPiece();
+                finish();
             }
         });
     }
@@ -115,7 +116,7 @@ public class AjoutPieceActivity extends AppCompatActivity {
                                                     public void onSuccess(Local local) {
                                                         // Aller vers Main Page avec local mis a jour
                                                         Intent intent = new Intent(getApplicationContext(), MainPage.class);
-                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                         intent.putExtra("localId",local);
                                                         startActivity(intent);
                                                         finish();
@@ -133,6 +134,11 @@ public class AjoutPieceActivity extends AppCompatActivity {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
                                                 Toast.makeText(AjoutPieceActivity.this, "Erreur lors de l'ajout de la pièce : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(getApplicationContext(), MainPage.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                intent.putExtra("localId",localEnCours);
+                                                startActivity(intent);
+                                                finish();
                                             }
                                         });
                             } else {
