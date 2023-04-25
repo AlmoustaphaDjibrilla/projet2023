@@ -7,6 +7,8 @@ import com.adi.projet2023.model.user.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -74,6 +76,22 @@ public class LocalUtils {
                 successListener.onSuccess(null);
             }
         }).addOnFailureListener(failureListener);
+    }
+
+    public static void supprimer_composer_realTime(String chemin){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(chemin);
+        ref.removeValue();
+    }
+    public static void supprimer_composant_piece_realTime(Piece piece){
+        for(int i =0; i<piece.getLesComposants().size();i++){
+            LocalUtils.supprimer_composer_realTime(piece.getLesComposants().get(i).getChemin());
+        }
+    }
+
+    public  static void supprimer_composant_local_realTime(Local local){
+        for(int i =0;i<local.getLesPieces().size();i++){
+            supprimer_composant_piece_realTime(local.getLesPieces().get(i));
+        }
     }
 
 }

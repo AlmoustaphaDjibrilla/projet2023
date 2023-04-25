@@ -24,6 +24,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -140,6 +142,7 @@ public class AjouterComposant extends AppCompatActivity {
                     localref.document(localDoc.getId()).update(data).addOnCompleteListener(updateTask -> {
                         if (updateTask.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), "Nouveau composant ajouté avec succès", Toast.LENGTH_SHORT).show();
+                            ajouter_a_realTime((String) nouveauComposant.get("typeComposant"), (String) nouveauComposant.get("chemin"), (String) nouveauComposant.get("nom"));
                             LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
                                 @Override
                                 public void onSuccess(Local local) {
@@ -177,6 +180,19 @@ public class AjouterComposant extends AppCompatActivity {
         }
         else{
             return;
+        }
+    }
+
+    private void ajouter_a_realTime(String type,String chemin,String nom){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(chemin);
+        Map<String, Object> composant_valeur = new HashMap<>();
+        if(type.equals("AMPOULE") || type.equals("REFRIGERATEUR") || type.equals("CLIMATISEUR") || type.equals("AUTRE")){
+            composant_valeur.put(nom, "OFF");
+            ref.setValue(composant_valeur);
+        }
+        else{
+            composant_valeur.put(nom, 0);
+            ref.push().setValue(composant_valeur);
         }
     }
 }

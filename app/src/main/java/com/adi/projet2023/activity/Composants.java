@@ -23,11 +23,14 @@ import com.adi.projet2023.model.local.Local;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -118,7 +121,7 @@ public class Composants extends AppCompatActivity {
 
                             btnSupprimerComposant.setOnClickListener(
                                     v->{
-                                        supprimer_composant(composantEnCours.getIdComposant());
+                                        supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
                                         dialogSupprimerComposant.dismiss();
                                     }
                             );
@@ -163,7 +166,7 @@ public class Composants extends AppCompatActivity {
 
                             btnSupprimerComposant.setOnClickListener(
                                     v->{
-                                        supprimer_composant(composantEnCours.getIdComposant());
+                                        supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
                                         dialogSupprimerComposant.dismiss();
                                     }
                             );
@@ -193,7 +196,7 @@ public class Composants extends AppCompatActivity {
         }
     }
 
-    private void supprimer_composant(String idComposant){
+    private void supprimer_composant(String idComposant, String chemin){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference collectionRef = db.collection("Local");
         collectionRef.whereEqualTo("idLocal",localEnCours.getIdLocal())
@@ -228,6 +231,7 @@ public class Composants extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Toast.makeText(getApplicationContext(), "Composant supprimée avec succès", Toast.LENGTH_SHORT).show();
+                                            LocalUtils.supprimer_composer_realTime(chemin);
                                             //Aller vers MainPage
                                             LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
                                                 @Override
@@ -265,4 +269,6 @@ public class Composants extends AppCompatActivity {
                     }
                 });
     }
+
+
 }

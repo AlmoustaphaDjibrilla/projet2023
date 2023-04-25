@@ -180,6 +180,7 @@ public class FragmentHome extends Fragment {
                             btnSupprimerPiece.setOnClickListener(
                                     v->{
                                         supprimer_piece(pieceEncours.getIdPiece());
+                                        LocalUtils.supprimer_composant_piece_realTime(pieceEncours);
                                         dialogSupprimerPiece.dismiss();
                                     }
                             );

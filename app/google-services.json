@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "62499756507",
+    "firebase_url": "https://projet-2023-204a1-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "projet-2023-204a1",
     "storage_bucket": "projet-2023-204a1.appspot.com"
   },
@@ -10,35 +11,6 @@
         "mobilesdk_app_id": "1:62499756507:android:f351c4ca2ea56a2d276ffe",
         "android_client_info": {
           "package_name": "com.adi.projet2023"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "62499756507-fchnje7uk1k66qri347ii8gplvt4khhh.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC1yDekUa_cC94EEf2gZaYWLbBCl8oyy9Q"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "62499756507-fchnje7uk1k66qri347ii8gplvt4khhh.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:62499756507:android:decdfcddd7cb997c276ffe",
-        "android_client_info": {
-          "package_name": "com.example.projet2023"
         }
       },
       "oauth_client": [
