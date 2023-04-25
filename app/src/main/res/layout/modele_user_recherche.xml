@@ -10,7 +10,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewModeleUser"
         android:layout_width="395dp"
-        android:layout_height="173dp"
+        android:layout_height="253dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="15dp"
         android:layout_marginRight="8dp"
@@ -38,7 +38,7 @@
                 app:srcCompat="@drawable/icon_profil" />
 
             <TextView
-                android:id="@+id/nomUserModel"
+                android:id="@+id/nomUserSupprime"
                 android:layout_width="231dp"
                 android:layout_height="28dp"
                 android:layout_marginStart="20dp"
@@ -51,7 +51,7 @@
                 app:layout_constraintTop_toTopOf="@+id/profilUserTrouve" />
 
             <TextView
-                android:id="@+id/mailUserModel"
+                android:id="@+id/mailUserSupprime"
                 android:layout_width="234dp"
                 android:layout_height="23dp"
                 android:layout_marginTop="12dp"
@@ -60,10 +60,10 @@
                 android:textColor="#4b4b4b"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@+id/nomUserModel"
+                app:layout_constraintEnd_toEndOf="@+id/nomUserSupprime"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/nomUserModel"
-                app:layout_constraintTop_toBottomOf="@+id/nomUserModel" />
+                app:layout_constraintStart_toStartOf="@+id/nomUserSupprime"
+                app:layout_constraintTop_toBottomOf="@+id/nomUserSupprime" />
 
             <TextView
                 android:id="@+id/textView7"
@@ -73,11 +73,11 @@
                 android:text="Enregistré le"
                 android:textAlignment="textStart"
                 android:textColor="#4b4b4b"
-                app:layout_constraintStart_toStartOf="@+id/mailUserModel"
-                app:layout_constraintTop_toBottomOf="@+id/mailUserModel" />
+                app:layout_constraintStart_toStartOf="@+id/mailUserSupprime"
+                app:layout_constraintTop_toBottomOf="@+id/mailUserSupprime" />
 
             <TextView
-                android:id="@+id/dateEnregistrementUserModel"
+                android:id="@+id/dateEnregistrementUserSupprime"
                 android:layout_width="133dp"
                 android:layout_height="18dp"
                 android:layout_marginStart="20dp"
@@ -86,6 +86,44 @@
                 android:textAlignment="textEnd"
                 app:layout_constraintStart_toEndOf="@+id/textView7"
                 app:layout_constraintTop_toTopOf="@+id/textView7" />
+
+            <TextView
+                android:id="@+id/uidUserSupprime"
+                android:layout_width="133dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="32dp"
+                android:fontFamily="@font/calibri"
+                android:textAlignment="textEnd"
+                android:textColor="#4b4b4b"
+                app:layout_constraintStart_toEndOf="@+id/textView4"
+                app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="66dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="12dp"
+                android:text="Uid"
+                android:textAlignment="textStart"
+                android:textColor="#4b4b4b"
+                app:layout_constraintStart_toStartOf="@+id/textView7"
+                app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+            <Button
+                android:id="@+id/btnAddUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="Ajouter"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/buttonshape"
+                android:fontFamily="@font/calibri"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/profilUserTrouve"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

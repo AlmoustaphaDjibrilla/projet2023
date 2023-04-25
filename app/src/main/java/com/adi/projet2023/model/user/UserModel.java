@@ -8,15 +8,6 @@ public class UserModel implements Serializable {
     private String Uid;
     private String uriProfil;
     private String telephone;
-
-    public String getUriProfil() {
-        return uriProfil;
-    }
-
-    public void setUriProfil(String uriProfil) {
-        this.uriProfil = uriProfil;
-    }
-
     private String email;
     private String nom;
     private String password;

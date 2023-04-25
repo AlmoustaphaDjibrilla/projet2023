@@ -134,6 +134,10 @@ public class Local implements Serializable{
         return lesPieces.remove(pieceASupprimer);
     }
 
+    public void ajouterUser(UserModel userModel){
+        this.lesUsers.add(userModel);
+    }
+
     @Override
     public String toString() {
         return "Local{" +
