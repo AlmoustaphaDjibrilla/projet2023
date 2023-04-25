@@ -132,10 +132,11 @@ public class MainPage extends AppCompatActivity {
                     textProfil.setVisibility(View.GONE);
 
                     homeImage.setImageResource(R.drawable.icon_home);
-                    homeImage.setImageResource(R.drawable.ic_person);
+                    homeImage.setImageResource(R.drawable.icon_home);
 
                     home.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                     profil.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    profilImage.setImageResource(R.drawable.ic_person);
 
                     //activer profil
                     textAdmin.setVisibility(View.VISIBLE);
