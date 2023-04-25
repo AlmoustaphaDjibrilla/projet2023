@@ -81,9 +81,10 @@ public class ChoixLocalActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         lesLocaux.clear();
-//        recuperer_locaux();
+        //recuperer_locaux();
 
-//        afficherLocalEnFonctionUser(FirebaseAuth.getInstance().getCurrentUser());
+        //Actualiser en cas de retour pour que les modifications s'affichent
+        afficherLocalEnFonctionUser(FirebaseAuth.getInstance().getCurrentUser());
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,9 +96,6 @@ public class ChoixLocalActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         initFirebaseComponents();
         init();
-
-        afficherLocalEnFonctionUser(FirebaseAuth.getInstance().getCurrentUser());
-
 
         if (lesLocaux.size()==0)
             titreChoixLocal.setText("Aucun local...");

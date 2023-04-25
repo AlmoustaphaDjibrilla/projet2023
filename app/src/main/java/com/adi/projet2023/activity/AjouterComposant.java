@@ -142,7 +142,7 @@ public class AjouterComposant extends AppCompatActivity {
                     localref.document(localDoc.getId()).update(data).addOnCompleteListener(updateTask -> {
                         if (updateTask.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), "Nouveau composant ajouté avec succès", Toast.LENGTH_SHORT).show();
-                            ajouter_a_realTime((String) nouveauComposant.get("typeComposant"), (String) nouveauComposant.get("chemin"), (String) nouveauComposant.get("nom"));
+                            ajouter_a_realTime((String) nouveauComposant.get("typeComposant"), (String) nouveauComposant.get("chemin"));
                             LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
                                 @Override
                                 public void onSuccess(Local local) {
@@ -183,16 +183,17 @@ public class AjouterComposant extends AppCompatActivity {
         }
     }
 
-    private void ajouter_a_realTime(String type,String chemin,String nom){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(chemin);
+    private void ajouter_a_realTime(String type,String chemin){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         Map<String, Object> composant_valeur = new HashMap<>();
         if(type.equals("AMPOULE") || type.equals("REFRIGERATEUR") || type.equals("CLIMATISEUR") || type.equals("AUTRE")){
-            composant_valeur.put(nom, "OFF");
-            ref.setValue(composant_valeur);
+            composant_valeur.put(chemin, "OFF");
+            ref.updateChildren(composant_valeur);
         }
         else{
-            composant_valeur.put(nom, 0);
-            ref.push().setValue(composant_valeur);
+            Long init= 0L;
+            composant_valeur.put(chemin, init);
+            ref.updateChildren(composant_valeur);
         }
     }
 }

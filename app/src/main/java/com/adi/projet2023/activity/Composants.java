@@ -243,9 +243,53 @@ public class Composants extends AppCompatActivity {
                     ref.child(composantEnCours.getChemin()).setValue(etat);
                 });
             } else {
-                View cardView = layout.getChildAt(i);
-                SeekBar seekBar = cardView.findViewById(R.id.Seekbar);
-                seekBar.setProgress(0);
+                View cardView2 = layout.findViewWithTag(composantEnCours.getIdComposant());
+                SeekBar seekBar = cardView2.findViewById(R.id.Seekbar);
+
+                DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+                DatabaseReference valueRef = databaseRef.child(composantEnCours.getChemin());
+                valueRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Object data = snapshot.getValue();
+                        if (data instanceof Long) {
+                            Long valeur = (Long) data;
+                            if (valeur==1){
+                                seekBar.setProgress(1);
+
+                            } else if(valeur==2){
+                                seekBar.setProgress(2);
+                            }
+                            else{
+                                seekBar.setProgress(0);
+                            }
+                        } else if (data instanceof HashMap) {
+                            // Traitement pour une HashMap
+                            HashMap<String, Object> hashMap = (HashMap<String, Object>) data;
+                            Long valeur = (Long) hashMap.get(composantEnCours.getNomComposant());
+                            Log.d("TAG","valeur"+cardView2.getTag());
+
+                            if (valeur==1L){
+                                seekBar.setProgress(1);
+
+                            } else if(valeur==2L){
+                                seekBar.setProgress(2);
+                            }
+                            else{
+                                seekBar.setProgress(0);
+                            }
+                        } else {
+                            // Traitement pour les autres types de données
+                            seekBar.setProgress(0);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("TAG","Erreur : "+error.getMessage());
+                    }
+                });
+
                 seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
