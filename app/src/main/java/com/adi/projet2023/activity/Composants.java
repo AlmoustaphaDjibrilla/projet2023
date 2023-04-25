@@ -3,11 +3,15 @@ package com.adi.projet2023.activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.LocalUtils;
+import com.adi.projet2023.Utils.RealTime;
 import com.adi.projet2023.activity.main_page.MainPage;
 import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.composant.Composant;
@@ -23,8 +28,12 @@ import com.adi.projet2023.model.local.Local;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,6 +52,7 @@ public class Composants extends AppCompatActivity {
     Dialog dialogSupprimerComposant;
     TextView txtTypeComposant, txtNomComposant, txtNomLocal, txtNomPiece;
     Button btnSupprimerComposant;
+    Switch  aSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +64,7 @@ public class Composants extends AppCompatActivity {
         localEnCours = (Local) getIntent().getSerializableExtra("localEnCours");
         pieceEnCours = (Piece) getIntent().getSerializableExtra("pieceEnCours");
         afficher_composants(composantList);
+        initSwitches(composantList);
 
         btnAddComposant.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +86,6 @@ public class Composants extends AppCompatActivity {
 
     private void afficher_composants(List<Composant> composantList){
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-
         //Initialisation des composants
         for(int i =0; i<composantList.size(); i++){
             Composant composantEnCours = composantList.get(i);
@@ -110,6 +120,7 @@ public class Composants extends AppCompatActivity {
                     default:
                         break;
                 }
+                cardView.setTag(composantEnCours.getIdComposant());
                 layout.addView(cardView);
                 cardView.setOnLongClickListener(
                         l->{
@@ -155,6 +166,7 @@ public class Composants extends AppCompatActivity {
                     default:
                         break;
                 }
+                cardView2.setTag(composantEnCours.getIdComposant());
                 layout.addView(cardView2);
                 cardView2.setOnLongClickListener(
                         l->{
@@ -170,7 +182,6 @@ public class Composants extends AppCompatActivity {
                                         dialogSupprimerComposant.dismiss();
                                     }
                             );
-
                             return true;
                         }
                 );
@@ -178,6 +189,79 @@ public class Composants extends AppCompatActivity {
 
         }
     }
+
+    private void initSwitches(List<Composant> composantList) {
+        for (int i = 0; i < composantList.size(); i++) {
+            Composant composantEnCours = composantList.get(i);
+            if (composantList.get(i).getTypeComposant().equals("AMPOULE") ||
+                    composantList.get(i).getTypeComposant().equals("REFRIGERATEUR") ||
+                    composantList.get(i).getTypeComposant().equals("CLIMATISEUR") ||
+                    composantList.get(i).getTypeComposant().equals("AUTRE")) {
+                View cardView = layout.findViewWithTag(composantEnCours.getIdComposant());
+                Switch switchCompat = cardView.findViewById(R.id.Switch);
+
+                DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+                DatabaseReference valueRef = databaseRef.child(composantEnCours.getChemin());
+
+                valueRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Object data = snapshot.getValue();
+                        if (data instanceof String) {
+                            // Traitement pour une chaîne de caractères
+                            String valeur = (String) data;
+                            if (valeur.equals("ON")){
+                                switchCompat.setChecked(true);
+                            } else {
+                                switchCompat.setChecked(false);
+                            }
+                        } else if (data instanceof HashMap) {
+                            // Traitement pour une HashMap
+                            HashMap<String, Object> hashMap = (HashMap<String, Object>) data;
+                            String valeur = (String) hashMap.get(composantEnCours.getNomComposant());
+                            if (valeur.equals("ON")){
+                                switchCompat.setChecked(true);
+                            } else {
+                                switchCompat.setChecked(false);
+                            }
+                        } else {
+                            // Traitement pour les autres types de données
+                            Log.d("TAG", "Type de données inconnu");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("TAG","Erreur : "+error.getMessage());
+                    }
+                });
+
+                switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    composantEnCours.setEtat(isChecked);
+                    String etat = isChecked ? "ON" : "OFF";
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                    ref.child(composantEnCours.getChemin()).setValue(etat);
+                });
+            } else {
+                View cardView = layout.getChildAt(i);
+                SeekBar seekBar = cardView.findViewById(R.id.Seekbar);
+                seekBar.setProgress(0);
+                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        composantEnCours.setValeur(progress);
+                    }
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                    }
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                    }
+                });
+            }
+        }
+    }
+
     private void initComponentsOfDialog(){
         txtTypeComposant= dialogSupprimerComposant.findViewById(R.id.txtTypeComposantSupprimer);
         txtNomPiece= dialogSupprimerComposant.findViewById(R.id.txtNomPieceComposantSupprimer);

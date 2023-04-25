@@ -1,8 +1,20 @@
 package com.adi.projet2023.model.composant;
 
+import android.util.Log;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.io.Serializable;
+import java.util.HashMap;
 
 public class Composant implements Serializable {
+    DatabaseReference databaseReference;
     String idComposant;
     String chemin;
     String nomComposant;
@@ -48,4 +60,28 @@ public class Composant implements Serializable {
     public void setChemin(String chemin) {
         this.chemin = chemin;
     }
+
+    public void setEtat(Boolean b){
+        databaseReference = FirebaseDatabase.getInstance().getReference().child(getChemin());
+        if(b){
+            HashMap<String, Object> hashMap =new HashMap<>();
+            hashMap.put(getNomComposant(), "ON");
+            databaseReference.setValue(hashMap);
+        }
+        else{
+            HashMap<String, Object> hashMap =new HashMap<>();
+            hashMap.put(getNomComposant(), "OFF");
+            databaseReference.setValue(hashMap);
+        }
+    }
+
+    public void setValeur(int p){
+        databaseReference = FirebaseDatabase.getInstance().getReference().child(getChemin());
+        HashMap<String, Object> hashMap =new HashMap<>();
+        hashMap.put(getNomComposant(), p);
+        databaseReference.setValue(hashMap);
+    }
+
+
+
 }
