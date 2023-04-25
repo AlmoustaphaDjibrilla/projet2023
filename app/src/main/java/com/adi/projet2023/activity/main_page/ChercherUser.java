@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,11 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adi.projet2023.R;
+import com.adi.projet2023.activity.ActivityRegisterUser;
 import com.adi.projet2023.creation.CreationLocal;
 import com.adi.projet2023.model.local.Local;
 import com.adi.projet2023.model.user.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -35,6 +38,8 @@ public class ChercherUser extends AppCompatActivity {
     Local localEnCours;
 
     ImageView imgQuitter;
+
+    FloatingActionButton addNewUser;
 
     EditText txtMailSearchUser, txtNomSearchUser, txtDateEnregistrementSearchUser;
     Button btnSearchUser, btnAddUser;
@@ -86,6 +91,13 @@ public class ChercherUser extends AppCompatActivity {
 
                 }
         );
+
+        addNewUser.setOnClickListener(
+                v->{
+                    Intent intent= new Intent(getApplicationContext(), ActivityRegisterUser.class);
+                    startActivity(intent);
+                }
+        );
     }
 
     /**
@@ -98,6 +110,7 @@ public class ChercherUser extends AppCompatActivity {
         txtDateEnregistrementSearchUser= findViewById(R.id.txtDateEnregisrementSearchUser);
         btnSearchUser= findViewById(R.id.btnSearchUser);
         imgQuitter= findViewById(R.id.imgQuitterRechercheUser);
+        addNewUser= findViewById(R.id.addNewUser);
     }
 
     /**
@@ -175,8 +188,9 @@ public class ChercherUser extends AppCompatActivity {
 
                             btnAddUser.setOnClickListener(
                                     v->{
-                                        Toast.makeText(ChercherUser.this, localEnCours.toString(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ChercherUser.this, userModel.getNom()+" ajouté", Toast.LENGTH_SHORT).show();
                                         ajouterUserLocal(userModel, localEnCours);
+                                        dialog.dismiss();
                                     }
                             );
                         }
@@ -185,7 +199,7 @@ public class ChercherUser extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Null", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Erreur...", Toast.LENGTH_LONG).show();
 
                     }
                 });

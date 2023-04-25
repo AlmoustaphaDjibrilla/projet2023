@@ -2,6 +2,8 @@ package com.adi.projet2023.activity.main_page.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,7 +18,15 @@ import com.adi.projet2023.activity.main_page.ChercherUser;
 import com.adi.projet2023.adapter.AdapterUserModel;
 import com.adi.projet2023.model.local.Local;
 import com.adi.projet2023.model.user.UserModel;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.checkerframework.checker.units.qual.A;
 
@@ -24,6 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FragmentUsers extends Fragment {
+
+    final String PATH_USERS_DATABASE= "Users";
+    private CollectionReference collectionUsers;
 
     Local localEnCours;
     ArrayList<UserModel> lesUsers;
@@ -57,9 +70,7 @@ public class FragmentUsers extends Fragment {
         
         btnAddUser.setOnClickListener(
                 v->{
-                    Intent intent= new Intent(getContext(), ChercherUser.class);
-                    intent.putExtra("localEnCours", localEnCours);
-                    startActivity(intent);
+                    verifierAdmin(FirebaseAuth.getInstance().getCurrentUser());
                 }
         );
 
@@ -73,5 +84,36 @@ public class FragmentUsers extends Fragment {
         AdapterUserModel adapterUserModel= new AdapterUserModel(this.getContext(), lesUsers);
         listUsers.setLayoutManager(new LinearLayoutManager(this.getContext()));
         listUsers.setAdapter(adapterUserModel);
+    }
+
+    private void verifierAdmin(FirebaseUser firebaseUser){
+        collectionUsers= FirebaseFirestore.getInstance().collection(PATH_USERS_DATABASE);
+
+        DocumentReference docUsermodel=
+                collectionUsers
+                        .document(firebaseUser.getUid());
+
+        docUsermodel.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.getBoolean("admin")){
+
+                            //Conduire à l'interface d'ajout
+                            Intent intent= new Intent(getContext(), ChercherUser.class);
+                            intent.putExtra("localEnCours", localEnCours);
+                            startActivity(intent);
+
+                        }else{
+                            Toast.makeText(getContext(), "Désolé vous n'êtes pas administrateur", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "Aucune réponse", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

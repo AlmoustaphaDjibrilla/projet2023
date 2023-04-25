@@ -138,6 +138,18 @@ public class Local implements Serializable{
         this.lesUsers.add(userModel);
     }
 
+    public boolean containsUser(UserModel userModel){
+        boolean contains= false;
+
+        if (lesUsers!=null){
+            for (UserModel currentUser: lesUsers){
+                if (currentUser.getEmail().equals(userModel.getEmail()))
+                    contains=true;
+            }
+        }
+        return contains;
+    }
+
     @Override
     public String toString() {
         return "Local{" +

@@ -81,7 +81,9 @@ public class ChoixLocalActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         lesLocaux.clear();
-        recuperer_locaux();
+//        recuperer_locaux();
+
+        afficherLocalEnFonctionUser(FirebaseAuth.getInstance().getCurrentUser());
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +101,6 @@ public class ChoixLocalActivity extends AppCompatActivity {
         else{
             titreChoixLocal.setText("Choisissez un local");
         }
-//        initComponentsOfDialog();
 
         binding.addlocal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +137,8 @@ public class ChoixLocalActivity extends AppCompatActivity {
         titreChoixLocal=findViewById(R.id.titreChoixLocal);
     }
 
+
+
     private void recuperer_locaux(){
         collectionLocal.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -157,12 +160,37 @@ public class ChoixLocalActivity extends AppCompatActivity {
                                     String nom = (String) hashMap.get("nom");
                                     String type = (String) hashMap.get("typePiece");
                                     String adresse = (String) hashMap.get("chemin");
-                                    List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("composants");
+                                    List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("lesComposants");
+//                                    List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("composants");
                                     lesPieces.add(new Piece(id,type,nom,adresse,listHashMap));
                                 }
                             }
 
-                            List<UserModel> lesUsers= (List<UserModel>) documentSnapshot.get("lesUsers");
+                            List<HashMap<String, Object>> users= (List<HashMap<String, Object>>) documentSnapshot.get("lesUsers");
+                            List<UserModel> lesUsers= new ArrayList<>();
+                            if (users != null){
+                                for (HashMap<String, Object> hashMap: users){
+                                    boolean admin= (boolean) hashMap.get("admin");
+                                    String dateEnregistrement= (String) hashMap.get("dateEnregistrement");
+                                    String email= (String) hashMap.get("email");
+                                    String nom= (String) hashMap.get("nom");
+                                    String password= (String) hashMap.get("password");
+                                    String uid= (String) hashMap.get("uid");
+                                    boolean user= (boolean) hashMap.get("user");
+
+                                    UserModel userTrouve= new UserModel();
+                                    userTrouve.setAdmin(admin);
+                                    userTrouve.setDateEnregistrement(dateEnregistrement);
+                                    userTrouve.setEmail(email);
+                                    userTrouve.setNom(nom);
+                                    userTrouve.setPassword(password);
+                                    userTrouve.setUid(uid);
+                                    userTrouve.setUser(user);
+
+                                    lesUsers.add(userTrouve);
+                                }
+                            }
+//                            List<UserModel> lesUsers= (List<UserModel>) documentSnapshot.get("lesUsers");
 
                             String nomLocal= documentSnapshot.getString("nomLocal");
                             String quartierLocal= documentSnapshot.getString("quartierLocal");
@@ -234,34 +262,8 @@ public class ChoixLocalActivity extends AppCompatActivity {
         initComponentsOfDialog();
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
     }
 
-    /**
-     * Ajout du local dans la base de données
-     * @param local represente le local à ajouter dans la BD
-     *              pour rappel, le local peut être
-     *              une MAISON, une ENTREPRISE, ou AUTRE
-     */
-    private void ajouterNouveauLocal(Local local){
-        DocumentReference documentReference=
-                collectionLocal
-                        .document(local.getIdLocal());
-        documentReference.set(local)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(getApplicationContext(), "New "+local.getDesignationLocal()+" added succesfully!!!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Error...", Toast.LENGTH_SHORT).show();
-                    }
-                });
-        dialog.dismiss();
-    }
 
     /**
      * Méthode pour vérifier si le user courant
@@ -279,7 +281,6 @@ public class ChoixLocalActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.getBoolean("admin")){
-//                            ajoutLocal();
                             dialog.show();
                         }else{
                             Toast.makeText(getApplicationContext(), "Désolé vous n'êtes pas administrateur", Toast.LENGTH_SHORT).show();
@@ -342,5 +343,120 @@ public class ChoixLocalActivity extends AppCompatActivity {
                 dialog.dismiss();
                 break;
         }
+    }
+
+
+    private void afficherLocalEnFonctionUser(FirebaseUser firebaseUser){
+        DocumentReference docUsermodel=
+                collectionUsers
+                        .document(firebaseUser.getUid());
+
+        docUsermodel.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.getBoolean("admin")){
+                            //Pour un admin, afficher tous les locaux enregistrés
+
+                            recuperer_locaux();
+
+                        }else{
+                            //Pour un user normal (non Admin), afficher les locaux auxquels il est affecté
+
+
+                            collectionLocal.get()
+                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                            for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+
+                                                //Récuperer manuellement tous les attributs du local
+                                                String designationLocal= documentSnapshot.getString("designationLocal");
+                                                String adresseLocal= documentSnapshot.getString("adresseLocal");
+                                                String idLocal= documentSnapshot.getString("idLocal");
+
+                                                //Ne pas toucher!!
+                                                List<HashMap<String, Object>> list= (List<HashMap<String, Object>>) documentSnapshot.get("lesPieces");
+                                                List<Piece> lesPieces = new ArrayList<>();
+                                                if(list != null){
+                                                    for (HashMap<String, Object> hashMap : list) {
+                                                        String id=(String) hashMap.get("idPiece");
+                                                        String nom = (String) hashMap.get("nom");
+                                                        String type = (String) hashMap.get("typePiece");
+                                                        String adresse = (String) hashMap.get("chemin");
+                                                        List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("lesComposants");
+                                                        lesPieces.add(new Piece(id,type,nom,adresse,listHashMap));
+                                                    }
+                                                }
+
+                                                List<HashMap<String, Object>> users= (List<HashMap<String, Object>>) documentSnapshot.get("lesUsers");
+                                                List<UserModel> lesUsers= new ArrayList<>();
+                                                if (users != null){
+                                                    for (HashMap<String, Object> hashMap: users){
+                                                        boolean admin= (boolean) hashMap.get("admin");
+                                                        String dateEnregistrement= (String) hashMap.get("dateEnregistrement");
+                                                        String email= (String) hashMap.get("email");
+                                                        String nom= (String) hashMap.get("nom");
+                                                        String password= (String) hashMap.get("password");
+                                                        String uid= (String) hashMap.get("uid");
+                                                        boolean user= (boolean) hashMap.get("user");
+
+                                                        UserModel userTrouve= new UserModel();
+                                                        userTrouve.setAdmin(admin);
+                                                        userTrouve.setDateEnregistrement(dateEnregistrement);
+                                                        userTrouve.setEmail(email);
+                                                        userTrouve.setNom(nom);
+                                                        userTrouve.setPassword(password);
+                                                        userTrouve.setUid(uid);
+                                                        userTrouve.setUser(user);
+
+                                                        lesUsers.add(userTrouve);
+                                                    }
+                                                }
+                                                String nomLocal= documentSnapshot.getString("nomLocal");
+                                                String quartierLocal= documentSnapshot.getString("quartierLocal");
+                                                TypeLocal typeLocal= TypeLocal.valueOf(documentSnapshot.getString("typeLocal"));
+                                                String villeLocal= documentSnapshot.getString("villeLocal");
+                                                String dateEnregistrementLocal = documentSnapshot.getString("dateEnregistrement");
+
+                                                //creer un nouvel local et lui affecter les attributs recuperés ci-dessus
+                                                Local local= new Local();
+                                                local.setDesignationLocal(designationLocal);
+                                                local.setAdresseLocal(adresseLocal);
+                                                local.setIdLocal(idLocal);
+                                                local.setLesPieces(lesPieces);
+                                                local.setLesUsers(lesUsers);
+                                                local.setNomLocal(nomLocal);
+                                                local.setQuartierLocal(quartierLocal);
+                                                local.setTypeLocal(typeLocal);
+                                                local.setVilleLocal(villeLocal);
+                                                local.setDateEnregistrement(dateEnregistrementLocal);
+
+
+                                                collectionUsers
+                                                        .document(firebaseUser.getUid())
+                                                                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                            @Override
+                                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                UserModel userModel1= documentSnapshot.toObject(UserModel.class);
+                                                                if (local.containsUser(userModel1)) {
+                                                                    lesLocaux.add(local);
+                                                                    updateListViewOfLocals();
+                                                                }
+                                                            }
+                                                        });
+                                            }
+                                        }
+                                    });
+
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Erreur...", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

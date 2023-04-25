@@ -14,13 +14,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.adi.projet2023.R;
-import com.adi.projet2023.activity.main_page.fragment.FragmentAdmin;
+import com.adi.projet2023.activity.main_page.fragment.FragmentUsers;
 import com.adi.projet2023.activity.main_page.fragment.FragmentHome;
 import com.adi.projet2023.activity.main_page.fragment.FragmentProfil;
-import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.local.Local;
-
-import java.util.List;
 
 public class MainPage extends AppCompatActivity {
 
@@ -64,7 +61,7 @@ public class MainPage extends AppCompatActivity {
                     textAdmin.setVisibility(View.GONE);
 
                     profilImage.setImageResource(R.drawable.ic_person);
-                    adminImage.setImageResource(R.drawable.icon_admin);
+                    adminImage.setImageResource(R.drawable.icon_all_users);
 
                     profil.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                     admin.setBackgroundColor(getResources().getColor(android.R.color.transparent));
@@ -99,7 +96,7 @@ public class MainPage extends AppCompatActivity {
                     textAdmin.setVisibility(View.GONE);
 
                     homeImage.setImageResource(R.drawable.icon_home);
-                    adminImage.setImageResource(R.drawable.icon_admin);
+                    adminImage.setImageResource(R.drawable.icon_all_users);
 
                     home.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                     admin.setBackgroundColor(getResources().getColor(android.R.color.transparent));
@@ -128,7 +125,7 @@ public class MainPage extends AppCompatActivity {
                 // Verifier si layout selectionner ou pas
                 if(selection!=3){
                     //Afficher Admin
-                    remplacementFragment(new FragmentAdmin());
+                    remplacementFragment(new FragmentUsers(localEnCours));
 
                     //deselection des autres sauf admin
                     textHome.setVisibility(View.GONE);
@@ -142,7 +139,7 @@ public class MainPage extends AppCompatActivity {
 
                     //activer profil
                     textAdmin.setVisibility(View.VISIBLE);
-                    adminImage.setImageResource(R.drawable.icon_admin);
+                    adminImage.setImageResource(R.drawable.icon_all_users);
                     admin.setBackgroundResource(R.drawable.round_navbar);
 
                     //creer animation

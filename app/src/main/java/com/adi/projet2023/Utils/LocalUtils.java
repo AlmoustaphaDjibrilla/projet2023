@@ -50,7 +50,24 @@ public class LocalUtils {
                     }
                 }
 
-                List<UserModel> lesUsers= (List<UserModel>) documentSnapshot.get("lesUsers");
+                List<HashMap<String, Object>> listUsers= (List<HashMap<String, Object>>) documentSnapshot.get("lesUsers");
+                List<UserModel> lesUsers= new ArrayList<>();
+                if (listUsers!=null){
+                    for (HashMap<String, Object> hashMapUser: listUsers){
+                        String userId= (String) hashMapUser.get("Uid");
+                        String mailUser= (String) hashMapUser.get("email");
+                        String nomUser= (String) hashMapUser.get("nom");
+                        String dateEnregistrement= (String) hashMapUser.get("dateEnregistrement");
+
+                        UserModel userModel= new UserModel();
+                        userModel.setUid(userId);
+                        userModel.setEmail(mailUser);
+                        userModel.setNom(nomUser);
+                        userModel.setDateEnregistrement(dateEnregistrement);
+
+                        lesUsers.add(userModel);
+                    }
+                }
 
                 String nomLocal= documentSnapshot.getString("nomLocal");
                 String quartierLocal= documentSnapshot.getString("quartierLocal");

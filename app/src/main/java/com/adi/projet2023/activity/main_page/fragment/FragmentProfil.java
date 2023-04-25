@@ -6,9 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.adi.projet2023.R;
+import com.google.firebase.auth.FirebaseUser;
 
 public class FragmentProfil extends Fragment {
 
+    FirebaseUser firebaseUser;
     public FragmentProfil() {
         // Required empty public constructor
     }
