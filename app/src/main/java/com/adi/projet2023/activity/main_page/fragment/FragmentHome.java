@@ -90,7 +90,7 @@ public class FragmentHome extends Fragment {
             }
         });
 
-        gridPiece = (GridLayout) root.findViewById(R.id.GridPieces);
+        gridPiece = root.findViewById(R.id.GridPieces);
         afficher_pieces(piecesList);
         return root;
     }

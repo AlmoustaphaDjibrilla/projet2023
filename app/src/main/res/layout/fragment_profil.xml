@@ -1,18 +1,241 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.main_page.fragment.FragmentProfil">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:textColor="@color/white"
-        android:text="Profil" />
+        android:background="@color/colorGrise">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#D3D3D3"
+            android:orientation="vertical" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="350dp"
+                    android:background="@drawable/tp_profile_fragment_background"
+                    android:fontFamily="@font/print_clearly"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imgProfilUser"
+                    android:layout_width="164dp"
+                    android:layout_height="169dp"
+                    android:layout_marginTop="4dp"
+                    android:src="@drawable/icon_account_circle"
+                    app:layout_constraintEnd_toEndOf="@+id/view"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="@+id/view"
+                    app:layout_constraintTop_toTopOf="@+id/view" />
+
+                <TextView
+                    android:id="@+id/txtNomUser1"
+                    android:layout_width="315dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="16dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWithe"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="@+id/imgProfilUser"
+                    app:layout_constraintHorizontal_bias="0.496"
+                    app:layout_constraintStart_toStartOf="@+id/imgProfilUser"
+                    app:layout_constraintTop_toBottomOf="@+id/imgProfilUser" />
+
+                <TextView
+                    android:id="@+id/txtMailUser1"
+                    android:layout_width="347dp"
+                    android:layout_height="26dp"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="@font/gotham"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWithe"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/txtNomUser1"
+                    app:layout_constraintStart_toStartOf="@+id/txtNomUser1"
+                    app:layout_constraintTop_toBottomOf="@+id/txtNomUser1" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout2"
+                    android:layout_width="355dp"
+                    android:layout_height="339dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="280dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="@drawable/white_background"
+                    android:elevation="3dp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="130dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="0dp">
+
+                        <ImageView
+                            android:id="@+id/imgHistoriqueUser"
+                            android:layout_width="89dp"
+                            android:layout_height="63dp"
+                            android:background="@drawable/oval_background"
+                            android:src="@drawable/icon_history" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView8"
+                            android:layout_width="230dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableStart="@drawable/ic_date_range_light_blue_24dp"
+                            android:drawablePadding="5dp"
+                            android:text="Date enregistrement"
+                            android:textSize="16sp" />
+
+                        <Space
+                            android:layout_width="20dp"
+                            android:layout_height="24dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:id="@+id/txtDateEnregistrementUser"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/calibri"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                    <Space
+                        android:layout_width="20dp"
+                        android:layout_height="30dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="230dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableStart="@drawable/ic_email"
+                            android:drawablePadding="5dp"
+                            android:text="Email"
+                            android:textSize="16sp" />
+
+                        <Space
+                            android:layout_width="20dp"
+                            android:layout_height="24dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:id="@+id/txtMailUser2"
+                            android:layout_width="250dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/calibri"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <Space
+                        android:layout_width="20dp"
+                        android:layout_height="30dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="230dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableStart="@drawable/ic_person"
+                            android:drawablePadding="5dp"
+                            android:text="Nom"
+                            android:textSize="16sp" />
+
+                        <Space
+                            android:layout_width="20dp"
+                            android:layout_height="24dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:id="@+id/txtNomUser2"
+                            android:layout_width="250dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/calibri"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="30dp"
+                    app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
+                    app:layout_constraintHorizontal_bias="0.359"
+                    app:layout_constraintStart_toStartOf="@+id/linearLayout2"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+                    <Button
+                        android:id="@+id/btnEditerProfilUser"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/buttonshape"
+                        android:fontFamily="@font/calibri"
+                        android:text="Editer mon profil"
+                        android:textAllCaps="false"
+                        android:textColor="#ffffff"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

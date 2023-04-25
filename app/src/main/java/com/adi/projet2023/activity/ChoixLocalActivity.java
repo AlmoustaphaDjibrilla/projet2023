@@ -83,19 +83,22 @@ public class ChoixLocalActivity extends AppCompatActivity {
         lesLocaux.clear();
 //        recuperer_locaux();
 
-        afficherLocalEnFonctionUser(FirebaseAuth.getInstance().getCurrentUser());
+//        afficherLocalEnFonctionUser(FirebaseAuth.getInstance().getCurrentUser());
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choix_local);
-
         dialog= new Dialog(this);
 
         binding = ActivityChoixLocalBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initFirebaseComponents();
         init();
+
+        afficherLocalEnFonctionUser(FirebaseAuth.getInstance().getCurrentUser());
+
+
         if (lesLocaux.size()==0)
             titreChoixLocal.setText("Aucun local...");
         else{
@@ -189,7 +192,6 @@ public class ChoixLocalActivity extends AppCompatActivity {
                                     lesUsers.add(userTrouve);
                                 }
                             }
-//                            List<UserModel> lesUsers= (List<UserModel>) documentSnapshot.get("lesUsers");
 
                             String nomLocal= documentSnapshot.getString("nomLocal");
                             String quartierLocal= documentSnapshot.getString("quartierLocal");
@@ -383,7 +385,8 @@ public class ChoixLocalActivity extends AppCompatActivity {
                                                         String nom = (String) hashMap.get("nom");
                                                         String type = (String) hashMap.get("typePiece");
                                                         String adresse = (String) hashMap.get("chemin");
-                                                        List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("lesComposants");
+                                                        List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("composants");
+//                                                        List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("lesComposants");
                                                         lesPieces.add(new Piece(id,type,nom,adresse,listHashMap));
                                                     }
                                                 }
@@ -447,7 +450,6 @@ public class ChoixLocalActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
-
                         }
                     }
                 })
