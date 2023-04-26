@@ -53,8 +53,10 @@ public class FragmentHome extends Fragment {
 
     FloatingActionButton btnAddPiece;
     Dialog dialogSupprimerPiece;
-    TextView txtTypePiece, txtNomPiece, txtNomLocal, txtCheminPiece;
+    TextView txtTypePiece, txtNomPiece, txtNomLocal, txtCheminPiece, titreLocal;
     Button btnSupprimerPiece;
+
+    ImageView imgQuitterMainPage;
 
     public FragmentHome(){
 
@@ -79,6 +81,14 @@ public class FragmentHome extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_home,null);
         btnAddPiece = root.findViewById(R.id.addPiece);
+
+        titreLocal= root.findViewById(R.id.titreLocal);
+        titreLocal.setText(localEnCours.getNomLocal());
+
+        imgQuitterMainPage=root.findViewById(R.id.imgQuitterMainPage);
+        imgQuitterMainPage.setOnClickListener(
+                view -> getActivity().finish()
+        );
 
         btnAddPiece.setOnClickListener(new View.OnClickListener() {
             @Override

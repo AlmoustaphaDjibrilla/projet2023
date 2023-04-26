@@ -50,9 +50,11 @@ public class Composants extends AppCompatActivity {
     Piece pieceEnCours;
     FloatingActionButton btnAddComposant;
     Dialog dialogSupprimerComposant;
-    TextView txtTypeComposant, txtNomComposant, txtNomLocal, txtNomPiece;
+    TextView txtTypeComposant, txtNomComposant, txtNomLocal, txtNomPiece, titrePiece;
     Button btnSupprimerComposant;
     Switch  aSwitch;
+
+    ImageView imgQuitterComposant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class Composants extends AppCompatActivity {
         composantList = (List<Composant>) getIntent().getSerializableExtra("composants");
         localEnCours = (Local) getIntent().getSerializableExtra("localEnCours");
         pieceEnCours = (Piece) getIntent().getSerializableExtra("pieceEnCours");
+        titrePiece.setText(pieceEnCours.getNomPiece());
         afficher_composants(composantList);
         initSwitches(composantList);
 
@@ -77,11 +80,17 @@ public class Composants extends AppCompatActivity {
             }
         });
 
+        imgQuitterComposant.setOnClickListener(
+                view -> finish()
+        );
+
     }
 
     private void init(){
         layout=findViewById(R.id.composant);
+        titrePiece= findViewById(R.id.titrePiece);
         btnAddComposant = findViewById(R.id.addComposant);
+        imgQuitterComposant= findViewById(R.id.imgQuitterComposant);
     }
 
     private void afficher_composants(List<Composant> composantList){

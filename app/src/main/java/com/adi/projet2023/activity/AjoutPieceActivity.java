@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +38,8 @@ public class AjoutPieceActivity extends AppCompatActivity {
     Local localEnCours;
     EditText nomPieceEdit;
     AutoCompleteTextView autoCompleteTextView;
+
+    ImageView imgQuitterAddPiece;
     @Override
     protected void onResume() {
         super.onResume();
@@ -66,12 +69,17 @@ public class AjoutPieceActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        imgQuitterAddPiece.setOnClickListener(
+                view -> finish()
+        );
     }
 
     private void init(){
         autoCompleteTextView=findViewById(R.id.txtTypeAjoutPiece);
         addPiece=findViewById(R.id.btnAjouterPiece);
         nomPieceEdit=findViewById(R.id.txtNomAjoutPiece);
+        imgQuitterAddPiece= findViewById(R.id.imgQuitterAddPiece);
     }
 
     private void ajouterPiece() {

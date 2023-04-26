@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.adi.projet2023.R;
@@ -42,6 +43,8 @@ public class FragmentUsers extends Fragment {
     ArrayList<UserModel> lesUsers;
     RecyclerView listUsers;
     FloatingActionButton btnAddUser;
+    ImageView imgQuitterFragmentUsers;
+
     public FragmentUsers(Local local) {
         // Required empty public constructor
         this.localEnCours= local;
@@ -74,12 +77,16 @@ public class FragmentUsers extends Fragment {
                 }
         );
 
+        imgQuitterFragmentUsers.setOnClickListener(
+                view1 -> getActivity().finish()
+        );
         return view;
     }
 
     private void initListOfUsers(View view){
         listUsers= view.findViewById(R.id.listUsers);
         btnAddUser= view.findViewById(R.id.addUser);
+        imgQuitterFragmentUsers= view.findViewById(R.id.imgQuitterFragmentUsers);
 
         AdapterUserModel adapterUserModel= new AdapterUserModel(this.getContext(), lesUsers);
         listUsers.setLayoutManager(new LinearLayoutManager(this.getContext()));
