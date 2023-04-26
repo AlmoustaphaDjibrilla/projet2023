@@ -100,16 +100,6 @@ public class FragmentHome extends Fragment {
         imgQuitterMainPage.setOnClickListener(
                 view -> getActivity().finish()
         );
-
-        btnAddPiece.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), AjoutPieceActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("localEnCours",localEnCours);
-                startActivity(intent);
-            }
-        });
         gridPiece = root.findViewById(R.id.GridPieces);
         afficher_pieces(piecesList);
         return root;
