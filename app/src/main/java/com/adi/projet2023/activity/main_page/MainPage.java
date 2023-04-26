@@ -132,13 +132,12 @@ public class MainPage extends AppCompatActivity {
                     textProfil.setVisibility(View.GONE);
 
                     homeImage.setImageResource(R.drawable.icon_home);
-                    homeImage.setImageResource(R.drawable.icon_home);
+                    profilImage.setImageResource(R.drawable.ic_person);
 
                     home.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                     profil.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    profilImage.setImageResource(R.drawable.ic_person);
 
-                    //activer profil
+                    //activer admin
                     textAdmin.setVisibility(View.VISIBLE);
                     adminImage.setImageResource(R.drawable.icon_all_users);
                     admin.setBackgroundResource(R.drawable.round_navbar);
@@ -149,7 +148,7 @@ public class MainPage extends AppCompatActivity {
                     scaleAnimation.setFillAfter(true);
                     admin.startAnimation(scaleAnimation);
 
-                    //selection sur profil
+                    //selection sur admin
                     selection=3;
                 }
             }
