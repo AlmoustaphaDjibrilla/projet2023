@@ -88,11 +88,9 @@ public class FragmentHome extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-<<<<<<< HEAD
         root = (ViewGroup) inflater.inflate(R.layout.fragment_home,null);
         layout = root.findViewById(R.id.LayoutFragmentHome);
-=======
-        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_home,null);
+
         btnAddPiece = root.findViewById(R.id.addPiece);
 
         titreLocal= root.findViewById(R.id.titreLocal);
@@ -112,8 +110,6 @@ public class FragmentHome extends Fragment {
                 startActivity(intent);
             }
         });
-
->>>>>>> 6c1ab5480636399e8f7b2b9ce81b2d91cf7be274
         gridPiece = root.findViewById(R.id.GridPieces);
         afficher_pieces(piecesList);
         return root;

@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Composants extends AppCompatActivity {
-    final String PATH_USERS_DATABASE= "Users";
+    final String PATH_USERS_DATABASE = "Users";
     LinearLayout layout;
     List<Composant> composantList;
     Local localEnCours;
@@ -60,458 +60,453 @@ public class Composants extends AppCompatActivity {
 
     ImageView imgQuitterComposant;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_affichage_composants);
         init();
-        dialogSupprimerComposant= new Dialog(this);
+        dialogSupprimerComposant = new Dialog(this);
         composantList = (List<Composant>) getIntent().getSerializableExtra("composants");
         localEnCours = (Local) getIntent().getSerializableExtra("localEnCours");
         pieceEnCours = (Piece) getIntent().getSerializableExtra("pieceEnCours");
         titrePiece.setText(pieceEnCours.getNomPiece());
         afficher_composants(composantList);
         initSwitches(composantList);
-
-<<<<<<< HEAD
-=======
         btnAddComposant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AjouterComposant.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("localEnCours",localEnCours);
-                intent.putExtra("pieceEnCours",pieceEnCours);
-                startActivity(intent);
-            }
+        @Override
+        public void onClick (View view){
+        Intent intent = new Intent(getApplicationContext(), AjouterComposant.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("localEnCours", localEnCours);
+        intent.putExtra("pieceEnCours", pieceEnCours);
+        startActivity(intent);
+        }
         });
-
         imgQuitterComposant.setOnClickListener(
                 view -> finish()
         );
-
->>>>>>> 6c1ab5480636399e8f7b2b9ce81b2d91cf7be274
     }
 
-    private void init(){
-        layout=findViewById(R.id.composant);
-<<<<<<< HEAD
-=======
-        titrePiece= findViewById(R.id.titrePiece);
-        btnAddComposant = findViewById(R.id.addComposant);
-        imgQuitterComposant= findViewById(R.id.imgQuitterComposant);
->>>>>>> 6c1ab5480636399e8f7b2b9ce81b2d91cf7be274
-    }
-
-    private void afficher_composants(List<Composant> composantList){
-        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-        //Initialisation des composants
-        for(int i =0; i<composantList.size(); i++){
-            Composant composantEnCours = composantList.get(i);
-            View cardView = inflater.inflate(R.layout.composant_card, layout,false);
-            View cardView2 = inflater.inflate(R.layout.composant2_card, layout,false);
-            if(composantList.get(i).getTypeComposant().equals("AMPOULE")||
-                    composantList.get(i).getTypeComposant().equals("REFRIGERATEUR")||
-                    composantList.get(i).getTypeComposant().equals("CLIMATISEUR")||
-                    composantList.get(i).getTypeComposant().equals("AUTRE")){
-                TextView nom = cardView.findViewById(R.id.nom_composant);
-                ImageView img = cardView.findViewById(R.id.img_composant);
-                nom.setText(composantList.get(i).getNomComposant());
-                switch (composantList.get(i).getTypeComposant()){
-                    case "AMPOULE":
-                        img.setImageResource(R.drawable.ampoules);
-                        break;
-                    case "CLIMATISEUR":
-                        img.setImageResource(R.drawable.clim);
-                        break;
-                    case "PORTE":
-                        img.setImageResource(R.drawable.porte);
-                        break;
-                    case "REFRIGERATEUR":
-                        img.setImageResource(R.drawable.frigo);
-                        break;
-                    case "VENTILATEUR":
-                        img.setImageResource(R.drawable.ventilateur);
-                        break;
-                    case "AUTRE":
-                        img.setImageResource(R.drawable.autre);
-                        break;
-                    default:
-                        break;
-                }
-                cardView.setTag(composantEnCours.getIdComposant());
-                layout.addView(cardView);
-                cardView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        String userId= FirebaseAuth.getInstance()
-                                .getCurrentUser()
-                                .getUid();
-
-                        DocumentReference documentReference=
-                                FirebaseFirestore.getInstance()
-                                        .collection(PATH_USERS_DATABASE)
-                                        .document(userId);
-
-                        documentReference
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        UserModel userModel= documentSnapshot.toObject(UserModel.class);
-
-                                        //Vérifier si le user courant est un admin
-                                        if (userModel.isAdmin()){
-                                            dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
-                                            initComponentsOfDialog();
-                                            dialogSupprimerComposant.show();
-                                            remplirChampsDialog(composantEnCours);
-
-                                            btnSupprimerComposant.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
-                                                    dialogSupprimerComposant.dismiss();
-                                                }
-                                            });
-                                        }
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                        return true;
-                    }
-                });
-            }else {
-                TextView nom1 = cardView2.findViewById(R.id.nom_composant2);
-                ImageView img1 = cardView2.findViewById(R.id.img_composant2);
-                nom1.setText(composantList.get(i).getNomComposant());
-                switch (composantList.get(i).getTypeComposant()){
-                    case "AMPOULE":
-                        img1.setImageResource(R.drawable.ampoule_animee);
-                        break;
-                    case "CLIMATISEUR":
-                        img1.setImageResource(R.drawable.clim);
-                        break;
-                    case "PORTE":
-                        img1.setImageResource(R.drawable.porte);
-                        break;
-                    case "REFRIGERATEUR":
-                        img1.setImageResource(R.drawable.frigo);
-                        break;
-                    case "VENTILATEUR":
-                        img1.setImageResource(R.drawable.ventilateur);
-                        break;
-                    case "AUTRE":
-                        img1.setImageResource(R.drawable.autre);
-                        break;
-                    default:
-                        break;
-                }
-                cardView2.setTag(composantEnCours.getIdComposant());
-                layout.addView(cardView2);
-                cardView2.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        String userId= FirebaseAuth.getInstance()
-                                .getCurrentUser()
-                                .getUid();
-
-                        DocumentReference documentReference=
-                                FirebaseFirestore.getInstance()
-                                        .collection(PATH_USERS_DATABASE)
-                                        .document(userId);
-
-                        documentReference
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        UserModel userModel= documentSnapshot.toObject(UserModel.class);
-
-                                        //Vérifier si le user courant est un admin
-                                        if (userModel.isAdmin()){
-                                            dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
-                                            initComponentsOfDialog();
-                                            dialogSupprimerComposant.show();
-                                            remplirChampsDialog(composantEnCours);
-
-                                            btnSupprimerComposant.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
-                                                    dialogSupprimerComposant.dismiss();
-                                                }
-                                            });
-                                        }
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                        return true;
-                    }
-                });
-            }
-
+        private void init () {
+            layout = findViewById(R.id.composant);
+            titrePiece = findViewById(R.id.titrePiece);
+            btnAddComposant = findViewById(R.id.addComposant);
+            imgQuitterComposant = findViewById(R.id.imgQuitterComposant);
+            titrePiece = findViewById(R.id.titrePiece);
+            btnAddComposant = findViewById(R.id.addComposant);
         }
 
-        //Si admin afficher boutton ajout piece
-        String userId= FirebaseAuth.getInstance()
-                .getCurrentUser()
-                .getUid();
-
-        DocumentReference documentReference=
-                FirebaseFirestore.getInstance()
-                        .collection(PATH_USERS_DATABASE)
-                        .document(userId);
-
-        documentReference
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        UserModel userModel= documentSnapshot.toObject(UserModel.class);
-
-                        //Vérifier si le user courant est un admin
-                        if (userModel.isAdmin()){
-                            View boutton_ajout_composant = inflater.inflate(R.layout.btn_add_composant, layout, false);
-                            btnAddComposant = boutton_ajout_composant.findViewById(R.id.addComposant);
-                            layout.addView(boutton_ajout_composant);
-                            btnAddComposant.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent intent = new Intent(getApplicationContext(), AjouterComposant.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.putExtra("localEnCours",localEnCours);
-                                    intent.putExtra("pieceEnCours",pieceEnCours);
-                                    startActivity(intent);
-                                }
-                            });                        }
+        private void afficher_composants (List < Composant > composantList) {
+            LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+            //Initialisation des composants
+            for (int i = 0; i < composantList.size(); i++) {
+                Composant composantEnCours = composantList.get(i);
+                View cardView = inflater.inflate(R.layout.composant_card, layout, false);
+                View cardView2 = inflater.inflate(R.layout.composant2_card, layout, false);
+                if (composantList.get(i).getTypeComposant().equals("AMPOULE") ||
+                        composantList.get(i).getTypeComposant().equals("REFRIGERATEUR") ||
+                        composantList.get(i).getTypeComposant().equals("CLIMATISEUR") ||
+                        composantList.get(i).getTypeComposant().equals("AUTRE")) {
+                    TextView nom = cardView.findViewById(R.id.nom_composant);
+                    ImageView img = cardView.findViewById(R.id.img_composant);
+                    nom.setText(composantList.get(i).getNomComposant());
+                    switch (composantList.get(i).getTypeComposant()) {
+                        case "AMPOULE":
+                            img.setImageResource(R.drawable.ampoules);
+                            break;
+                        case "CLIMATISEUR":
+                            img.setImageResource(R.drawable.clim);
+                            break;
+                        case "PORTE":
+                            img.setImageResource(R.drawable.porte);
+                            break;
+                        case "REFRIGERATEUR":
+                            img.setImageResource(R.drawable.frigo);
+                            break;
+                        case "VENTILATEUR":
+                            img.setImageResource(R.drawable.ventilateur);
+                            break;
+                        case "AUTRE":
+                            img.setImageResource(R.drawable.autre);
+                            break;
+                        default:
+                            break;
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
+                    cardView.setTag(composantEnCours.getIdComposant());
+                    layout.addView(cardView);
+                    cardView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            String userId = FirebaseAuth.getInstance()
+                                    .getCurrentUser()
+                                    .getUid();
 
-    private void initSwitches(List<Composant> composantList) {
-        for (int i = 0; i < composantList.size(); i++) {
-            Composant composantEnCours = composantList.get(i);
-            if (composantList.get(i).getTypeComposant().equals("AMPOULE") ||
-                    composantList.get(i).getTypeComposant().equals("REFRIGERATEUR") ||
-                    composantList.get(i).getTypeComposant().equals("CLIMATISEUR") ||
-                    composantList.get(i).getTypeComposant().equals("AUTRE")) {
-                View cardView = layout.findViewWithTag(composantEnCours.getIdComposant());
-                Switch switchCompat = cardView.findViewById(R.id.Switch);
+                            DocumentReference documentReference =
+                                    FirebaseFirestore.getInstance()
+                                            .collection(PATH_USERS_DATABASE)
+                                            .document(userId);
 
-                DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference valueRef = databaseRef.child(composantEnCours.getChemin());
-
-                valueRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Object data = snapshot.getValue();
-                        if (data instanceof String) {
-                            // Traitement pour une chaîne de caractères
-                            String valeur = (String) data;
-                            if (valeur.equals("ON")){
-                                switchCompat.setChecked(true);
-                            } else {
-                                switchCompat.setChecked(false);
-                            }
-                        } else if (data instanceof HashMap) {
-                            // Traitement pour une HashMap
-                            HashMap<String, Object> hashMap = (HashMap<String, Object>) data;
-                            String valeur = (String) hashMap.get(composantEnCours.getNomComposant());
-                            if (valeur.equals("ON")){
-                                switchCompat.setChecked(true);
-                            } else {
-                                switchCompat.setChecked(false);
-                            }
-                        } else {
-                            // Traitement pour les autres types de données
-                            Log.d("TAG", "Type de données inconnu");
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d("TAG","Erreur : "+error.getMessage());
-                    }
-                });
-
-                switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    composantEnCours.setEtat(isChecked);
-                    String etat = isChecked ? "ON" : "OFF";
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-                    ref.child(composantEnCours.getChemin()).setValue(etat);
-                });
-            } else {
-                View cardView2 = layout.findViewWithTag(composantEnCours.getIdComposant());
-                SeekBar seekBar = cardView2.findViewById(R.id.Seekbar);
-
-                DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference valueRef = databaseRef.child(composantEnCours.getChemin());
-                valueRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Object data = snapshot.getValue();
-                        if (data instanceof Long) {
-                            Long valeur = (Long) data;
-                            if (valeur==1){
-                                seekBar.setProgress(1);
-
-                            } else if(valeur==2){
-                                seekBar.setProgress(2);
-                            }
-                            else{
-                                seekBar.setProgress(0);
-                            }
-                        } else if (data instanceof HashMap) {
-                            // Traitement pour une HashMap
-                            HashMap<String, Object> hashMap = (HashMap<String, Object>) data;
-                            Long valeur = (Long) hashMap.get(composantEnCours.getNomComposant());
-                            Log.d("TAG","valeur"+cardView2.getTag());
-
-                            if (valeur==1L){
-                                seekBar.setProgress(1);
-
-                            } else if(valeur==2L){
-                                seekBar.setProgress(2);
-                            }
-                            else{
-                                seekBar.setProgress(0);
-                            }
-                        } else {
-                            // Traitement pour les autres types de données
-                            seekBar.setProgress(0);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d("TAG","Erreur : "+error.getMessage());
-                    }
-                });
-
-                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        composantEnCours.setValeur(progress);
-                    }
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-                    }
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                    }
-                });
-            }
-        }
-    }
-
-    private void initComponentsOfDialog(){
-        txtTypeComposant= dialogSupprimerComposant.findViewById(R.id.txtTypeComposantSupprimer);
-        txtNomPiece= dialogSupprimerComposant.findViewById(R.id.txtNomPieceComposantSupprimer);
-        txtNomLocal= dialogSupprimerComposant.findViewById(R.id.txtNomLocalComposantSupprimer);
-        txtNomComposant= dialogSupprimerComposant.findViewById(R.id.txtNomComposantSupprimer);
-
-        btnSupprimerComposant= dialogSupprimerComposant.findViewById(R.id.btnSupprimerComposant);
-    }
-
-    private void remplirChampsDialog(Composant composant){
-        if (composant!=null){
-            txtTypeComposant.setText(composant.getTypeComposant());
-            txtNomPiece.setText(pieceEnCours.getNomPiece());
-            txtNomLocal.setText(localEnCours.getNomLocal());
-            txtNomComposant.setText(composant.getNomComposant());
-        }
-    }
-
-    private void supprimer_composant(String idComposant, String chemin){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference collectionRef = db.collection("Local");
-        collectionRef.whereEqualTo("idLocal",localEnCours.getIdLocal())
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot querySnapshot) {
-                        DocumentSnapshot localDoc = querySnapshot.getDocuments().get(0);
-                        List<Map<String, Object>> lesPieces = (List<Map<String, Object>>) localDoc.get("lesPieces");
-
-                        boolean composantTrouvee = false ;
-                        Map<String,Object> pieceActu = null;
-                        for (Map<String, Object> piece : lesPieces) {
-                            if (piece.get("idPiece").equals(pieceEnCours.getIdPiece())) {
-                                pieceActu = piece;
-                                break;
-                            }
-                        }
-                        List<Map<String, Object>> composants = (List<Map<String, Object>>) pieceActu.get("composants");
-
-                        for (Map<String, Object> composant : composants){
-                            if (composant.get("idComposant").equals(idComposant)){
-                                composantTrouvee = true;
-                                composants.remove(composant);
-                                break;
-                            }
-                        }
-
-                        if (composantTrouvee) {
-                            localDoc.getReference().update("lesPieces", lesPieces)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            documentReference
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                         @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(getApplicationContext(), "Composant supprimée avec succès", Toast.LENGTH_SHORT).show();
-                                            LocalUtils.supprimer_composer_realTime(chemin);
-                                            //Aller vers MainPage
-                                            LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
-                                                @Override
-                                                public void onSuccess(Local local) {
-                                                    // Aller vers Main Page avec local mis a jour
-                                                    Intent intent = new Intent(getApplicationContext(), MainPage.class);
-                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                    intent.putExtra("localId",local);
-                                                    startActivity(intent);
-                                                    finish();
-                                                }
-                                            }, new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    // Erreur lors de la recuperation du local mis a jour
-                                                    Toast.makeText(getApplicationContext(), "Erreur " , Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            UserModel userModel = documentSnapshot.toObject(UserModel.class);
+
+                                            //Vérifier si le user courant est un admin
+                                            if (userModel.isAdmin()) {
+                                                dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
+                                                initComponentsOfDialog();
+                                                dialogSupprimerComposant.show();
+                                                remplirChampsDialog(composantEnCours);
+
+                                                btnSupprimerComposant.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
+                                                        dialogSupprimerComposant.dismiss();
+                                                    }
+                                                });
+                                            }
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getApplicationContext(), "Erreur lors de la suppression de la pièce : ", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
                                         }
                                     });
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Composant non trouvée", Toast.LENGTH_SHORT).show();
+                            return true;
                         }
+                    });
+                } else {
+                    TextView nom1 = cardView2.findViewById(R.id.nom_composant2);
+                    ImageView img1 = cardView2.findViewById(R.id.img_composant2);
+                    nom1.setText(composantList.get(i).getNomComposant());
+                    switch (composantList.get(i).getTypeComposant()) {
+                        case "AMPOULE":
+                            img1.setImageResource(R.drawable.ampoule_animee);
+                            break;
+                        case "CLIMATISEUR":
+                            img1.setImageResource(R.drawable.clim);
+                            break;
+                        case "PORTE":
+                            img1.setImageResource(R.drawable.porte);
+                            break;
+                        case "REFRIGERATEUR":
+                            img1.setImageResource(R.drawable.frigo);
+                            break;
+                        case "VENTILATEUR":
+                            img1.setImageResource(R.drawable.ventilateur);
+                            break;
+                        case "AUTRE":
+                            img1.setImageResource(R.drawable.autre);
+                            break;
+                        default:
+                            break;
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Une erreur s'est produite", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    cardView2.setTag(composantEnCours.getIdComposant());
+                    layout.addView(cardView2);
+                    cardView2.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            String userId = FirebaseAuth.getInstance()
+                                    .getCurrentUser()
+                                    .getUid();
+
+                            DocumentReference documentReference =
+                                    FirebaseFirestore.getInstance()
+                                            .collection(PATH_USERS_DATABASE)
+                                            .document(userId);
+
+                            documentReference
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            UserModel userModel = documentSnapshot.toObject(UserModel.class);
+
+                                            //Vérifier si le user courant est un admin
+                                            if (userModel.isAdmin()) {
+                                                dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
+                                                initComponentsOfDialog();
+                                                dialogSupprimerComposant.show();
+                                                remplirChampsDialog(composantEnCours);
+
+                                                btnSupprimerComposant.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
+                                                        dialogSupprimerComposant.dismiss();
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                            return true;
+                        }
+                    });
+                }
+
+            }
+
+            //Si admin afficher boutton ajout piece
+            String userId = FirebaseAuth.getInstance()
+                    .getCurrentUser()
+                    .getUid();
+
+            DocumentReference documentReference =
+                    FirebaseFirestore.getInstance()
+                            .collection(PATH_USERS_DATABASE)
+                            .document(userId);
+
+            documentReference
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            UserModel userModel = documentSnapshot.toObject(UserModel.class);
+
+                            //Vérifier si le user courant est un admin
+                            if (userModel.isAdmin()) {
+                                View boutton_ajout_composant = inflater.inflate(R.layout.btn_add_composant, layout, false);
+                                btnAddComposant = boutton_ajout_composant.findViewById(R.id.addComposant);
+                                layout.addView(boutton_ajout_composant);
+                                btnAddComposant.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        Intent intent = new Intent(getApplicationContext(), AjouterComposant.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.putExtra("localEnCours", localEnCours);
+                                        intent.putExtra("pieceEnCours", pieceEnCours);
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+
+        private void initSwitches (List < Composant > composantList) {
+            for (int i = 0; i < composantList.size(); i++) {
+                Composant composantEnCours = composantList.get(i);
+                if (composantList.get(i).getTypeComposant().equals("AMPOULE") ||
+                        composantList.get(i).getTypeComposant().equals("REFRIGERATEUR") ||
+                        composantList.get(i).getTypeComposant().equals("CLIMATISEUR") ||
+                        composantList.get(i).getTypeComposant().equals("AUTRE")) {
+                    View cardView = layout.findViewWithTag(composantEnCours.getIdComposant());
+                    Switch switchCompat = cardView.findViewById(R.id.Switch);
+
+                    DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+                    DatabaseReference valueRef = databaseRef.child(composantEnCours.getChemin());
+
+                    valueRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Object data = snapshot.getValue();
+                            if (data instanceof String) {
+                                // Traitement pour une chaîne de caractères
+                                String valeur = (String) data;
+                                if (valeur.equals("ON")) {
+                                    switchCompat.setChecked(true);
+                                } else {
+                                    switchCompat.setChecked(false);
+                                }
+                            } else if (data instanceof HashMap) {
+                                // Traitement pour une HashMap
+                                HashMap<String, Object> hashMap = (HashMap<String, Object>) data;
+                                String valeur = (String) hashMap.get(composantEnCours.getNomComposant());
+                                if (valeur.equals("ON")) {
+                                    switchCompat.setChecked(true);
+                                } else {
+                                    switchCompat.setChecked(false);
+                                }
+                            } else {
+                                // Traitement pour les autres types de données
+                                Log.d("TAG", "Type de données inconnu");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.d("TAG", "Erreur : " + error.getMessage());
+                        }
+                    });
+
+                    switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        composantEnCours.setEtat(isChecked);
+                        String etat = isChecked ? "ON" : "OFF";
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                        ref.child(composantEnCours.getChemin()).setValue(etat);
+                    });
+                } else {
+                    View cardView2 = layout.findViewWithTag(composantEnCours.getIdComposant());
+                    SeekBar seekBar = cardView2.findViewById(R.id.Seekbar);
+
+                    DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+                    DatabaseReference valueRef = databaseRef.child(composantEnCours.getChemin());
+                    valueRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Object data = snapshot.getValue();
+                            if (data instanceof Long) {
+                                Long valeur = (Long) data;
+                                if (valeur == 1) {
+                                    seekBar.setProgress(1);
+
+                                } else if (valeur == 2) {
+                                    seekBar.setProgress(2);
+                                } else {
+                                    seekBar.setProgress(0);
+                                }
+                            } else if (data instanceof HashMap) {
+                                // Traitement pour une HashMap
+                                HashMap<String, Object> hashMap = (HashMap<String, Object>) data;
+                                Long valeur = (Long) hashMap.get(composantEnCours.getNomComposant());
+                                Log.d("TAG", "valeur" + cardView2.getTag());
+
+                                if (valeur == 1L) {
+                                    seekBar.setProgress(1);
+
+                                } else if (valeur == 2L) {
+                                    seekBar.setProgress(2);
+                                } else {
+                                    seekBar.setProgress(0);
+                                }
+                            } else {
+                                // Traitement pour les autres types de données
+                                seekBar.setProgress(0);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.d("TAG", "Erreur : " + error.getMessage());
+                        }
+                    });
+
+                    seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                            composantEnCours.setValeur(progress);
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+                        }
+
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+                        }
+                    });
+                }
+            }
+        }
+
+        private void initComponentsOfDialog () {
+            txtTypeComposant = dialogSupprimerComposant.findViewById(R.id.txtTypeComposantSupprimer);
+            txtNomPiece = dialogSupprimerComposant.findViewById(R.id.txtNomPieceComposantSupprimer);
+            txtNomLocal = dialogSupprimerComposant.findViewById(R.id.txtNomLocalComposantSupprimer);
+            txtNomComposant = dialogSupprimerComposant.findViewById(R.id.txtNomComposantSupprimer);
+
+            btnSupprimerComposant = dialogSupprimerComposant.findViewById(R.id.btnSupprimerComposant);
+        }
+
+        private void remplirChampsDialog(Composant composant){
+            if (composant != null) {
+                txtTypeComposant.setText(composant.getTypeComposant());
+                txtNomPiece.setText(pieceEnCours.getNomPiece());
+                txtNomLocal.setText(localEnCours.getNomLocal());
+                txtNomComposant.setText(composant.getNomComposant());
+            }
+        }
+
+        private void supprimer_composant (String idComposant, String chemin){
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            CollectionReference collectionRef = db.collection("Local");
+            collectionRef.whereEqualTo("idLocal", localEnCours.getIdLocal())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot querySnapshot) {
+                            DocumentSnapshot localDoc = querySnapshot.getDocuments().get(0);
+                            List<Map<String, Object>> lesPieces = (List<Map<String, Object>>) localDoc.get("lesPieces");
+
+                            boolean composantTrouvee = false;
+                            Map<String, Object> pieceActu = null;
+                            for (Map<String, Object> piece : lesPieces) {
+                                if (piece.get("idPiece").equals(pieceEnCours.getIdPiece())) {
+                                    pieceActu = piece;
+                                    break;
+                                }
+                            }
+                            List<Map<String, Object>> composants = (List<Map<String, Object>>) pieceActu.get("composants");
+
+                            for (Map<String, Object> composant : composants) {
+                                if (composant.get("idComposant").equals(idComposant)) {
+                                    composantTrouvee = true;
+                                    composants.remove(composant);
+                                    break;
+                                }
+                            }
+
+                            if (composantTrouvee) {
+                                localDoc.getReference().update("lesPieces", lesPieces)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(getApplicationContext(), "Composant supprimée avec succès", Toast.LENGTH_SHORT).show();
+                                                LocalUtils.supprimer_composer_realTime(chemin);
+                                                //Aller vers MainPage
+                                                LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
+                                                    @Override
+                                                    public void onSuccess(Local local) {
+                                                        // Aller vers Main Page avec local mis a jour
+                                                        Intent intent = new Intent(getApplicationContext(), MainPage.class);
+                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                        intent.putExtra("localId", local);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
+                                                }, new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        // Erreur lors de la recuperation du local mis a jour
+                                                        Toast.makeText(getApplicationContext(), "Erreur ", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(getApplicationContext(), "Erreur lors de la suppression de la pièce : ", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Composant non trouvée", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "Une erreur s'est produite", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+
     }
 
-
-}
