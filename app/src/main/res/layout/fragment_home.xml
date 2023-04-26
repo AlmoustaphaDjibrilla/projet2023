@@ -9,15 +9,30 @@
 
 
     <LinearLayout
+        android:id="@+id/LayoutFragmentHome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imgQuitterMainPage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/icon_back"/>
+
         <TextView
+            android:id="@+id/titreLocal"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:text="Welcome"
+            android:text=""
+            android:layout_marginTop="15dp"
             android:layout_margin="16dp"
-            android:textColor="@color/black"
+            android:fontFamily="@font/montserrat_semibold"
+            android:textColor="@color/comel"
             android:textSize="30sp"/>
 
         <RelativeLayout
@@ -51,7 +66,7 @@
                     android:layout_marginEnd="92dp"
                     android:layout_marginBottom="31dp"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:text="25 C"
+                    android:text=" °C"
                     android:textColor="@color/comel"
                     android:textSize="30sp" />
 
@@ -64,7 +79,7 @@
                     android:layout_marginEnd="90dp"
                     android:layout_marginBottom="16dp"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:text="28%"
+                    android:text="%"
                     android:textColor="@color/comel"
                     android:textSize="30sp" />
 
@@ -93,14 +108,5 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp">
         </GridLayout>
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addPiece"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginBottom="16dp"
-            app:srcCompat="@android:drawable/ic_input_add" />
-
     </LinearLayout>
 </ScrollView>

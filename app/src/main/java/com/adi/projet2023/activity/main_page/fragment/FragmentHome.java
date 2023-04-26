@@ -3,6 +3,8 @@ package com.adi.projet2023.activity.main_page.fragment;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,14 +27,17 @@ import com.adi.projet2023.Utils.LocalUtils;
 import com.adi.projet2023.activity.AjoutPieceActivity;
 import com.adi.projet2023.activity.Composants;
 import com.adi.projet2023.activity.main_page.MainPage;
+import com.adi.projet2023.creation.CreationLocal;
 import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.composant.Composant;
 import com.adi.projet2023.model.local.Local;
+import com.adi.projet2023.model.user.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -47,14 +53,19 @@ import java.util.List;
 import java.util.Map;
 
 public class FragmentHome extends Fragment {
+    final String PATH_USERS_DATABASE= "Users";
     GridLayout gridPiece;
     Local localEnCours;
     List<Piece> piecesList;
 
     FloatingActionButton btnAddPiece;
     Dialog dialogSupprimerPiece;
-    TextView txtTypePiece, txtNomPiece, txtNomLocal, txtCheminPiece;
+    TextView txtTypePiece, txtNomPiece, txtNomLocal, txtCheminPiece, titreLocal;
     Button btnSupprimerPiece;
+    LinearLayout layout;
+    ViewGroup root;
+
+    ImageView imgQuitterMainPage;
 
     public FragmentHome(){
 
@@ -77,8 +88,20 @@ public class FragmentHome extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+<<<<<<< HEAD
+        root = (ViewGroup) inflater.inflate(R.layout.fragment_home,null);
+        layout = root.findViewById(R.id.LayoutFragmentHome);
+=======
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_home,null);
         btnAddPiece = root.findViewById(R.id.addPiece);
+
+        titreLocal= root.findViewById(R.id.titreLocal);
+        titreLocal.setText(localEnCours.getNomLocal());
+
+        imgQuitterMainPage=root.findViewById(R.id.imgQuitterMainPage);
+        imgQuitterMainPage.setOnClickListener(
+                view -> getActivity().finish()
+        );
 
         btnAddPiece.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +113,7 @@ public class FragmentHome extends Fragment {
             }
         });
 
+>>>>>>> 6c1ab5480636399e8f7b2b9ce81b2d91cf7be274
         gridPiece = root.findViewById(R.id.GridPieces);
         afficher_pieces(piecesList);
         return root;
@@ -169,30 +193,99 @@ public class FragmentHome extends Fragment {
                         startActivity(intent);
                     }
                 });
-                cardView.setOnLongClickListener(
-                        l->{
-                            dialogSupprimerPiece.setContentView(R.layout.supprimer_piece);
-                            initComponentsOfDialog();
-                            dialogSupprimerPiece.show();
+                cardView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        String userId= FirebaseAuth.getInstance()
+                                .getCurrentUser()
+                                .getUid();
 
-                            remplirChampsDialog(pieceEncours);
+                        DocumentReference documentReference=
+                                FirebaseFirestore.getInstance()
+                                        .collection(PATH_USERS_DATABASE)
+                                        .document(userId);
 
-                            btnSupprimerPiece.setOnClickListener(
-                                    v->{
-                                        supprimer_piece(pieceEncours.getIdPiece());
-                                        LocalUtils.supprimer_composant_piece_realTime(pieceEncours);
-                                        dialogSupprimerPiece.dismiss();
+                        documentReference
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        UserModel userModel= documentSnapshot.toObject(UserModel.class);
+
+                                        //Vérifier si le user courant est un admin
+                                        if (userModel.isAdmin()){
+                                            dialogSupprimerPiece.setContentView(R.layout.supprimer_piece);
+                                            initComponentsOfDialog();
+                                            dialogSupprimerPiece.show();
+                                            remplirChampsDialog(pieceEncours);
+
+                                            btnSupprimerPiece.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    supprimer_piece(pieceEncours.getIdPiece());
+                                                    LocalUtils.supprimer_composant_piece_realTime(pieceEncours);
+                                                    dialogSupprimerPiece.dismiss();
+                                                }
+                                            });
+                                        }
                                     }
-                            );
-
-                            return true;
-                        }
-                );
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getActivity(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                        return true;
+                    }
+                });
             }
         }
         else {
             Log.d("TAG", "Aucune piece");
         }
+
+        //Si admin afficher boutton ajout piece
+        String userId= FirebaseAuth.getInstance()
+                .getCurrentUser()
+                .getUid();
+
+        DocumentReference documentReference=
+                FirebaseFirestore.getInstance()
+                        .collection(PATH_USERS_DATABASE)
+                        .document(userId);
+
+        documentReference
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        UserModel userModel= documentSnapshot.toObject(UserModel.class);
+
+                        //Vérifier si le user courant est un admin
+                        if (userModel.isAdmin()){
+                            View boutton_ajout_piece = inflater.inflate(R.layout.btn_add_piece, layout, false);
+                            btnAddPiece = boutton_ajout_piece.findViewById(R.id.addPiece);
+                            layout.addView(boutton_ajout_piece);
+                            btnAddPiece.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(getContext(), AjoutPieceActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtra("localEnCours",localEnCours);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
 
     private void initComponentsOfDialog(){
@@ -245,6 +338,8 @@ public class FragmentHome extends Fragment {
                                                 public void onSuccess(Local local) {
                                                     // Aller vers Main Page avec local mis a jour
                                                     gridPiece.removeAllViews();
+                                                    View viewToRemove = root.findViewById(R.id.addPiece);
+                                                    layout.removeView(viewToRemove);
                                                     afficher_pieces(local.getLesPieces());
                                                 }
                                             }, new OnFailureListener() {

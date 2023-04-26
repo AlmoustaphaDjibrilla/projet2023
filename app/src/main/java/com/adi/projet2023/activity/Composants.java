@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.LocalUtils;
@@ -25,9 +26,11 @@ import com.adi.projet2023.activity.main_page.MainPage;
 import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.composant.Composant;
 import com.adi.projet2023.model.local.Local;
+import com.adi.projet2023.model.user.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -44,15 +48,17 @@ import java.util.List;
 import java.util.Map;
 
 public class Composants extends AppCompatActivity {
+    final String PATH_USERS_DATABASE= "Users";
     LinearLayout layout;
     List<Composant> composantList;
     Local localEnCours;
     Piece pieceEnCours;
     FloatingActionButton btnAddComposant;
     Dialog dialogSupprimerComposant;
-    TextView txtTypeComposant, txtNomComposant, txtNomLocal, txtNomPiece;
+    TextView txtTypeComposant, txtNomComposant, txtNomLocal, txtNomPiece, titrePiece;
     Button btnSupprimerComposant;
-    Switch  aSwitch;
+
+    ImageView imgQuitterComposant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +69,12 @@ public class Composants extends AppCompatActivity {
         composantList = (List<Composant>) getIntent().getSerializableExtra("composants");
         localEnCours = (Local) getIntent().getSerializableExtra("localEnCours");
         pieceEnCours = (Piece) getIntent().getSerializableExtra("pieceEnCours");
+        titrePiece.setText(pieceEnCours.getNomPiece());
         afficher_composants(composantList);
         initSwitches(composantList);
 
+<<<<<<< HEAD
+=======
         btnAddComposant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,11 +86,21 @@ public class Composants extends AppCompatActivity {
             }
         });
 
+        imgQuitterComposant.setOnClickListener(
+                view -> finish()
+        );
+
+>>>>>>> 6c1ab5480636399e8f7b2b9ce81b2d91cf7be274
     }
 
     private void init(){
         layout=findViewById(R.id.composant);
+<<<<<<< HEAD
+=======
+        titrePiece= findViewById(R.id.titrePiece);
         btnAddComposant = findViewById(R.id.addComposant);
+        imgQuitterComposant= findViewById(R.id.imgQuitterComposant);
+>>>>>>> 6c1ab5480636399e8f7b2b9ce81b2d91cf7be274
     }
 
     private void afficher_composants(List<Composant> composantList){
@@ -122,24 +141,51 @@ public class Composants extends AppCompatActivity {
                 }
                 cardView.setTag(composantEnCours.getIdComposant());
                 layout.addView(cardView);
-                cardView.setOnLongClickListener(
-                        l->{
-                            dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
-                            initComponentsOfDialog();
-                            dialogSupprimerComposant.show();
+                cardView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        String userId= FirebaseAuth.getInstance()
+                                .getCurrentUser()
+                                .getUid();
 
-                            remplirChampsDialog(composantEnCours);
+                        DocumentReference documentReference=
+                                FirebaseFirestore.getInstance()
+                                        .collection(PATH_USERS_DATABASE)
+                                        .document(userId);
 
-                            btnSupprimerComposant.setOnClickListener(
-                                    v->{
-                                        supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
-                                        dialogSupprimerComposant.dismiss();
+                        documentReference
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        UserModel userModel= documentSnapshot.toObject(UserModel.class);
+
+                                        //Vérifier si le user courant est un admin
+                                        if (userModel.isAdmin()){
+                                            dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
+                                            initComponentsOfDialog();
+                                            dialogSupprimerComposant.show();
+                                            remplirChampsDialog(composantEnCours);
+
+                                            btnSupprimerComposant.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
+                                                    dialogSupprimerComposant.dismiss();
+                                                }
+                                            });
+                                        }
                                     }
-                            );
-
-                            return true;
-                        }
-                );
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                        return true;
+                    }
+                });
             }else {
                 TextView nom1 = cardView2.findViewById(R.id.nom_composant2);
                 ImageView img1 = cardView2.findViewById(R.id.img_composant2);
@@ -168,26 +214,95 @@ public class Composants extends AppCompatActivity {
                 }
                 cardView2.setTag(composantEnCours.getIdComposant());
                 layout.addView(cardView2);
-                cardView2.setOnLongClickListener(
-                        l->{
-                            dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
-                            initComponentsOfDialog();
-                            dialogSupprimerComposant.show();
+                cardView2.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        String userId= FirebaseAuth.getInstance()
+                                .getCurrentUser()
+                                .getUid();
 
-                            remplirChampsDialog(composantEnCours);
+                        DocumentReference documentReference=
+                                FirebaseFirestore.getInstance()
+                                        .collection(PATH_USERS_DATABASE)
+                                        .document(userId);
 
-                            btnSupprimerComposant.setOnClickListener(
-                                    v->{
-                                        supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
-                                        dialogSupprimerComposant.dismiss();
+                        documentReference
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        UserModel userModel= documentSnapshot.toObject(UserModel.class);
+
+                                        //Vérifier si le user courant est un admin
+                                        if (userModel.isAdmin()){
+                                            dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
+                                            initComponentsOfDialog();
+                                            dialogSupprimerComposant.show();
+                                            remplirChampsDialog(composantEnCours);
+
+                                            btnSupprimerComposant.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
+                                                    dialogSupprimerComposant.dismiss();
+                                                }
+                                            });
+                                        }
                                     }
-                            );
-                            return true;
-                        }
-                );
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                        return true;
+                    }
+                });
             }
 
         }
+
+        //Si admin afficher boutton ajout piece
+        String userId= FirebaseAuth.getInstance()
+                .getCurrentUser()
+                .getUid();
+
+        DocumentReference documentReference=
+                FirebaseFirestore.getInstance()
+                        .collection(PATH_USERS_DATABASE)
+                        .document(userId);
+
+        documentReference
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        UserModel userModel= documentSnapshot.toObject(UserModel.class);
+
+                        //Vérifier si le user courant est un admin
+                        if (userModel.isAdmin()){
+                            View boutton_ajout_composant = inflater.inflate(R.layout.btn_add_composant, layout, false);
+                            btnAddComposant = boutton_ajout_composant.findViewById(R.id.addComposant);
+                            layout.addView(boutton_ajout_composant);
+                            btnAddComposant.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(getApplicationContext(), AjouterComposant.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtra("localEnCours",localEnCours);
+                                    intent.putExtra("pieceEnCours",pieceEnCours);
+                                    startActivity(intent);
+                                }
+                            });                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void initSwitches(List<Composant> composantList) {

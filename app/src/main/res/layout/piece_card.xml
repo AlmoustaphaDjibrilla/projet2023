@@ -31,8 +31,10 @@
                 android:layout_gravity="center_horizontal"
                 android:text="Test"
                 android:textAlignment="center"
+                android:fontFamily="@font/montserrat_semibold"
                 android:textColor="@color/black"
-                android:textSize="18sp">
+                android:textStyle="bold"
+                android:textSize="15sp">
             </TextView>
         </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.adi.projet2023.R;
@@ -48,6 +49,8 @@ public class AjouterComposant extends AppCompatActivity {
     Local localEnCours;
     Piece pieceEnCours;
     AutoCompleteTextView autoCompleteTextView;
+
+    ImageView imgQuitterAddComposant;
     @Override
     protected void onResume() {
         super.onResume();
@@ -79,12 +82,18 @@ public class AjouterComposant extends AppCompatActivity {
             }
         });
 
+        imgQuitterAddComposant.setOnClickListener(
+                view -> finish()
+        );
+
     }
 
     private void init(){
         autoCompleteTextView=findViewById(R.id.txtTypeAjoutComposant);
         addComposant=findViewById(R.id.btnAjouterComposant);
         nomComposantEdit=findViewById(R.id.txtNomAjoutComposant);
+
+        imgQuitterAddComposant= findViewById(R.id.imgQuitterAddComposant);
     }
 
     private boolean verifier_champ(String nomComposant, String typeComposant){
