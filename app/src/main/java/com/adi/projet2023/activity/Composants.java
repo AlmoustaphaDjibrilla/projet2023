@@ -70,6 +70,7 @@ public class Composants extends AppCompatActivity {
         composantList = (List<Composant>) getIntent().getSerializableExtra("composants");
         localEnCours = (Local) getIntent().getSerializableExtra("localEnCours");
         pieceEnCours = (Piece) getIntent().getSerializableExtra("pieceEnCours");
+        recuperer_temperature_humidite();
         titrePiece.setText(pieceEnCours.getNomPiece());
         afficher_composants(composantList);
         initSwitches(composantList);
@@ -495,6 +496,26 @@ public class Composants extends AppCompatActivity {
                 });
     }
 
+    private void recuperer_temperature_humidite(){
+        String chemin = "/"+localEnCours.getNomLocal().toLowerCase();
+        TextView humidite = findViewById(R.id.humidite);
+        TextView temperature = findViewById(R.id.temperature);
+
+        RealTime.getValueFromFirebase(chemin,"Temperature", Long.class, new RealTime.OnValueReceivedListener<Long>() {
+            @Override
+            public void onValueReceived(Long value) {
+                temperature.setText(value+" C");
+            }
+        });
+
+        RealTime.getValueFromFirebase(chemin,"Humidite", Long.class, new RealTime.OnValueReceivedListener<Long>() {
+            @Override
+            public void onValueReceived(Long value) {
+                humidite.setText(value+" %");
+            }
+        });
+
+    }
 
 }
 

@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.LocalUtils;
+import com.adi.projet2023.Utils.RealTime;
 import com.adi.projet2023.activity.AjoutPieceActivity;
 import com.adi.projet2023.activity.Composants;
 import com.adi.projet2023.activity.main_page.MainPage;
@@ -90,6 +91,7 @@ public class FragmentHome extends Fragment {
                              Bundle savedInstanceState) {
         root = (ViewGroup) inflater.inflate(R.layout.fragment_home,null);
         layout = root.findViewById(R.id.LayoutFragmentHome);
+        recuperer_temperature_humidite();
 
         btnAddPiece = root.findViewById(R.id.addPiece);
 
@@ -355,5 +357,27 @@ public class FragmentHome extends Fragment {
                     }
                 });
     }
+
+    private void recuperer_temperature_humidite(){
+        String chemin = "/"+localEnCours.getNomLocal().toLowerCase();
+        TextView humidite = root.findViewById(R.id.humidite);
+        TextView temperature = root.findViewById(R.id.temperature);
+
+        RealTime.getValueFromFirebase(chemin,"Temperature", Long.class, new RealTime.OnValueReceivedListener<Long>() {
+            @Override
+            public void onValueReceived(Long value) {
+                temperature.setText(value+" C");
+            }
+        });
+
+        RealTime.getValueFromFirebase(chemin,"Humidite", Long.class, new RealTime.OnValueReceivedListener<Long>() {
+            @Override
+            public void onValueReceived(Long value) {
+                humidite.setText(value+" %");
+            }
+        });
+
+    }
+
 
 }

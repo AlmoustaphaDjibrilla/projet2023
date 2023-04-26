@@ -99,6 +99,18 @@ public class LocalUtils {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(chemin);
         ref.removeValue();
     }
+
+    private static void supprimer_route_temp(Local local){
+        String chemin= "/"+local.getNomLocal().toLowerCase();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(chemin);
+        ref.child("Temperature").removeValue();
+    }
+
+    private static void supprimer_route_hum(Local local){
+        String chemin= "/"+local.getNomLocal().toLowerCase();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(chemin);
+        ref.child("Humidite").removeValue();
+    }
     public static void supprimer_composant_piece_realTime(Piece piece){
         for(int i =0; i<piece.getLesComposants().size();i++){
             LocalUtils.supprimer_composer_realTime(piece.getLesComposants().get(i).getChemin());
@@ -106,9 +118,15 @@ public class LocalUtils {
     }
 
     public  static void supprimer_composant_local_realTime(Local local){
-        for(int i =0;i<local.getLesPieces().size();i++){
-            supprimer_composant_piece_realTime(local.getLesPieces().get(i));
+        supprimer_route_temp(local);
+        supprimer_route_hum(local);
+
+        if(local.getLesPieces()!=null){
+            for(int i =0;i<local.getLesPieces().size();i++){
+                supprimer_composant_piece_realTime(local.getLesPieces().get(i));
+            }
         }
+
     }
 
 }

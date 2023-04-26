@@ -36,6 +36,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -47,6 +49,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChoixLocalActivity extends AppCompatActivity {
 
@@ -313,6 +316,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
             case MAISON:
                 Maison maison= new Maison(nomLocal, quartierLocal, villeLocal);
                 CreationLocal.creationMaison(maison);
+                ajouter_local_a_realTime("/"+maison.getNomLocal().toLowerCase());
                 lesLocaux.add(maison);
                 updateListViewOfLocals();
                 Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
@@ -322,6 +326,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
             case ENTREPRISE:
                 Entreprise entreprise= new Entreprise(nomLocal, quartierLocal, villeLocal);
                 CreationLocal.creationEntreprise(entreprise);
+                ajouter_local_a_realTime("/"+entreprise.getNomLocal().toLowerCase());
                 lesLocaux.add(entreprise);
                 updateListViewOfLocals();
                 Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
@@ -331,6 +336,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
             case AUTRE:
                 AutreLocal autreLocal= new AutreLocal(nomLocal, quartierLocal, villeLocal);
                 CreationLocal.creationAutreLocal(autreLocal);
+                ajouter_local_a_realTime("/"+autreLocal.getNomLocal().toLowerCase());
                 lesLocaux.add(autreLocal);
                 updateListViewOfLocals();
                 Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
@@ -344,6 +350,14 @@ public class ChoixLocalActivity extends AppCompatActivity {
         }
     }
 
+    private void ajouter_local_a_realTime(String chemin){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(chemin);
+        Map<String, Object> composant_valeur = new HashMap<>();
+        composant_valeur.put("Temperature", 0);
+        composant_valeur.put("Humidite", 0);
+        ref.updateChildren(composant_valeur);
+
+    }
 
     private void afficherLocalEnFonctionUser(FirebaseUser firebaseUser){
         DocumentReference docUsermodel=
