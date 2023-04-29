@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.LocalUtils;
@@ -37,7 +36,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -48,6 +46,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Composants extends AppCompatActivity {
 
@@ -56,6 +55,7 @@ public class Composants extends AppCompatActivity {
 
     final String PATH_USERS_DATABASE = "Users";
     LinearLayout layout;
+    boolean initialisation = true;
     List<Composant> composantList;
     Local localEnCours;
     Piece pieceEnCours;
@@ -395,11 +395,20 @@ public class Composants extends AppCompatActivity {
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                         composantEnCours.setValeur(progress);
                         Commande commande= new Commande(composantEnCours);
-                        if (progress==0){
-                            commande.setDetail_commande(DETAIL_EXTINCTION);
-                        }
-                        else{
-                            commande.setDetail_commande(DETAIL_ALLUMAGE);
+                        if(composantEnCours.getTypeComposant().equals("PORTE")){
+                            if (progress==0){
+                                commande.setDetail_commande("FERMETURE");
+                            }
+                            else{
+                                commande.setDetail_commande("OUVERTURE");
+                            }
+                        }else{
+                            if (progress==0){
+                                commande.setDetail_commande("ARRET");
+                            }
+                            else{
+                                commande.setDetail_commande("MARCHE");
+                            }
                         }
                         CreationCommande.enregistrerNouvelleCommande(commande);
                     }
