@@ -118,8 +118,6 @@
                     app:cardCornerRadius="4dp"
                     app:cardUseCompatPadding="true"
                     app:contentPadding="16dp">
-
-
                 </ListView>
 
 

@@ -23,6 +23,8 @@ import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.LocalUtils;
 import com.adi.projet2023.Utils.RealTime;
 import com.adi.projet2023.activity.main_page.MainPage;
+import com.adi.projet2023.creation.CreationCommande;
+import com.adi.projet2023.model.Commande.Commande;
 import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.composant.Composant;
 import com.adi.projet2023.model.local.Local;
@@ -48,6 +50,10 @@ import java.util.List;
 import java.util.Map;
 
 public class Composants extends AppCompatActivity {
+
+    final String DETAIL_ALLUMAGE= "Allumage";
+    final String DETAIL_EXTINCTION= "Extinction";
+
     final String PATH_USERS_DATABASE = "Users";
     LinearLayout layout;
     List<Composant> composantList;
@@ -288,7 +294,7 @@ public class Composants extends AppCompatActivity {
                 });
     }
 
-    private void initSwitches (List < Composant > composantList){
+    private void initSwitches (List<Composant> composantList){
         for (int i = 0; i < composantList.size(); i++) {
             Composant composantEnCours = composantList.get(i);
             if (composantList.get(i).getTypeComposant().equals("AMPOULE") ||
@@ -337,8 +343,16 @@ public class Composants extends AppCompatActivity {
                 switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     composantEnCours.setEtat(isChecked);
                     String etat = isChecked ? "ON" : "OFF";
+                    Commande commande= new Commande(composantEnCours);
+                    if (etat.equals("ON"))
+                        commande.setDetail_commande(DETAIL_ALLUMAGE);
+                    else
+                        commande.setDetail_commande(DETAIL_EXTINCTION);
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-                    ref.child(composantEnCours.getChemin()).setValue(etat);
+                    ref
+                            .child(composantEnCours.getChemin())
+                            .setValue(etat);
+                    CreationCommande.enregistrerNouvelleCommande(commande);
                 });
             } else {
                 View cardView2 = layout.findViewWithTag(composantEnCours.getIdComposant());
@@ -390,6 +404,14 @@ public class Composants extends AppCompatActivity {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                         composantEnCours.setValeur(progress);
+                        Commande commande= new Commande(composantEnCours);
+                        if (progress==0){
+                            commande.setDetail_commande(DETAIL_EXTINCTION);
+                        }
+                        else{
+                            commande.setDetail_commande(DETAIL_ALLUMAGE);
+                        }
+                        CreationCommande.enregistrerNouvelleCommande(commande);
                     }
 
                     @Override

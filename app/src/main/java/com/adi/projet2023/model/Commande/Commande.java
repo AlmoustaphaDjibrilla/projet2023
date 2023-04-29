@@ -20,10 +20,7 @@ public class Commande implements Serializable {
     public Commande() {
     }
 
-    public Commande(UserModel userModel, Composant composant) {
-        this.userModel = userModel;
-        if (userModel!=null)
-            this.emailUser= userModel.getEmail();
+    public Commande(Composant composant) {
         if (composant!=null)
             this.nomComposant= composant.getNomComposant();
         this.composant = composant;

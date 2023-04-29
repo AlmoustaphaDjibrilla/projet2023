@@ -71,10 +71,59 @@ public class AdapterListCommandes extends BaseAdapter {
 
 
         if (detailCommande.contains(detail_allumer_ampoule)){
-            imgActionCommande.setImageResource(R.drawable.icon_lumiere_allumee);
+            String typeComposant= commandeEnCours.getComposant().getTypeComposant();
+
+            switch (typeComposant){
+                case "AMPOULE":
+                    imgActionCommande.setImageResource(R.drawable.icon_lumiere_allumee);
+                    break;
+
+                case "CLIMATISEUR":
+                    imgActionCommande.setImageResource(R.drawable.icon_allumage_climatiseur);
+                    break;
+
+                case "VENTILATEUR":
+                    imgActionCommande.setImageResource(R.drawable.icon_allumage_ventilateur);
+                    break;
+
+                case "PORTE":
+                    imgActionCommande.setImageResource(R.drawable.icon_ouverture_porte);
+                    break;
+
+                case "REFRIGERATEUR":
+                    imgActionCommande.setImageResource(R.drawable.icon_allumage_frigo);
+
+                default:
+                    break;
+            }
+
         }
         else if (detailCommande.contains(detail_extinction_ampoule)){
-            imgActionCommande.setImageResource(R.drawable.icon_lumiere_eteinte);
+            String typeComposant= commandeEnCours.getComposant().getTypeComposant();
+
+            switch (typeComposant){
+                case "AMPOULE":
+                    imgActionCommande.setImageResource(R.drawable.icon_lumiere_eteinte);
+                    break;
+
+                case "CLIMATISEUR":
+                    imgActionCommande.setImageResource(R.drawable.icon_extinction_climatiseur);
+                    break;
+
+                case "VENTILATEUR":
+                    imgActionCommande.setImageResource(R.drawable.icon_extinction_ventilateur);
+                    break;
+
+                case "PORTE":
+                    imgActionCommande.setImageResource(R.drawable.icon_fermeture_porte);
+                    break;
+
+                case "REFRIGERATEUR":
+                    imgActionCommande.setImageResource(R.drawable.icon_extinction_frigo);
+
+                default:
+                    break;
+            }
         }
 
 

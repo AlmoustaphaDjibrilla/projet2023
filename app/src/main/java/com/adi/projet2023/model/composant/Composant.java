@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 public class Composant implements Serializable {
+
     DatabaseReference databaseReference;
     String idComposant;
     String chemin;
