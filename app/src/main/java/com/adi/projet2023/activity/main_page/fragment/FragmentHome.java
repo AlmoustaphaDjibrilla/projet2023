@@ -163,6 +163,9 @@ public class FragmentHome extends Fragment {
                     case "DOUCHE":
                         img.setImageResource(R.drawable.douche);
                         break;
+                    case "JARDIN":
+                        img.setImageResource(R.drawable.jardin);
+                        break;
                     case "AUTRE":
                         img.setImageResource(R.drawable.autre_piece);
                         break;

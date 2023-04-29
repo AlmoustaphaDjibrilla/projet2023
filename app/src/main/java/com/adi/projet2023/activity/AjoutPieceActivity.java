@@ -65,8 +65,10 @@ public class AjoutPieceActivity extends AppCompatActivity {
         addPiece.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ajouterPiece();
-                finish();
+                if(verifier_champs()){
+                    ajouterPiece();
+                    finish();
+                }
             }
         });
 
@@ -82,103 +84,98 @@ public class AjoutPieceActivity extends AppCompatActivity {
         imgQuitterAddPiece= findViewById(R.id.imgQuitterAddPiece);
     }
 
+    private boolean verifier_champs(){
+        String nomPiece = nomPieceEdit.getText().toString().trim();
+        String typePiece = autoCompleteTextView.getText().toString();
+
+        if(nomPiece==null || nomPiece.equals("")){
+            nomPieceEdit.setError("Saisissez le nom de la piece");
+            return false;
+        }
+        if(typePiece==null || typePiece.equals("")){
+            autoCompleteTextView.setError("Choisissez le type de la piece");
+            return false;
+        }
+        return true;
+    }
+
     private void ajouterPiece() {
         String nomPiece = nomPieceEdit.getText().toString().trim();
         typePiece = autoCompleteTextView.getText().toString();
         String c ="/";
         String chemin = c+localEnCours.getNomLocal().toLowerCase()+c+nomPiece.toLowerCase();
 
-        if(verifier_champ(nomPiece,typePiece)){
-            // Créer un objet Map pour représenter les données de la nouvelle pièce
-            Map<String, Object> piece = new HashMap<>();
-            piece.put("idPiece",nomPiece.replaceAll("\\s", "").toLowerCase());
-            piece.put("nom", nomPiece);
-            piece.put("chemin",chemin);
-            piece.put("typePiece", typePiece);
-            piece.put("composants", new ArrayList<Map<String, Object>>());
+        // Créer un objet Map pour représenter les données de la nouvelle pièce
+        Map<String, Object> piece = new HashMap<>();
+        piece.put("idPiece",nomPiece.replaceAll("\\s", "").toLowerCase());
+        piece.put("nom", nomPiece);
+        piece.put("chemin",chemin);
+        piece.put("typePiece", typePiece);
+        piece.put("composants", new ArrayList<Map<String, Object>>());
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            CollectionReference localRef = db.collection("Local");
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference localRef = db.collection("Local");
 
-            // Ajouter la nouvelle pièce à la liste "lesPieces" du document "Local" correspondant à l'ID "test"
-            localRef.whereEqualTo("idLocal", localEnCours.getIdLocal())
-                    .get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            if (!queryDocumentSnapshots.isEmpty()) {
-                                DocumentSnapshot localDoc = queryDocumentSnapshots.getDocuments().get(0);
-                                List<Map<String, Object>> lesPieces = (List<Map<String, Object>>) localDoc.get("lesPieces");
-                                if (lesPieces == null) {
-                                    lesPieces = new ArrayList<>();
-                                }
-                                lesPieces.add(piece);
-                                localDoc.getReference().update("lesPieces", lesPieces)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Toast.makeText(AjoutPieceActivity.this, "Nouvelle pièce ajoutée avec succès", Toast.LENGTH_SHORT).show();
-                                                //Aller vers MainPage
-                                                LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
-                                                    @Override
-                                                    public void onSuccess(Local local) {
-                                                        // Aller vers Main Page avec local mis a jour
-                                                        Intent intent = new Intent(getApplicationContext(), MainPage.class);
-                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                        intent.putExtra("localId",local);
-                                                        startActivity(intent);
-                                                        finish();
-                                                    }
-                                                }, new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        // Erreur lors de la recuperation du local mis a jour
-                                                        Toast.makeText(AjoutPieceActivity.this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(AjoutPieceActivity.this, "Erreur lors de l'ajout de la pièce : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(getApplicationContext(), MainPage.class);
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                intent.putExtra("localId",localEnCours);
-                                                startActivity(intent);
-                                                finish();
-                                            }
-                                        });
-                            } else {
-                                Toast.makeText(AjoutPieceActivity.this, "Local introuvable", Toast.LENGTH_SHORT).show();
+        // Ajouter la nouvelle pièce à la liste "lesPieces" du document "Local" correspondant à l'ID "test"
+        localRef.whereEqualTo("idLocal", localEnCours.getIdLocal())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            DocumentSnapshot localDoc = queryDocumentSnapshots.getDocuments().get(0);
+                            List<Map<String, Object>> lesPieces = (List<Map<String, Object>>) localDoc.get("lesPieces");
+                            if (lesPieces == null) {
+                                lesPieces = new ArrayList<>();
                             }
+                            lesPieces.add(piece);
+                            localDoc.getReference().update("lesPieces", lesPieces)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(AjoutPieceActivity.this, "Nouvelle pièce ajoutée avec succès", Toast.LENGTH_SHORT).show();
+                                            //Aller vers MainPage
+                                            LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
+                                                @Override
+                                                public void onSuccess(Local local) {
+                                                    // Aller vers Main Page avec local mis a jour
+                                                    Intent intent = new Intent(getApplicationContext(), MainPage.class);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                    intent.putExtra("localId",local);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
+                                            }, new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Erreur lors de la recuperation du local mis a jour
+                                                    Toast.makeText(AjoutPieceActivity.this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(AjoutPieceActivity.this, "Erreur lors de l'ajout de la pièce : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(getApplicationContext(), MainPage.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            intent.putExtra("localId",localEnCours);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(AjoutPieceActivity.this, "Local introuvable", Toast.LENGTH_SHORT).show();
                         }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(AjoutPieceActivity.this, "Erreur lors de la récupération Local : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
-        else {
-            return;
-        }
-
-    }
-
-    private boolean verifier_champ(String nomPiece, String typePiece){
-        Boolean check = true;
-        if (TextUtils.isEmpty(nomPiece)) {
-            nomPieceEdit.setError("Nom de la pièce requis",null);
-            check=false;
-        }
-
-        else if (TextUtils.isEmpty(typePiece)) {
-            autoCompleteTextView.setError("Type de la pièce requis");
-            check = false;
-        }
-        return check;
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(AjoutPieceActivity.this, "Erreur lors de la récupération Local : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
 }

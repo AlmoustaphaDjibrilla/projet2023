@@ -101,7 +101,8 @@ public class Composants extends AppCompatActivity {
             if (composantList.get(i).getTypeComposant().equals("AMPOULE") ||
                     composantList.get(i).getTypeComposant().equals("REFRIGERATEUR") ||
                     composantList.get(i).getTypeComposant().equals("CLIMATISEUR") ||
-                    composantList.get(i).getTypeComposant().equals("AUTRE")) {
+                    composantList.get(i).getTypeComposant().equals("AUTRE")||
+                    composantList.get(i).getTypeComposant().equals("TONDEUSE")) {
                 TextView nom = cardView.findViewById(R.id.nom_composant);
                 ImageView img = cardView.findViewById(R.id.img_composant);
                 nom.setText(composantList.get(i).getNomComposant());
@@ -112,14 +113,11 @@ public class Composants extends AppCompatActivity {
                     case "CLIMATISEUR":
                         img.setImageResource(R.drawable.clim);
                         break;
-                    case "PORTE":
-                        img.setImageResource(R.drawable.porte);
-                        break;
                     case "REFRIGERATEUR":
                         img.setImageResource(R.drawable.frigo);
                         break;
-                    case "VENTILATEUR":
-                        img.setImageResource(R.drawable.ventilateur);
+                    case "TONDEUSE":
+                        img.setImageResource(R.drawable.tondeuse);
                         break;
                     case "AUTRE":
                         img.setImageResource(R.drawable.autre);
@@ -179,23 +177,14 @@ public class Composants extends AppCompatActivity {
                 ImageView img1 = cardView2.findViewById(R.id.img_composant2);
                 nom1.setText(composantList.get(i).getNomComposant());
                 switch (composantList.get(i).getTypeComposant()) {
-                    case "AMPOULE":
-                        img1.setImageResource(R.drawable.ampoule_animee);
-                        break;
-                    case "CLIMATISEUR":
-                        img1.setImageResource(R.drawable.clim);
-                        break;
                     case "PORTE":
                         img1.setImageResource(R.drawable.porte);
-                        break;
-                    case "REFRIGERATEUR":
-                        img1.setImageResource(R.drawable.frigo);
                         break;
                     case "VENTILATEUR":
                         img1.setImageResource(R.drawable.ventilateur);
                         break;
-                    case "AUTRE":
-                        img1.setImageResource(R.drawable.autre);
+                    case "ARROSAGE":
+                        img1.setImageResource(R.drawable.arrosage);
                         break;
                     default:
                         break;
@@ -300,7 +289,8 @@ public class Composants extends AppCompatActivity {
             if (composantList.get(i).getTypeComposant().equals("AMPOULE") ||
                     composantList.get(i).getTypeComposant().equals("REFRIGERATEUR") ||
                     composantList.get(i).getTypeComposant().equals("CLIMATISEUR") ||
-                    composantList.get(i).getTypeComposant().equals("AUTRE")) {
+                    composantList.get(i).getTypeComposant().equals("AUTRE") ||
+                    composantList.get(i).getTypeComposant().equals("TONDEUSE")) {
                 View cardView = layout.findViewWithTag(composantEnCours.getIdComposant());
                 Switch switchCompat = cardView.findViewById(R.id.Switch);
 

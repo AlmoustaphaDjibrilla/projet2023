@@ -55,16 +55,53 @@ public class AjouterComposant extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         init();
-        String []type = getResources().getStringArray(R.array.type_composant);
-        ArrayAdapter<String> adapter= new ArrayAdapter<>(this,R.layout.type_composants, type);
+        if(pieceEnCours.getTypePiece().equals("JARDIN")){
+            String []type = getResources().getStringArray(R.array.type_composant_jardin);
+            ArrayAdapter<String> adapter= new ArrayAdapter<>(this,R.layout.type_composants, type);
+            autoCompleteTextView.setAdapter(adapter);
+            autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    typeComposant = adapterView.getItemAtPosition(i).toString().toUpperCase();
+                }
+            });
+        }
+        else if (pieceEnCours.getTypePiece().equals("DOUCHE")) {
 
-        autoCompleteTextView.setAdapter(adapter);
-        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                typeComposant = adapterView.getItemAtPosition(i).toString().toUpperCase();
-            }
-        });
+            String []type = getResources().getStringArray(R.array.type_composant_douche);
+            ArrayAdapter<String> adapter= new ArrayAdapter<>(this,R.layout.type_composants, type);
+            autoCompleteTextView.setAdapter(adapter);
+            autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    typeComposant = adapterView.getItemAtPosition(i).toString().toUpperCase();
+                }
+            });
+        }
+        else if (pieceEnCours.getTypePiece().equals("CUISINE")) {
+
+            String []type = getResources().getStringArray(R.array.type_composant_cuisine);
+            ArrayAdapter<String> adapter= new ArrayAdapter<>(this,R.layout.type_composants, type);
+            autoCompleteTextView.setAdapter(adapter);
+            autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    typeComposant = adapterView.getItemAtPosition(i).toString().toUpperCase();
+                }
+            });
+        }
+        else {
+            String []type = getResources().getStringArray(R.array.type_composant);
+            ArrayAdapter<String> adapter= new ArrayAdapter<>(this,R.layout.type_composants, type);
+            autoCompleteTextView.setAdapter(adapter);
+            autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    typeComposant = adapterView.getItemAtPosition(i).toString().toUpperCase();
+                }
+            });
+        }
+
     }
 
     @Override
@@ -77,8 +114,10 @@ public class AjouterComposant extends AppCompatActivity {
         addComposant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ajouterComposant();
-                finish();
+                if(verifier_champ()){
+                    ajouterComposant();
+                    finish();
+                }
             }
         });
 
@@ -96,18 +135,19 @@ public class AjouterComposant extends AppCompatActivity {
         imgQuitterAddComposant= findViewById(R.id.imgQuitterAddComposant);
     }
 
-    private boolean verifier_champ(String nomComposant, String typeComposant){
-        Boolean check = true;
-        if (TextUtils.isEmpty(nomComposant)) {
-            nomComposantEdit.setError("Nom de la pièce requis",null);
-            check=false;
-        }
+    private boolean verifier_champ(){
+        String nomComposant = nomComposantEdit.getText().toString().trim();
+        String typeComposant = autoCompleteTextView.getText().toString();
 
-        else if (TextUtils.isEmpty(typeComposant)) {
-            autoCompleteTextView.setError("Type de la pièce requis");
-            check = false;
+        if(nomComposant==null || nomComposant.equals("")){
+            nomComposantEdit.setError("Saisissez un nom pour le composant");
+            return false;
         }
-        return check;
+        if(typeComposant==null || typeComposant.equals("")){
+            autoCompleteTextView.setError("Choisissez le type du composant");
+            return false;
+        }
+        return true;
     }
 
     private void ajouterComposant(){
@@ -116,86 +156,83 @@ public class AjouterComposant extends AppCompatActivity {
         String c ="/";
         String chemin = pieceEnCours.getAdressePiece()+c+nomComposant.toLowerCase();
 
-        if(verifier_champ(nomComposant, typeComposant)){
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            // Créer un objet Map pour représenter les données du nouveau composant
-            Map<String, Object> nouveauComposant = new HashMap<>();
-            nouveauComposant.put("idComposant",nomComposant.replaceAll("\\s", "").toLowerCase());
-            nouveauComposant.put("nom", nomComposant);
-            nouveauComposant.put("typeComposant", typeComposant);
-            nouveauComposant.put("chemin",chemin);
+        // Créer un objet Map pour représenter les données du nouveau composant
+        Map<String, Object> nouveauComposant = new HashMap<>();
+        nouveauComposant.put("idComposant",nomComposant.replaceAll("\\s", "").toLowerCase());
+        nouveauComposant.put("nom", nomComposant);
+        nouveauComposant.put("typeComposant", typeComposant);
+        nouveauComposant.put("chemin",chemin);
 
-            CollectionReference localref = db.collection("Local");
-            Query requete = localref.whereEqualTo("idLocal",localEnCours.getIdLocal());
+        CollectionReference localref = db.collection("Local");
+        Query requete = localref.whereEqualTo("idLocal",localEnCours.getIdLocal());
 
-            requete.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                @Override
-                public void onSuccess(QuerySnapshot querySnapshot) {
-                    DocumentSnapshot localDoc = querySnapshot.getDocuments().get(0);
-                    List<Map<String, Object>> lesPieces = (List<Map<String, Object>>) localDoc.get("lesPieces");
+        requete.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot querySnapshot) {
+                DocumentSnapshot localDoc = querySnapshot.getDocuments().get(0);
+                List<Map<String, Object>> lesPieces = (List<Map<String, Object>>) localDoc.get("lesPieces");
 
-                    Map<String, Object> pieceActu= null;
-                    for (Map<String, Object> piece : lesPieces) {
-                        String pieceId = (String) piece.get("idPiece");
-                        if (pieceId != null && pieceId.equals(pieceEnCours.getIdPiece())) {
-                            pieceActu = piece;
-                            break;
-                        }
+                Map<String, Object> pieceActu= null;
+                for (Map<String, Object> piece : lesPieces) {
+                    String pieceId = (String) piece.get("idPiece");
+                    if (pieceId != null && pieceId.equals(pieceEnCours.getIdPiece())) {
+                        pieceActu = piece;
+                        break;
                     }
-                    List<Map<String, Object>> composants = (List<Map<String, Object>>) pieceActu.get("composants");
-                    composants.add(nouveauComposant);
-
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("lesPieces", lesPieces);
-                    localref.document(localDoc.getId()).update(data).addOnCompleteListener(updateTask -> {
-                        if (updateTask.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Nouveau composant ajouté avec succès", Toast.LENGTH_SHORT).show();
-                            ajouter_a_realTime((String) nouveauComposant.get("typeComposant"), (String) nouveauComposant.get("chemin"));
-                            LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
-                                @Override
-                                public void onSuccess(Local local) {
-                                    // Aller vers Main Page avec local mis a jour
-                                    Intent intent = new Intent(getApplicationContext(), MainPage.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    intent.putExtra("localId",local);
-                                    startActivity(intent);
-                                }
-                            }, new OnFailureListener() {
-                                @Override
-                                public void onFailure(@org.checkerframework.checker.nullness.qual.NonNull Exception e) {
-                                    // Erreur lors de la recuperation du local mis a jour
-                                    Toast.makeText(getApplicationContext(), "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Erreur Ajout", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getApplicationContext(), MainPage.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            intent.putExtra("localId",localEnCours);
-                            startActivity(intent);
-                            finish();
-                        }
-                    });
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(), "Erreur recherche document", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-        else{
-            return;
-        }
+                List<Map<String, Object>> composants = (List<Map<String, Object>>) pieceActu.get("composants");
+                composants.add(nouveauComposant);
+
+                Map<String, Object> data = new HashMap<>();
+                data.put("lesPieces", lesPieces);
+                localref.document(localDoc.getId()).update(data).addOnCompleteListener(updateTask -> {
+                    if (updateTask.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "Nouveau composant ajouté avec succès", Toast.LENGTH_SHORT).show();
+                        ajouter_a_realTime((String) nouveauComposant.get("typeComposant"), (String) nouveauComposant.get("chemin"));
+                        LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
+                            @Override
+                            public void onSuccess(Local local) {
+                                // Aller vers Main Page avec local mis a jour
+                                Intent intent = new Intent(getApplicationContext(), MainPage.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.putExtra("localId",local);
+                                startActivity(intent);
+                            }
+                        }, new OnFailureListener() {
+                            @Override
+                            public void onFailure(@org.checkerframework.checker.nullness.qual.NonNull Exception e) {
+                                // Erreur lors de la recuperation du local mis a jour
+                                Toast.makeText(getApplicationContext(), "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Erreur Ajout", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), MainPage.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra("localId",localEnCours);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Erreur recherche document", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 
     private void ajouter_a_realTime(String type,String chemin){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         Map<String, Object> composant_valeur = new HashMap<>();
-        if(type.equals("AMPOULE") || type.equals("REFRIGERATEUR") || type.equals("CLIMATISEUR") || type.equals("AUTRE")){
+        if(type.equals("AMPOULE") || type.equals("REFRIGERATEUR") || type.equals("CLIMATISEUR") || type.equals("AUTRE") || type.equals("TONDEUSE")){
             composant_valeur.put(chemin, "OFF");
             ref.updateChildren(composant_valeur);
         }
