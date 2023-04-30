@@ -1,7 +1,9 @@
 package com.adi.projet2023.adapter;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -19,6 +21,7 @@ import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.LocalUtils;
 import com.adi.projet2023.activity.main_page.MainPage;
 import com.adi.projet2023.creation.CreationLocal;
+import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.local.Local;
 import com.adi.projet2023.model.user.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -29,6 +32,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
 
@@ -43,6 +47,8 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
     TextView txtTypeLocal, txtNomLocal, txtQuartierLocal, txtVilleLocal, txtDateEnregistrementLocal;
     Button btnSupprimerLocal;
 
+    AlertDialog.Builder dialogWarning;
+
     public AdapterLocal(Context context, ArrayList<Local> lesLocaux) {
         this.context = context;
         this.lesLocaux = lesLocaux;
@@ -54,6 +60,7 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
         AffichageLocal affichageLocal= new AffichageLocal(LayoutInflater.from(context).inflate(R.layout.modele_local, parent, false));
 
         dialogSupprimerLocal= new Dialog(context);
+        dialogWarning= new AlertDialog.Builder(context);
         dialogSupprimerLocal.setContentView(R.layout.layout_supprimer_local);
 
         initComponentsOfDialog();
@@ -93,45 +100,32 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
 
                 btnSupprimerLocal.setOnClickListener(
                         v->{
-                            String userId= FirebaseAuth.getInstance()
-                                            .getCurrentUser()
-                                                    .getUid();
 
-                            DocumentReference documentReference=
-                                    FirebaseFirestore.getInstance()
-                                                    .collection(PATH_USERS_DATABASE)
-                                                            .document(userId);
+                            List<Piece> lesPieces = local.getLesPieces();
+                            int nbrPiece=0;
+                            if (lesPieces!=null)
+                                nbrPiece= lesPieces.size();
 
-                            documentReference
-                                    .get()
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    UserModel userModel= documentSnapshot.toObject(UserModel.class);
+                            dialogWarning.setTitle("Attention")
+                                            .setMessage("Ce local contient "+nbrPiece+" pièce(s)\nVoulez-vous vraiment le supprimer?")
+                                                    .setCancelable(true)
+                                                            .setPositiveButton("Supprimer", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                                    dialogInterface.dismiss();
+                                                                    supprimerLocal(local);
+                                                                }
+                                                            })
+                                                            .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                                    dialogInterface.dismiss();
+                                                                    dialogSupprimerLocal.dismiss();
+                                                                }
+                                                            })
+                                    .setIcon(R.drawable.icon_warning)
+                                    .show();
 
-                                                    //Vérifier si le user courant est un admin
-                                                    if (userModel.isAdmin()){
-
-                                                        //Suppression du Local en cours
-                                                        CreationLocal.supprimerLocal(local);
-                                                        lesLocaux.remove(local);
-                                                        LocalUtils.supprimer_composant_local_realTime(local);
-                                                        notifyDataSetChanged();
-                                                        Toast.makeText(context, local.getNomLocal()+" supprimé..", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                    else{
-                                                        Toast.makeText(context, "Vous n'êtes pas admin", Toast.LENGTH_LONG).show();
-                                                    }
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(context, "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-
-                            dialogSupprimerLocal.dismiss();
                         }
                 );
 
@@ -170,5 +164,47 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
     @Override
     public int getItemCount() {
         return lesLocaux.size();
+    }
+
+    private void supprimerLocal(Local local){
+        String userId= FirebaseAuth.getInstance()
+                .getCurrentUser()
+                .getUid();
+
+        DocumentReference documentReference=
+                FirebaseFirestore.getInstance()
+                        .collection(PATH_USERS_DATABASE)
+                        .document(userId);
+
+        documentReference
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        UserModel userModel= documentSnapshot.toObject(UserModel.class);
+
+                        //Vérifier si le user courant est un admin
+                        if (userModel.isAdmin()){
+
+                            //Suppression du Local en cours
+                            CreationLocal.supprimerLocal(local);
+                            lesLocaux.remove(local);
+                            LocalUtils.supprimer_composant_local_realTime(local);
+                            notifyDataSetChanged();
+                            Toast.makeText(context, local.getNomLocal()+" supprimé..", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Toast.makeText(context, "Vous n'êtes pas admin", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        dialogSupprimerLocal.dismiss();
     }
 }
