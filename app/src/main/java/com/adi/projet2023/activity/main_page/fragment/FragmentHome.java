@@ -1,7 +1,9 @@
 package com.adi.projet2023.activity.main_page.fragment;
 
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -68,6 +70,8 @@ public class FragmentHome extends Fragment {
 
     ImageView imgQuitterMainPage;
 
+    AlertDialog.Builder builder;
+
     public FragmentHome(){
 
     }
@@ -84,6 +88,7 @@ public class FragmentHome extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dialogSupprimerPiece= new Dialog(this.getContext());
+        builder= new AlertDialog.Builder(this.getContext());
     }
 
     @Override
@@ -210,14 +215,34 @@ public class FragmentHome extends Fragment {
                                             dialogSupprimerPiece.show();
                                             remplirChampsDialog(pieceEncours);
 
-                                            btnSupprimerPiece.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    supprimer_piece(pieceEncours.getIdPiece());
-                                                    LocalUtils.supprimer_composant_piece_realTime(pieceEncours);
-                                                    dialogSupprimerPiece.dismiss();
+                                            btnSupprimerPiece.setOnClickListener(
+                                                v -> {
+                                                    List<Composant> lesComposants = pieceEncours.getLesComposants();
+                                                    int nbrComposants=0;
+                                                    if (lesComposants!=null)
+                                                        nbrComposants= lesComposants.size();
+
+                                                    builder
+                                                            .setTitle("Attention")
+                                                                    .setMessage("Cette pièce contient "+nbrComposants+" composant(s)\nVoulez-vous vraiment la supprimer?")
+                                                                            .setPositiveButton("Supprimer", new DialogInterface.OnClickListener() {
+                                                                                @Override
+                                                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                                                    dialogInterface.dismiss();
+                                                                                    suppressionPiece(pieceEncours);
+                                                                                }
+                                                                            })
+                                                                            .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                                                                                @Override
+                                                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                                                    dialogInterface.cancel();
+                                                                                }
+                                                                            })
+                                                            .setIcon(R.drawable.icon_warning)
+                                                            .show();
+
                                                 }
-                                            });
+                                            );
                                         }
                                     }
                                 })
@@ -379,8 +404,12 @@ public class FragmentHome extends Fragment {
                 humidite.setText(value+" %");
             }
         });
-
     }
 
 
+    private void suppressionPiece(Piece pieceEncours){
+        supprimer_piece(pieceEncours.getIdPiece());
+        LocalUtils.supprimer_composant_piece_realTime(pieceEncours);
+        dialogSupprimerPiece.dismiss();
+    }
 }
