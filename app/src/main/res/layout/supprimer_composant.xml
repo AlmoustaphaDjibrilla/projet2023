@@ -79,7 +79,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/txtTitreUserCommande"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -102,8 +102,8 @@
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.771"
-                        app:layout_constraintStart_toEndOf="@+id/textView3"
-                        app:layout_constraintTop_toTopOf="@+id/textView3" />
+                        app:layout_constraintStart_toEndOf="@+id/txtTitreUserCommande"
+                        app:layout_constraintTop_toTopOf="@+id/txtTitreUserCommande" />
 
                     <TextView
                         android:id="@+id/textView7"
@@ -113,8 +113,8 @@
                         android:fontFamily="@font/calibri"
                         android:text="Local: "
                         android:textSize="22sp"
-                        app:layout_constraintStart_toStartOf="@+id/textView3"
-                        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                        app:layout_constraintStart_toStartOf="@+id/txtTitreUserCommande"
+                        app:layout_constraintTop_toBottomOf="@+id/txtTitreUserCommande" />
 
                     <TextView
                         android:id="@+id/txtNomLocalComposantSupprimer"

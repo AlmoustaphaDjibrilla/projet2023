@@ -88,7 +88,7 @@ public class FragmentUsers extends Fragment {
         btnAddUser= view.findViewById(R.id.addUser);
         imgQuitterFragmentUsers= view.findViewById(R.id.imgQuitterFragmentUsers);
 
-        AdapterUserModel adapterUserModel= new AdapterUserModel(this.getContext(), lesUsers);
+        AdapterUserModel adapterUserModel= new AdapterUserModel(this.getContext(), lesUsers, localEnCours);
         listUsers.setLayoutManager(new LinearLayoutManager(this.getContext()));
         listUsers.setAdapter(adapterUserModel);
     }

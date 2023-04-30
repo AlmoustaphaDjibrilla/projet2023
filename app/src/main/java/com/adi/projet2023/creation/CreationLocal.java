@@ -72,7 +72,6 @@ public class CreationLocal {
                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                Local local= (Local) documentSnapshot.toObject(Local.class);
                                 List<Map<String, Object>> lesUsers= (List<Map<String, Object>>) documentSnapshot.get("lesUsers");
                                 if (lesUsers==null)
                                     lesUsers= new ArrayList<>();
@@ -82,6 +81,38 @@ public class CreationLocal {
                         });
 
         localEnCours.ajouterUser(userAAjouter);
+        docLocal.set(localEnCours);
+    }
+
+    public static void retirerUserLocal(UserModel userARetirer, Local localEnCours){
+        DocumentReference docLocal=
+                FirebaseFirestore.getInstance()
+                        .collection(PATH_LOCAL_DATABASES)
+                        .document(localEnCours.getIdLocal());
+
+        Map<String, Object> mapUser= new HashMap<>();
+        mapUser.put("uid", userARetirer.getUid());
+        mapUser.put("password", userARetirer.getPassword());
+        mapUser.put("email", userARetirer.getEmail());
+        mapUser.put("nom", userARetirer.getNom());
+        mapUser.put("dateEnregistrement", userARetirer.getDateEnregistrement());
+        mapUser.put("admin", userARetirer.isAdmin());
+        mapUser.put("user", userARetirer.isUser());
+
+
+        docLocal
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        List<Map<String, Object>> lesUsers= (List<Map<String, Object>>) documentSnapshot.get("lesUsers");
+                        if (lesUsers!=null){
+                            lesUsers.remove(mapUser);
+                        }
+                    }
+                });
+
+        localEnCours.retirerUser(userARetirer);
         docLocal.set(localEnCours);
     }
 }

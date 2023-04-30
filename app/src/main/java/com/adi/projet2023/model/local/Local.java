@@ -138,6 +138,11 @@ public class Local implements Serializable{
         this.lesUsers.add(userModel);
     }
 
+    public void retirerUser(UserModel userModel){
+        if (lesUsers!=null)
+            lesUsers.remove(userModel);
+    }
+
     public boolean containsUser(UserModel userModel){
         boolean contains= false;
 
