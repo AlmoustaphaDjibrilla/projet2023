@@ -1,14 +1,12 @@
 package com.adi.projet2023.model.composant;
 
-import android.util.Log;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.adi.projet2023.model.Commande.Commande;
+import com.adi.projet2023.model.user.UserModel;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import org.checkerframework.checker.nullness.qual.NonNull;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -82,7 +80,6 @@ public class Composant implements Serializable {
         hashMap.put(getNomComposant(), p);
         databaseReference.setValue(hashMap);
     }
-
 
 
 }

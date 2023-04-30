@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.LocalUtils;
@@ -37,7 +36,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -48,6 +46,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Composants extends AppCompatActivity {
 
@@ -56,6 +55,7 @@ public class Composants extends AppCompatActivity {
 
     final String PATH_USERS_DATABASE = "Users";
     LinearLayout layout;
+    boolean initialisation = true;
     List<Composant> composantList;
     Local localEnCours;
     Piece pieceEnCours;
@@ -101,7 +101,8 @@ public class Composants extends AppCompatActivity {
             if (composantList.get(i).getTypeComposant().equals("AMPOULE") ||
                     composantList.get(i).getTypeComposant().equals("REFRIGERATEUR") ||
                     composantList.get(i).getTypeComposant().equals("CLIMATISEUR") ||
-                    composantList.get(i).getTypeComposant().equals("AUTRE")) {
+                    composantList.get(i).getTypeComposant().equals("AUTRE")||
+                    composantList.get(i).getTypeComposant().equals("TONDEUSE")) {
                 TextView nom = cardView.findViewById(R.id.nom_composant);
                 ImageView img = cardView.findViewById(R.id.img_composant);
                 nom.setText(composantList.get(i).getNomComposant());
@@ -112,14 +113,11 @@ public class Composants extends AppCompatActivity {
                     case "CLIMATISEUR":
                         img.setImageResource(R.drawable.clim);
                         break;
-                    case "PORTE":
-                        img.setImageResource(R.drawable.porte);
-                        break;
                     case "REFRIGERATEUR":
                         img.setImageResource(R.drawable.frigo);
                         break;
-                    case "VENTILATEUR":
-                        img.setImageResource(R.drawable.ventilateur);
+                    case "TONDEUSE":
+                        img.setImageResource(R.drawable.tondeuse);
                         break;
                     case "AUTRE":
                         img.setImageResource(R.drawable.autre);
@@ -179,23 +177,14 @@ public class Composants extends AppCompatActivity {
                 ImageView img1 = cardView2.findViewById(R.id.img_composant2);
                 nom1.setText(composantList.get(i).getNomComposant());
                 switch (composantList.get(i).getTypeComposant()) {
-                    case "AMPOULE":
-                        img1.setImageResource(R.drawable.ampoule_animee);
-                        break;
-                    case "CLIMATISEUR":
-                        img1.setImageResource(R.drawable.clim);
-                        break;
                     case "PORTE":
                         img1.setImageResource(R.drawable.porte);
-                        break;
-                    case "REFRIGERATEUR":
-                        img1.setImageResource(R.drawable.frigo);
                         break;
                     case "VENTILATEUR":
                         img1.setImageResource(R.drawable.ventilateur);
                         break;
-                    case "AUTRE":
-                        img1.setImageResource(R.drawable.autre);
+                    case "ARROSAGE":
+                        img1.setImageResource(R.drawable.arrosage);
                         break;
                     default:
                         break;
@@ -300,7 +289,8 @@ public class Composants extends AppCompatActivity {
             if (composantList.get(i).getTypeComposant().equals("AMPOULE") ||
                     composantList.get(i).getTypeComposant().equals("REFRIGERATEUR") ||
                     composantList.get(i).getTypeComposant().equals("CLIMATISEUR") ||
-                    composantList.get(i).getTypeComposant().equals("AUTRE")) {
+                    composantList.get(i).getTypeComposant().equals("AUTRE") ||
+                    composantList.get(i).getTypeComposant().equals("TONDEUSE")) {
                 View cardView = layout.findViewWithTag(composantEnCours.getIdComposant());
                 Switch switchCompat = cardView.findViewById(R.id.Switch);
 
@@ -405,11 +395,20 @@ public class Composants extends AppCompatActivity {
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                         composantEnCours.setValeur(progress);
                         Commande commande= new Commande(composantEnCours);
-                        if (progress==0){
-                            commande.setDetail_commande(DETAIL_EXTINCTION);
-                        }
-                        else{
-                            commande.setDetail_commande(DETAIL_ALLUMAGE);
+                        if(composantEnCours.getTypeComposant().equals("PORTE")){
+                            if (progress==0){
+                                commande.setDetail_commande("FERMETURE");
+                            }
+                            else{
+                                commande.setDetail_commande("OUVERTURE");
+                            }
+                        }else{
+                            if (progress==0){
+                                commande.setDetail_commande("ARRET");
+                            }
+                            else{
+                                commande.setDetail_commande("MARCHE");
+                            }
                         }
                         CreationCommande.enregistrerNouvelleCommande(commande);
                     }
