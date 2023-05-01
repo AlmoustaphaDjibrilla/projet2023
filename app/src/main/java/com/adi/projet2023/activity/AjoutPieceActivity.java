@@ -2,7 +2,6 @@ package com.adi.projet2023.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class AjoutPieceActivity extends AppCompatActivity {
     private String typePiece;
@@ -107,7 +107,7 @@ public class AjoutPieceActivity extends AppCompatActivity {
 
         // Créer un objet Map pour représenter les données de la nouvelle pièce
         Map<String, Object> piece = new HashMap<>();
-        piece.put("idPiece",nomPiece.replaceAll("\\s", "").toLowerCase());
+        piece.put("idPiece", UUID.randomUUID().toString());
         piece.put("nom", nomPiece);
         piece.put("chemin",chemin);
         piece.put("typePiece", typePiece);

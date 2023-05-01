@@ -64,7 +64,7 @@ public class FragmentHome extends Fragment {
 
     FloatingActionButton btnAddPiece;
     Dialog dialogSupprimerPiece;
-    TextView txtTypePiece, txtNomPiece, txtNomLocal, txtCheminPiece, titreLocal;
+    TextView txtTypePiece, txtNomPiece, txtNomLocal, titreLocal;
     Button btnSupprimerPiece;
     LinearLayout layout;
     ViewGroup root;
@@ -320,8 +320,6 @@ public class FragmentHome extends Fragment {
         txtTypePiece= dialogSupprimerPiece.findViewById(R.id.txtTypePieceSupprimer);
         txtNomPiece= dialogSupprimerPiece.findViewById(R.id.txtNomPieceSupprimerPiece);
         txtNomLocal= dialogSupprimerPiece.findViewById(R.id.txtNomLocalSupprimerPiece);
-        txtCheminPiece= dialogSupprimerPiece.findViewById(R.id.txtCheminPieceSupprimerComposant);
-
         btnSupprimerPiece= dialogSupprimerPiece.findViewById(R.id.btnSupprimerPiece);
     }
 
@@ -330,7 +328,6 @@ public class FragmentHome extends Fragment {
             txtTypePiece.setText(piece.getTypePiece());
             txtNomPiece.setText(piece.getNomPiece());
             txtNomLocal.setText(localEnCours.getNomLocal());
-            txtCheminPiece.setText(piece.getAdressePiece());
         }
     }
     public void supprimer_piece(String id) {

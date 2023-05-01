@@ -6,6 +6,7 @@ import com.adi.projet2023.model.user.UserModel;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public class Local implements Serializable{
 
@@ -43,7 +44,7 @@ public class Local implements Serializable{
         LocalDate date= LocalDate.now();
         this.dateEnregistrement= date.toString();
         this.adresseLocal= nomLocal.toLowerCase().replaceAll(" ", "");
-        this.idLocal= adresseLocal;
+        this.idLocal= UUID.randomUUID().toString();
     }
 
     public String getIdLocal() {

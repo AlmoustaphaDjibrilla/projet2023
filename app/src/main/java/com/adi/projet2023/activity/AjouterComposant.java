@@ -1,11 +1,7 @@
 package com.adi.projet2023.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,31 +11,28 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.LocalUtils;
 import com.adi.projet2023.activity.main_page.MainPage;
 import com.adi.projet2023.model.Piece.Piece;
-import com.adi.projet2023.model.composant.Composant;
 import com.adi.projet2023.model.local.Local;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class AjouterComposant extends AppCompatActivity {
 
@@ -160,7 +153,7 @@ public class AjouterComposant extends AppCompatActivity {
 
         // Créer un objet Map pour représenter les données du nouveau composant
         Map<String, Object> nouveauComposant = new HashMap<>();
-        nouveauComposant.put("idComposant",nomComposant.replaceAll("\\s", "").toLowerCase());
+        nouveauComposant.put("idComposant", UUID.randomUUID().toString());
         nouveauComposant.put("nom", nomComposant);
         nouveauComposant.put("typeComposant", typeComposant);
         nouveauComposant.put("chemin",chemin);
