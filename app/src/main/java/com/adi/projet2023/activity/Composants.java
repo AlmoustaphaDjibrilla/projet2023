@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -46,7 +45,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Composants extends AppCompatActivity {
 
@@ -55,7 +53,6 @@ public class Composants extends AppCompatActivity {
 
     final String PATH_USERS_DATABASE = "Users";
     LinearLayout layout;
-    boolean initialisation = true;
     List<Composant> composantList;
     Local localEnCours;
     Piece pieceEnCours;
@@ -94,150 +91,155 @@ public class Composants extends AppCompatActivity {
     private void afficher_composants (List < Composant > composantList) {
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
         //Initialisation des composants
-        for (int i = 0; i < composantList.size(); i++) {
-            Composant composantEnCours = composantList.get(i);
-            View cardView = inflater.inflate(R.layout.composant_card, layout, false);
-            View cardView2 = inflater.inflate(R.layout.composant2_card, layout, false);
-            if (composantList.get(i).getTypeComposant().equals("AMPOULE") ||
-                    composantList.get(i).getTypeComposant().equals("REFRIGERATEUR") ||
-                    composantList.get(i).getTypeComposant().equals("CLIMATISEUR") ||
-                    composantList.get(i).getTypeComposant().equals("AUTRE")||
-                    composantList.get(i).getTypeComposant().equals("TONDEUSE")) {
-                TextView nom = cardView.findViewById(R.id.nom_composant);
-                ImageView img = cardView.findViewById(R.id.img_composant);
-                nom.setText(composantList.get(i).getNomComposant());
-                switch (composantList.get(i).getTypeComposant()) {
-                    case "AMPOULE":
-                        img.setImageResource(R.drawable.ampoules);
-                        break;
-                    case "CLIMATISEUR":
-                        img.setImageResource(R.drawable.clim);
-                        break;
-                    case "REFRIGERATEUR":
-                        img.setImageResource(R.drawable.frigo);
-                        break;
-                    case "TONDEUSE":
-                        img.setImageResource(R.drawable.tondeuse);
-                        break;
-                    case "AUTRE":
-                        img.setImageResource(R.drawable.autre);
-                        break;
-                    default:
-                        break;
-                }
-                cardView.setTag(composantEnCours.getIdComposant());
-                layout.addView(cardView);
-                cardView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        String userId = FirebaseAuth.getInstance()
-                                .getCurrentUser()
-                                .getUid();
-
-                        DocumentReference documentReference =
-                                FirebaseFirestore.getInstance()
-                                        .collection(PATH_USERS_DATABASE)
-                                        .document(userId);
-
-                        documentReference
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        UserModel userModel = documentSnapshot.toObject(UserModel.class);
-
-                                        //Vérifier si le user courant est un admin
-                                        if (userModel.isAdmin()) {
-                                            dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
-                                            initComponentsOfDialog();
-                                            dialogSupprimerComposant.show();
-                                            remplirChampsDialog(composantEnCours);
-
-                                            btnSupprimerComposant.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
-                                                    dialogSupprimerComposant.dismiss();
-                                                }
-                                            });
-                                        }
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                        return true;
+        if(composantList != null && composantList.size()!=0){
+            for (int i = 0; i < composantList.size(); i++) {
+                Composant composantEnCours = composantList.get(i);
+                View cardView = inflater.inflate(R.layout.composant_card, layout, false);
+                View cardView2 = inflater.inflate(R.layout.composant2_card, layout, false);
+                if (composantList.get(i).getTypeComposant().equals("AMPOULE") ||
+                        composantList.get(i).getTypeComposant().equals("REFRIGERATEUR") ||
+                        composantList.get(i).getTypeComposant().equals("CLIMATISEUR") ||
+                        composantList.get(i).getTypeComposant().equals("AUTRE")||
+                        composantList.get(i).getTypeComposant().equals("TONDEUSE")) {
+                    TextView nom = cardView.findViewById(R.id.nom_composant);
+                    ImageView img = cardView.findViewById(R.id.img_composant);
+                    nom.setText(composantList.get(i).getNomComposant());
+                    switch (composantList.get(i).getTypeComposant()) {
+                        case "AMPOULE":
+                            img.setImageResource(R.drawable.ampoules);
+                            break;
+                        case "CLIMATISEUR":
+                            img.setImageResource(R.drawable.clim);
+                            break;
+                        case "REFRIGERATEUR":
+                            img.setImageResource(R.drawable.frigo);
+                            break;
+                        case "TONDEUSE":
+                            img.setImageResource(R.drawable.tondeuse);
+                            break;
+                        case "AUTRE":
+                            img.setImageResource(R.drawable.autre);
+                            break;
+                        default:
+                            break;
                     }
-                });
-            } else {
-                TextView nom1 = cardView2.findViewById(R.id.nom_composant2);
-                ImageView img1 = cardView2.findViewById(R.id.img_composant2);
-                nom1.setText(composantList.get(i).getNomComposant());
-                switch (composantList.get(i).getTypeComposant()) {
-                    case "PORTE":
-                        img1.setImageResource(R.drawable.porte);
-                        break;
-                    case "VENTILATEUR":
-                        img1.setImageResource(R.drawable.ventilateur);
-                        break;
-                    case "ARROSAGE":
-                        img1.setImageResource(R.drawable.arrosage);
-                        break;
-                    default:
-                        break;
-                }
-                cardView2.setTag(composantEnCours.getIdComposant());
-                layout.addView(cardView2);
-                cardView2.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        String userId = FirebaseAuth.getInstance()
-                                .getCurrentUser()
-                                .getUid();
+                    cardView.setTag(composantEnCours.getIdComposant());
+                    layout.addView(cardView);
+                    cardView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            String userId = FirebaseAuth.getInstance()
+                                    .getCurrentUser()
+                                    .getUid();
 
-                        DocumentReference documentReference =
-                                FirebaseFirestore.getInstance()
-                                        .collection(PATH_USERS_DATABASE)
-                                        .document(userId);
+                            DocumentReference documentReference =
+                                    FirebaseFirestore.getInstance()
+                                            .collection(PATH_USERS_DATABASE)
+                                            .document(userId);
 
-                        documentReference
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        UserModel userModel = documentSnapshot.toObject(UserModel.class);
+                            documentReference
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            UserModel userModel = documentSnapshot.toObject(UserModel.class);
 
-                                        //Vérifier si le user courant est un admin
-                                        if (userModel.isAdmin()) {
-                                            dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
-                                            initComponentsOfDialog();
-                                            dialogSupprimerComposant.show();
-                                            remplirChampsDialog(composantEnCours);
+                                            //Vérifier si le user courant est un admin
+                                            if (userModel.isAdmin()) {
+                                                dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
+                                                initComponentsOfDialog();
+                                                dialogSupprimerComposant.show();
+                                                remplirChampsDialog(composantEnCours);
 
-                                            btnSupprimerComposant.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
-                                                    dialogSupprimerComposant.dismiss();
-                                                }
-                                            });
+                                                btnSupprimerComposant.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
+                                                        dialogSupprimerComposant.dismiss();
+                                                    }
+                                                });
+                                            }
                                         }
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                        return true;
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                            return true;
+                        }
+                    });
+                } else {
+                    TextView nom1 = cardView2.findViewById(R.id.nom_composant2);
+                    ImageView img1 = cardView2.findViewById(R.id.img_composant2);
+                    nom1.setText(composantList.get(i).getNomComposant());
+                    switch (composantList.get(i).getTypeComposant()) {
+                        case "PORTE":
+                            img1.setImageResource(R.drawable.porte);
+                            break;
+                        case "VENTILATEUR":
+                            img1.setImageResource(R.drawable.ventilateur);
+                            break;
+                        case "ARROSAGE":
+                            img1.setImageResource(R.drawable.arrosage);
+                            break;
+                        default:
+                            break;
                     }
-                });
+                    cardView2.setTag(composantEnCours.getIdComposant());
+                    layout.addView(cardView2);
+                    cardView2.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            String userId = FirebaseAuth.getInstance()
+                                    .getCurrentUser()
+                                    .getUid();
+
+                            DocumentReference documentReference =
+                                    FirebaseFirestore.getInstance()
+                                            .collection(PATH_USERS_DATABASE)
+                                            .document(userId);
+
+                            documentReference
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            UserModel userModel = documentSnapshot.toObject(UserModel.class);
+
+                                            //Vérifier si le user courant est un admin
+                                            if (userModel.isAdmin()) {
+                                                dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
+                                                initComponentsOfDialog();
+                                                dialogSupprimerComposant.show();
+                                                remplirChampsDialog(composantEnCours);
+
+                                                btnSupprimerComposant.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
+                                                        dialogSupprimerComposant.dismiss();
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                            return true;
+                        }
+                    });
+                }
+
             }
-
+        }else {
+            View vide = inflater.inflate(R.layout.liste_vide, layout, false);
+            layout.addView(vide);
         }
 
         //Si admin afficher boutton ajout piece
@@ -259,9 +261,7 @@ public class Composants extends AppCompatActivity {
 
                         //Vérifier si le user courant est un admin
                         if (userModel.isAdmin()) {
-                            View boutton_ajout_composant = inflater.inflate(R.layout.btn_add_composant, layout, false);
-                            btnAddComposant = boutton_ajout_composant.findViewById(R.id.addComposant);
-                            layout.addView(boutton_ajout_composant);
+                            btnAddComposant.show();
                             btnAddComposant.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {

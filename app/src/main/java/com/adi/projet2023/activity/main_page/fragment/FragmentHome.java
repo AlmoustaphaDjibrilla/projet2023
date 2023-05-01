@@ -232,6 +232,7 @@ public class FragmentHome extends Fragment {
                                                     if (lesComposants!=null)
                                                         nbrComposants= lesComposants.size();
 
+                                                    dialogSupprimerPiece.dismiss();
                                                     final AlertDialog dialog = dialogWarning.create();
                                                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                                     alertMessage.setText("Cette piece contient "+nbrComposants+" composant(s)\nVoulez-vous vraiment la supprimer?");
@@ -248,7 +249,6 @@ public class FragmentHome extends Fragment {
                                                         @Override
                                                         public void onClick(View view) {
                                                             dialog.cancel();
-                                                            dialogSupprimerPiece.dismiss();
                                                         }
                                                     });
 
@@ -270,6 +270,8 @@ public class FragmentHome extends Fragment {
             }
         }
         else {
+            View vide = inflater.inflate(R.layout.liste_vide, layout, false);
+            layout.addView(vide);
             Log.d("TAG", "Aucune piece");
         }
 
@@ -292,9 +294,7 @@ public class FragmentHome extends Fragment {
 
                         //Vérifier si le user courant est un admin
                         if (userModel.isAdmin()){
-                            View boutton_ajout_piece = inflater.inflate(R.layout.btn_add_piece, layout, false);
-                            btnAddPiece = boutton_ajout_piece.findViewById(R.id.addPiece);
-                            layout.addView(boutton_ajout_piece);
+                            btnAddPiece.show();
                             btnAddPiece.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {

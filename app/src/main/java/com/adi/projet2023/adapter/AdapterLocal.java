@@ -115,6 +115,7 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
                             if (lesPieces!=null)
                                 nbrPiece= lesPieces.size();
 
+                            dialogSupprimerLocal.dismiss();
                             final AlertDialog dialog = dialogWarning.create();
                             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             alertMessage.setText("Ce local contient "+nbrPiece+" pièce(s)\nVoulez-vous vraiment le supprimer?");
@@ -131,7 +132,6 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
                                 @Override
                                 public void onClick(View view) {
                                     dialog.cancel();
-                                    dialogSupprimerLocal.dismiss();
                                 }
                             });
 
