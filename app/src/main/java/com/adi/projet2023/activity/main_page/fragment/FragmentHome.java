@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -70,7 +71,11 @@ public class FragmentHome extends Fragment {
 
     ImageView imgQuitterMainPage;
 
-    AlertDialog.Builder builder;
+    ImageButton cancel;
+    Button final_suppression;
+    TextView alertMessage;
+
+    AlertDialog.Builder dialogWarning;
 
     public FragmentHome(){
 
@@ -88,7 +93,12 @@ public class FragmentHome extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dialogSupprimerPiece= new Dialog(this.getContext());
-        builder= new AlertDialog.Builder(this.getContext());
+        View alertDialogCustomiser = LayoutInflater.from(getContext()).inflate(R.layout.dialog_alert_customiser,null);
+        dialogWarning= new AlertDialog.Builder(getContext());
+        dialogWarning.setView(alertDialogCustomiser);
+        cancel = (ImageButton) alertDialogCustomiser.findViewById(R.id.cancel_button);
+        alertMessage = (TextView) alertDialogCustomiser.findViewById(R.id.alert_message);
+        final_suppression = (Button) alertDialogCustomiser.findViewById(R.id.final_delete_button);
     }
 
     @Override
@@ -222,24 +232,26 @@ public class FragmentHome extends Fragment {
                                                     if (lesComposants!=null)
                                                         nbrComposants= lesComposants.size();
 
-                                                    builder
-                                                            .setTitle("Attention")
-                                                                    .setMessage("Cette pièce contient "+nbrComposants+" composant(s)\nVoulez-vous vraiment la supprimer?")
-                                                                            .setPositiveButton("Supprimer", new DialogInterface.OnClickListener() {
-                                                                                @Override
-                                                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                                                    dialogInterface.dismiss();
-                                                                                    suppressionPiece(pieceEncours);
-                                                                                }
-                                                                            })
-                                                                            .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                                                                                @Override
-                                                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                                                    dialogInterface.cancel();
-                                                                                }
-                                                                            })
-                                                            .setIcon(R.drawable.icon_warning)
-                                                            .show();
+                                                    final AlertDialog dialog = dialogWarning.create();
+                                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                                    alertMessage.setText("Cette piece contient "+nbrComposants+" composant(s)\nVoulez-vous vraiment la supprimer?");
+                                                    dialog.show();
+                                                    final_suppression.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            dialog.cancel();
+                                                            suppressionPiece(pieceEncours);
+                                                        }
+                                                    });
+
+                                                    cancel.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            dialog.cancel();
+                                                            dialogSupprimerPiece.dismiss();
+                                                        }
+                                                    });
+
 
                                                 }
                                             );
