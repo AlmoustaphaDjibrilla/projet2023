@@ -72,7 +72,6 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
         alertMessage = (TextView) alertDialogCustomiser.findViewById(R.id.alert_message);
         final_suppression = (Button) alertDialogCustomiser.findViewById(R.id.final_delete_button);
 
-
         dialogSupprimerLocal.setContentView(R.layout.layout_supprimer_local);
 
         initComponentsOfDialog();
@@ -135,9 +134,7 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
                                 }
                             });
 
-
-                        }
-                );
+                        });
 
                 return true;
             }

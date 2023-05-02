@@ -8,7 +8,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#512da8"
+        android:background="@color/white"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:elevation="0dp">
 
@@ -32,15 +32,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="0dp"
-                    android:src="@drawable/ic_arrow_back_white_24dp" />
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/addNewUser"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="290dp"
-                    android:layout_gravity="top|end"
-                    app:srcCompat="@drawable/icon_add_person" />
+                    android:src="@drawable/icon_back" />
 
             </RelativeLayout>
 
@@ -48,7 +40,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="0dp"
@@ -65,39 +57,15 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center">
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="260dp"
+                    <pl.droidsonroids.gif.GifImageView
+                        android:layout_marginLeft="50dp"
+                        android:layout_width="300dp"
+                        android:layout_height="300dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/bus_image_3" />
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="16dp"
-                        android:fontFamily="@font/print_clearly"
-                        android:text="Recherche"
-                        android:textAlignment="center"
-                        android:textColor="#FFFFFF"
-                        android:textSize="32sp" />
-
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView"
-                        android:layout_marginTop="8dp"
-                        android:fontFamily="@font/gotham"
-                        android:text="D'un utilisateur"
-                        android:textAlignment="center"
-                        android:textColor="#FFFFFF"
-                        android:textSize="18sp" />
-
+                        android:src="@drawable/search" />
 
                 </RelativeLayout>
 
@@ -179,7 +147,6 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                     </LinearLayout>
-
                 </androidx.cardview.widget.CardView>
 
 

@@ -27,8 +27,9 @@ public class FragmentProfil extends Fragment {
     UserModel userModel;
 
     TextView txtNomUser1, txtNomUser2, txtMailUser1, txtMailUser2, txtDateEnregistrementUser;
-    ImageView imgProfilUser, imgHistoriqueUser;
-    Button btnEditerProfilUser;
+    ImageView imgProfilUser;
+
+    Button historiquelUser;
 
 
 
@@ -58,7 +59,7 @@ public class FragmentProfil extends Fragment {
             updateComponants(modelUser);
         }
 
-        imgHistoriqueUser.setOnClickListener(
+        historiquelUser.setOnClickListener(
                 v->{
                     Intent intentHistorique= new Intent(getContext(), CommandesUserActivity.class);
                     startActivity(intentHistorique);
@@ -85,9 +86,8 @@ public class FragmentProfil extends Fragment {
         txtDateEnregistrementUser= view.findViewById(R.id.txtDateEnregistrementUser);
 
         imgProfilUser= view.findViewById(R.id.imgProfilUser);
-        imgHistoriqueUser= view.findViewById(R.id.imgHistoriqueUser);
 
-        btnEditerProfilUser= view.findViewById(R.id.btnEditerProfilUser);
+        historiquelUser= view.findViewById(R.id.btnHistoriqueUser);
     }
 
 

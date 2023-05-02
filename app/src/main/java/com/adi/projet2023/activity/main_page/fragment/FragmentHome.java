@@ -3,7 +3,6 @@ package com.adi.projet2023.activity.main_page.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -23,41 +22,30 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.LocalUtils;
-import com.adi.projet2023.Utils.RealTime;
+import com.adi.projet2023.Utils.DatabaseUtils;
 import com.adi.projet2023.activity.AjoutPieceActivity;
 import com.adi.projet2023.activity.Composants;
-import com.adi.projet2023.activity.main_page.MainPage;
-import com.adi.projet2023.creation.CreationLocal;
 import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.composant.Composant;
 import com.adi.projet2023.model.local.Local;
 import com.adi.projet2023.model.user.UserModel;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class FragmentHome extends Fragment {
-    final String PATH_USERS_DATABASE= "Users";
     GridLayout gridPiece;
     Local localEnCours;
     List<Piece> piecesList;
@@ -205,65 +193,45 @@ public class FragmentHome extends Fragment {
                         String userId= FirebaseAuth.getInstance()
                                 .getCurrentUser()
                                 .getUid();
+                        DatabaseUtils.getUser(userId, UserModel.class, new DatabaseUtils.OnValueReceivedListener<UserModel>() {
+                            @Override
+                            public void onValueReceived(UserModel value) {
+                                if(value.isAdmin()){
+                                    dialogSupprimerPiece.setContentView(R.layout.supprimer_piece);
+                                    initComponentsOfDialog();
+                                    dialogSupprimerPiece.show();
+                                    remplirChampsDialog(pieceEncours);
 
-                        DocumentReference documentReference=
-                                FirebaseFirestore.getInstance()
-                                        .collection(PATH_USERS_DATABASE)
-                                        .document(userId);
+                                    btnSupprimerPiece.setOnClickListener(
+                                            v -> {
+                                                List<Composant> lesComposants = pieceEncours.getLesComposants();
+                                                int nbrComposants=0;
+                                                if (lesComposants!=null)
+                                                    nbrComposants= lesComposants.size();
 
-                        documentReference
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        UserModel userModel= documentSnapshot.toObject(UserModel.class);
+                                                dialogSupprimerPiece.dismiss();
+                                                final AlertDialog dialog = dialogWarning.create();
+                                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                                alertMessage.setText("Cette piece contient "+nbrComposants+" composant(s)\nVoulez-vous vraiment la supprimer?");
+                                                dialog.show();
+                                                final_suppression.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        dialog.cancel();
+                                                        suppressionPiece(pieceEncours);
+                                                    }
+                                                });
+                                                cancel.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                            });
+                                }
+                            }
+                        });
 
-                                        //Vérifier si le user courant est un admin
-                                        if (userModel.isAdmin()){
-                                            dialogSupprimerPiece.setContentView(R.layout.supprimer_piece);
-                                            initComponentsOfDialog();
-                                            dialogSupprimerPiece.show();
-                                            remplirChampsDialog(pieceEncours);
-
-                                            btnSupprimerPiece.setOnClickListener(
-                                                v -> {
-                                                    List<Composant> lesComposants = pieceEncours.getLesComposants();
-                                                    int nbrComposants=0;
-                                                    if (lesComposants!=null)
-                                                        nbrComposants= lesComposants.size();
-
-                                                    dialogSupprimerPiece.dismiss();
-                                                    final AlertDialog dialog = dialogWarning.create();
-                                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                                    alertMessage.setText("Cette piece contient "+nbrComposants+" composant(s)\nVoulez-vous vraiment la supprimer?");
-                                                    dialog.show();
-                                                    final_suppression.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View view) {
-                                                            dialog.cancel();
-                                                            suppressionPiece(pieceEncours);
-                                                        }
-                                                    });
-
-                                                    cancel.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View view) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
-
-
-                                                }
-                                            );
-                                        }
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getActivity(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
                         return true;
                     }
                 });
@@ -280,39 +248,23 @@ public class FragmentHome extends Fragment {
                 .getCurrentUser()
                 .getUid();
 
-        DocumentReference documentReference=
-                FirebaseFirestore.getInstance()
-                        .collection(PATH_USERS_DATABASE)
-                        .document(userId);
-
-        documentReference
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        UserModel userModel= documentSnapshot.toObject(UserModel.class);
-
-                        //Vérifier si le user courant est un admin
-                        if (userModel.isAdmin()){
-                            btnAddPiece.show();
-                            btnAddPiece.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent intent = new Intent(getContext(), AjoutPieceActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.putExtra("localEnCours",localEnCours);
-                                    startActivity(intent);
-                                }
-                            });
+        DatabaseUtils.getUser(userId, UserModel.class, new DatabaseUtils.OnValueReceivedListener<UserModel>() {
+            @Override
+            public void onValueReceived(UserModel value) {
+                if(value.isAdmin()){
+                    btnAddPiece.show();
+                    btnAddPiece.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getContext(), AjoutPieceActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("localEnCours",localEnCours);
+                            startActivity(intent);
                         }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    });
+                }
+            }
+        });
 
     }
 
@@ -400,14 +352,14 @@ public class FragmentHome extends Fragment {
         TextView humidite = root.findViewById(R.id.humidite);
         TextView temperature = root.findViewById(R.id.temperature);
 
-        RealTime.getValueFromFirebase(chemin,"Temperature", Long.class, new RealTime.OnValueReceivedListener<Long>() {
+        DatabaseUtils.getValueFromFirebase(chemin,"Temperature", Long.class, new DatabaseUtils.OnValueReceivedListener<Long>() {
             @Override
             public void onValueReceived(Long value) {
                 temperature.setText(value+" C");
             }
         });
 
-        RealTime.getValueFromFirebase(chemin,"Humidite", Long.class, new RealTime.OnValueReceivedListener<Long>() {
+        DatabaseUtils.getValueFromFirebase(chemin,"Humidite", Long.class, new DatabaseUtils.OnValueReceivedListener<Long>() {
             @Override
             public void onValueReceived(Long value) {
                 humidite.setText(value+" %");

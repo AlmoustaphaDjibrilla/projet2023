@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.LocalUtils;
-import com.adi.projet2023.Utils.RealTime;
+import com.adi.projet2023.Utils.DatabaseUtils;
 import com.adi.projet2023.activity.main_page.MainPage;
 import com.adi.projet2023.creation.CreationCommande;
 import com.adi.projet2023.model.Commande.Commande;
@@ -37,7 +37,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -51,7 +50,6 @@ public class Composants extends AppCompatActivity {
     final String DETAIL_ALLUMAGE= "Allumage";
     final String DETAIL_EXTINCTION= "Extinction";
 
-    final String PATH_USERS_DATABASE = "Users";
     LinearLayout layout;
     List<Composant> composantList;
     Local localEnCours;
@@ -131,42 +129,25 @@ public class Composants extends AppCompatActivity {
                             String userId = FirebaseAuth.getInstance()
                                     .getCurrentUser()
                                     .getUid();
-
-                            DocumentReference documentReference =
-                                    FirebaseFirestore.getInstance()
-                                            .collection(PATH_USERS_DATABASE)
-                                            .document(userId);
-
-                            documentReference
-                                    .get()
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            UserModel userModel = documentSnapshot.toObject(UserModel.class);
-
-                                            //Vérifier si le user courant est un admin
-                                            if (userModel.isAdmin()) {
-                                                dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
-                                                initComponentsOfDialog();
-                                                dialogSupprimerComposant.show();
-                                                remplirChampsDialog(composantEnCours);
-
-                                                btnSupprimerComposant.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
-                                                        dialogSupprimerComposant.dismiss();
-                                                    }
-                                                });
+                            DatabaseUtils.getUser(userId, UserModel.class, new DatabaseUtils.OnValueReceivedListener<UserModel>() {
+                                @Override
+                                public void onValueReceived(UserModel value) {
+                                    if(value.isAdmin()){
+                                        dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
+                                        initComponentsOfDialog();
+                                        dialogSupprimerComposant.show();
+                                        remplirChampsDialog(composantEnCours);
+                                        btnSupprimerComposant.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
+                                                dialogSupprimerComposant.dismiss();
                                             }
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                        });
+                                    }
+                                }
+                            });
+
                             return true;
                         }
                     });
@@ -195,42 +176,24 @@ public class Composants extends AppCompatActivity {
                             String userId = FirebaseAuth.getInstance()
                                     .getCurrentUser()
                                     .getUid();
-
-                            DocumentReference documentReference =
-                                    FirebaseFirestore.getInstance()
-                                            .collection(PATH_USERS_DATABASE)
-                                            .document(userId);
-
-                            documentReference
-                                    .get()
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            UserModel userModel = documentSnapshot.toObject(UserModel.class);
-
-                                            //Vérifier si le user courant est un admin
-                                            if (userModel.isAdmin()) {
-                                                dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
-                                                initComponentsOfDialog();
-                                                dialogSupprimerComposant.show();
-                                                remplirChampsDialog(composantEnCours);
-
-                                                btnSupprimerComposant.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
-                                                        dialogSupprimerComposant.dismiss();
-                                                    }
-                                                });
+                            DatabaseUtils.getUser(userId, UserModel.class, new DatabaseUtils.OnValueReceivedListener<UserModel>() {
+                                @Override
+                                public void onValueReceived(UserModel value) {
+                                    if(value.isAdmin()){
+                                        dialogSupprimerComposant.setContentView(R.layout.supprimer_composant);
+                                        initComponentsOfDialog();
+                                        dialogSupprimerComposant.show();
+                                        remplirChampsDialog(composantEnCours);
+                                        btnSupprimerComposant.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                supprimer_composant(composantEnCours.getIdComposant(), composantEnCours.getChemin());
+                                                dialogSupprimerComposant.dismiss();
                                             }
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                        });
+                                    }
+                                }
+                            });
                             return true;
                         }
                     });
@@ -246,41 +209,24 @@ public class Composants extends AppCompatActivity {
         String userId = FirebaseAuth.getInstance()
                 .getCurrentUser()
                 .getUid();
-
-        DocumentReference documentReference =
-                FirebaseFirestore.getInstance()
-                        .collection(PATH_USERS_DATABASE)
-                        .document(userId);
-
-        documentReference
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        UserModel userModel = documentSnapshot.toObject(UserModel.class);
-
-                        //Vérifier si le user courant est un admin
-                        if (userModel.isAdmin()) {
-                            btnAddComposant.show();
-                            btnAddComposant.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent intent = new Intent(getApplicationContext(), AjouterComposant.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.putExtra("localEnCours", localEnCours);
-                                    intent.putExtra("pieceEnCours", pieceEnCours);
-                                    startActivity(intent);
-                                }
-                            });
+        DatabaseUtils.getUser(userId, UserModel.class, new DatabaseUtils.OnValueReceivedListener<UserModel>() {
+            @Override
+            public void onValueReceived(UserModel value) {
+                if(value.isAdmin()){
+                    btnAddComposant.show();
+                    btnAddComposant.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getApplicationContext(), AjouterComposant.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("localEnCours", localEnCours);
+                            intent.putExtra("pieceEnCours", pieceEnCours);
+                            startActivity(intent);
                         }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    });
+                }
+            }
+        });
     }
 
     private void initSwitches (List<Composant> composantList){
@@ -522,14 +468,14 @@ public class Composants extends AppCompatActivity {
         TextView humidite = findViewById(R.id.humidite);
         TextView temperature = findViewById(R.id.temperature);
 
-        RealTime.getValueFromFirebase(chemin,"Temperature", Long.class, new RealTime.OnValueReceivedListener<Long>() {
+        DatabaseUtils.getValueFromFirebase(chemin,"Temperature", Long.class, new DatabaseUtils.OnValueReceivedListener<Long>() {
             @Override
             public void onValueReceived(Long value) {
                 temperature.setText(value+" C");
             }
         });
 
-        RealTime.getValueFromFirebase(chemin,"Humidite", Long.class, new RealTime.OnValueReceivedListener<Long>() {
+        DatabaseUtils.getValueFromFirebase(chemin,"Humidite", Long.class, new DatabaseUtils.OnValueReceivedListener<Long>() {
             @Override
             public void onValueReceived(Long value) {
                 humidite.setText(value+" %");

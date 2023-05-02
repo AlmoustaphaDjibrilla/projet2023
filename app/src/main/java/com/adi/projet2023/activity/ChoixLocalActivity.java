@@ -1,11 +1,9 @@
 package com.adi.projet2023.activity;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.service.controls.actions.FloatAction;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,12 +13,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adi.projet2023.R;
-import com.adi.projet2023.activity.main_page.MainPage;
+import com.adi.projet2023.Utils.DatabaseUtils;
 import com.adi.projet2023.adapter.AdapterLocal;
 import com.adi.projet2023.creation.CreationLocal;
 import com.adi.projet2023.databinding.ActivityChoixLocalBinding;
@@ -34,6 +31,7 @@ import com.adi.projet2023.model.user.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -45,7 +43,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,10 +59,6 @@ public class ChoixLocalActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore firebaseFirestore;
 
-    UserModel userModel;
-
-
-    private AppBarConfiguration appBarConfiguration;
     private ActivityChoixLocalBinding binding;
     RecyclerView listLocaux;
     ArrayList<Local> lesLocaux;
@@ -84,7 +77,6 @@ public class ChoixLocalActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         lesLocaux.clear();
-        //recuperer_locaux();
 
         //Actualiser en cas de retour pour que les modifications s'affichent
         afficherLocalEnFonctionUser(FirebaseAuth.getInstance().getCurrentUser());
@@ -94,6 +86,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choix_local);
         dialog= new Dialog(this);
+
 
         binding = ActivityChoixLocalBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -106,11 +99,22 @@ public class ChoixLocalActivity extends AppCompatActivity {
             titreChoixLocal.setText("Choisissez un local");
         }
 
+        String userId = FirebaseAuth.getInstance()
+                .getCurrentUser()
+                .getUid();
+        DatabaseUtils.getUser(userId, UserModel.class, new DatabaseUtils.OnValueReceivedListener<UserModel>() {
+            @Override
+            public void onValueReceived(UserModel value) {
+                if(value.isAdmin()){
+                    binding.addlocal.show();
+                }
+            }
+        });
         binding.addlocal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ajoutLocal();
-                verifierAdmin(mAuth.getCurrentUser());
+                verifierAdmin();
                 btnAjouterLocal.setOnClickListener(
                         v->{
                             TypeLocal typeLocal;
@@ -130,6 +134,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
                 );
             }
         });
+
     }
 
     /**
@@ -141,7 +146,20 @@ public class ChoixLocalActivity extends AppCompatActivity {
         titreChoixLocal=findViewById(R.id.titreChoixLocal);
     }
 
+    private void verifierAdmin(){
+        String userId = FirebaseAuth.getInstance()
+                .getCurrentUser()
+                .getUid();
+        DatabaseUtils.getUser(userId, UserModel.class, new DatabaseUtils.OnValueReceivedListener<UserModel>() {
+            @Override
+            public void onValueReceived(UserModel value) {
+                if(value.isAdmin()){
+                    dialog.show();
+                }
+            }
+        });
 
+    }
 
     private void recuperer_locaux(){
         collectionLocal.get()
@@ -265,38 +283,6 @@ public class ChoixLocalActivity extends AppCompatActivity {
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
-
-
-    /**
-     * Méthode pour vérifier si le user courant
-     * est un admin afin de lui permettre
-     * d'ajouter un nouveau Local
-     * @param firebaseUser
-     */
-    private void verifierAdmin(FirebaseUser firebaseUser){
-        DocumentReference docUsermodel=
-                collectionUsers
-                        .document(firebaseUser.getUid());
-
-        docUsermodel.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.getBoolean("admin")){
-                            dialog.show();
-                        }else{
-                            Toast.makeText(getApplicationContext(), "Désolé vous n'êtes pas administrateur", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Aucune réponse", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
 
     private void nouveauLocal(TypeLocal typeLocal, String nomLocal, String quartierLocal, String villeLocal){
         if(nomLocal==null || nomLocal.equals("")){

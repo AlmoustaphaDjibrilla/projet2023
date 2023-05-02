@@ -1,50 +1,46 @@
 package com.adi.projet2023.activity.main_page.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.adi.projet2023.R;
+import com.adi.projet2023.Utils.DatabaseUtils;
+import com.adi.projet2023.activity.ActivityRegisterUser;
 import com.adi.projet2023.activity.main_page.ChercherUser;
 import com.adi.projet2023.adapter.AdapterUserModel;
 import com.adi.projet2023.model.local.Local;
 import com.adi.projet2023.model.user.UserModel;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FragmentUsers extends Fragment {
 
-    final String PATH_USERS_DATABASE= "Users";
-    private CollectionReference collectionUsers;
-
     Local localEnCours;
     ArrayList<UserModel> lesUsers;
     RecyclerView listUsers;
-    FloatingActionButton btnAddUser;
+    FloatingActionButton btnAddUser, btnSearchUser, btnHistoriquesUsers;
+    ExtendedFloatingActionButton actions;
+    Boolean visibles;
     ImageView imgQuitterFragmentUsers;
 
+    public FragmentUsers(){
+
+    }
     public FragmentUsers(Local local) {
         // Required empty public constructor
         this.localEnCours= local;
@@ -61,7 +57,6 @@ public class FragmentUsers extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -70,57 +65,90 @@ public class FragmentUsers extends Fragment {
         View view= inflater.inflate(R.layout.fragment_users, container, false);
 
         initListOfUsers(view);
-        
-        btnAddUser.setOnClickListener(
-                v->{
-                    verifierAdmin(FirebaseAuth.getInstance().getCurrentUser());
-                }
-        );
+        initActionsButton(view);
 
         imgQuitterFragmentUsers.setOnClickListener(
-                view1 -> getActivity().finish()
+                v -> this.getActivity().finish()
         );
         return view;
     }
 
     private void initListOfUsers(View view){
         listUsers= view.findViewById(R.id.listUsers);
-        btnAddUser= view.findViewById(R.id.addUser);
-        imgQuitterFragmentUsers= view.findViewById(R.id.imgQuitterFragmentUsers);
-
         AdapterUserModel adapterUserModel= new AdapterUserModel(this.getContext(), lesUsers, localEnCours);
         listUsers.setLayoutManager(new LinearLayoutManager(this.getContext()));
         listUsers.setAdapter(adapterUserModel);
+
+        imgQuitterFragmentUsers= view.findViewById(R.id.imgQuitterFragmentUsers);
     }
 
-    private void verifierAdmin(FirebaseUser firebaseUser){
-        collectionUsers= FirebaseFirestore.getInstance().collection(PATH_USERS_DATABASE);
+    private void initActionsButton(View view){
 
-        DocumentReference docUsermodel=
-                collectionUsers
-                        .document(firebaseUser.getUid());
+        actions = view.findViewById(R.id.actions_supp);
+        btnAddUser = view.findViewById(R.id.add_user_fab);
+        btnSearchUser= view.findViewById(R.id.search_user_fab);
+        btnHistoriquesUsers = view.findViewById(R.id.historique_fab);
+        btnAddUser.setVisibility(View.GONE);
+        btnSearchUser.setVisibility(View.GONE);
+        btnHistoriquesUsers.setVisibility(View.GONE);
 
-        docUsermodel.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.getBoolean("admin")){
+        visibles=false;
 
-                            //Conduire à l'interface d'ajout
-                            Intent intent= new Intent(getContext(), ChercherUser.class);
-                            intent.putExtra("localEnCours", localEnCours);
-                            startActivity(intent);
+        String userId = FirebaseAuth.getInstance()
+                .getCurrentUser()
+                .getUid();
+        DatabaseUtils.getUser(userId, UserModel.class, new DatabaseUtils.OnValueReceivedListener<UserModel>() {
+            @Override
+            public void onValueReceived(UserModel value) {
+                if(value.isAdmin()){
+                    actions.show();
+                    actions.shrink();
+                }
+            }
+        });
 
-                        }else{
-                            Toast.makeText(getContext(), "Désolé vous n'êtes pas administrateur", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Aucune réponse", Toast.LENGTH_SHORT).show();
-                    }
+        actions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!visibles){
+                    view.setClickable(false);
+                    btnAddUser.show();
+                    btnSearchUser.show();
+                    btnHistoriquesUsers.show();
+                    actions.extend();
+
+                    visibles=true;
+                }else{
+                    view.setClickable(true);
+                    btnAddUser.hide();
+                    btnSearchUser.hide();
+                    btnHistoriquesUsers.hide();
+                    actions.shrink();
+
+                    visibles=false;
+                }
+            }
+        });
+
+        btnSearchUser.setOnClickListener(
+                v->{
+                    Intent intent= new Intent(getContext(), ChercherUser.class);
+                    intent.putExtra("localEnCours", localEnCours);
+                    startActivity(intent);
+                    btnAddUser.setVisibility(View.GONE);
+                    btnSearchUser.setVisibility(View.GONE);
+                    btnHistoriquesUsers.setVisibility(View.GONE);
+                    actions.shrink();
                 });
+        btnAddUser.setOnClickListener(
+                v->{
+                    Intent intent= new Intent(getContext(), ActivityRegisterUser.class);
+                    startActivity(intent);
+                    btnAddUser.setVisibility(View.GONE);
+                    btnSearchUser.setVisibility(View.GONE);
+                    btnHistoriquesUsers.setVisibility(View.GONE);
+                    actions.shrink();
+                });
+
     }
 }

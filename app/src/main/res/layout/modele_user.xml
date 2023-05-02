@@ -8,6 +8,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.cardview.widget.CardView
+        android:backgroundTint="@color/lavender"
         android:id="@+id/cardViewModeleUser"
         android:layout_width="395dp"
         android:layout_height="173dp"

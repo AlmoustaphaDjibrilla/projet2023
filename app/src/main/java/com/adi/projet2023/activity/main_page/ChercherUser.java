@@ -39,8 +39,6 @@ public class ChercherUser extends AppCompatActivity {
 
     ImageView imgQuitter;
 
-    FloatingActionButton addNewUser;
-
     EditText txtMailSearchUser, txtNomSearchUser, txtDateEnregistrementSearchUser;
     Button btnSearchUser, btnAddUser;
     Dialog dialog;
@@ -92,12 +90,6 @@ public class ChercherUser extends AppCompatActivity {
                 }
         );
 
-        addNewUser.setOnClickListener(
-                v->{
-                    Intent intent= new Intent(getApplicationContext(), ActivityRegisterUser.class);
-                    startActivity(intent);
-                }
-        );
     }
 
     /**
@@ -110,7 +102,6 @@ public class ChercherUser extends AppCompatActivity {
         txtDateEnregistrementSearchUser= findViewById(R.id.txtDateEnregisrementSearchUser);
         btnSearchUser= findViewById(R.id.btnSearchUser);
         imgQuitter= findViewById(R.id.imgQuitterRechercheUser);
-        addNewUser= findViewById(R.id.addNewUser);
     }
 
     /**
