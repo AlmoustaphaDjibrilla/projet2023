@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.LocalUtils;
 import com.adi.projet2023.activity.ActivityRegisterUser;
+import com.adi.projet2023.activity.ChoixLocalActivity;
 import com.adi.projet2023.creation.CreationLocal;
 import com.adi.projet2023.model.local.Local;
 import com.adi.projet2023.model.user.UserModel;
@@ -181,7 +182,7 @@ public class ChercherUser extends AppCompatActivity {
                             btnAddUser.setOnClickListener(
                                     v->{
                                         Toast.makeText(ChercherUser.this, userModel.getNom()+" ajouté", Toast.LENGTH_SHORT).show();
-                                        ajouterUserLocal(userModel, localEnCours);
+                                        ajouterUserLocal(userModel,localEnCours);
                                         dialog.dismiss();
                                     }
                             );
@@ -199,7 +200,7 @@ public class ChercherUser extends AppCompatActivity {
 
     private void ajouterUserLocal(UserModel userModel, Local local){
         CreationLocal.ajouterUserALocal(userModel, local);
-        LocalUtils.getLocalById(local.getIdLocal(), new OnSuccessListener<Local>() {
+        LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
             @Override
             public void onSuccess(Local local) {
                 // Aller vers Main Page avec local mis a jour

@@ -1,14 +1,22 @@
 package com.adi.projet2023.creation;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.adi.projet2023.model.local.AutreLocal;
 import com.adi.projet2023.model.local.Entreprise;
 import com.adi.projet2023.model.local.Local;
 import com.adi.projet2023.model.local.Maison;
 import com.adi.projet2023.model.user.UserModel;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,67 +60,76 @@ public class CreationLocal {
     }
 
     public static void ajouterUserALocal(UserModel userAAjouter, Local localEnCours){
-        DocumentReference docLocal=
-                FirebaseFirestore.getInstance()
-                        .collection(PATH_LOCAL_DATABASES)
-                        .document(localEnCours.getIdLocal());
+
+        Map<String, Object> newUser= new HashMap<>();
+        newUser.put("uid", userAAjouter.getUid());
+        newUser.put("password", userAAjouter.getPassword());
+        newUser.put("email", userAAjouter.getEmail());
+        newUser.put("nom", userAAjouter.getNom());
+        newUser.put("dateEnregistrement", userAAjouter.getDateEnregistrement());
+        newUser.put("admin", userAAjouter.isAdmin());
+        newUser.put("user", userAAjouter.isUser());
+
+        CollectionReference localRef = FirebaseFirestore.getInstance().collection("Local");
+        Query req = localRef.whereEqualTo("idLocal", localEnCours.getIdLocal());
+        req.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot querySnapshot) {
+                DocumentSnapshot localDoc = querySnapshot.getDocuments().get(0);
+                List<Map<String, Object>> lesUsers = (List<Map<String, Object>>) localDoc.get("lesUsers");
+                if (lesUsers == null) {
+                    lesUsers = new ArrayList<>();
+                }
+                lesUsers.add(newUser);
+                localDoc.getReference().update("lesUsers",lesUsers);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("TAG",e.getMessage());
+            }
+        });
 
 
-        Map<String, Object> mapUser= new HashMap<>();
-        mapUser.put("uid", userAAjouter.getUid());
-        mapUser.put("password", userAAjouter.getPassword());
-        mapUser.put("email", userAAjouter.getEmail());
-        mapUser.put("nom", userAAjouter.getNom());
-        mapUser.put("dateEnregistrement", userAAjouter.getDateEnregistrement());
-        mapUser.put("admin", userAAjouter.isAdmin());
-        mapUser.put("user", userAAjouter.isUser());
-
-        docLocal
-                .get()
-                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                List<Map<String, Object>> lesUsers= (List<Map<String, Object>>) documentSnapshot.get("lesUsers");
-                                if (lesUsers==null)
-                                    lesUsers= new ArrayList<>();
-
-                                lesUsers.add(mapUser);
-                            }
-                        });
-
-        localEnCours.ajouterUser(userAAjouter);
-        docLocal.set(localEnCours);
     }
 
     public static void retirerUserLocal(UserModel userARetirer, Local localEnCours){
-        DocumentReference docLocal=
-                FirebaseFirestore.getInstance()
-                        .collection(PATH_LOCAL_DATABASES)
-                        .document(localEnCours.getIdLocal());
 
-        Map<String, Object> mapUser= new HashMap<>();
-        mapUser.put("uid", userARetirer.getUid());
-        mapUser.put("password", userARetirer.getPassword());
-        mapUser.put("email", userARetirer.getEmail());
-        mapUser.put("nom", userARetirer.getNom());
-        mapUser.put("dateEnregistrement", userARetirer.getDateEnregistrement());
-        mapUser.put("admin", userARetirer.isAdmin());
-        mapUser.put("user", userARetirer.isUser());
+        Map<String, Object> user= new HashMap<>();
+        user.put("uid", userARetirer.getUid());
+        user.put("password", userARetirer.getPassword());
+        user.put("email", userARetirer.getEmail());
+        user.put("nom", userARetirer.getNom());
+        user.put("dateEnregistrement", userARetirer.getDateEnregistrement());
+        user.put("admin", userARetirer.isAdmin());
+        user.put("user", userARetirer.isUser());
 
+        CollectionReference localRef = FirebaseFirestore.getInstance().collection("Local");
+        Query req = localRef.whereEqualTo("idLocal", localEnCours.getIdLocal());
+        req.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot querySnapshot) {
+                DocumentSnapshot localDoc = querySnapshot.getDocuments().get(0);
+                List<Map<String, Object>> lesUsers = (List<Map<String, Object>>) localDoc.get("lesUsers");
 
-        docLocal
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        List<Map<String, Object>> lesUsers= (List<Map<String, Object>>) documentSnapshot.get("lesUsers");
-                        if (lesUsers!=null){
-                            lesUsers.remove(mapUser);
-                        }
+                boolean trouve = false;
+                for (Map<String, Object> user : lesUsers) {
+                    if (user.get("uid").equals(userARetirer.getUid())) {
+                        lesUsers.remove(user);
+                        trouve = true;
+                        break;
                     }
-                });
+                }
+                if(trouve){
+                    localDoc.getReference().update("lesUsers",lesUsers);
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("TAG",e.getMessage());
+            }
+        });
 
-        localEnCours.retirerUser(userARetirer);
-        docLocal.set(localEnCours);
     }
 }

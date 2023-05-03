@@ -384,7 +384,6 @@ public class ChoixLocalActivity extends AppCompatActivity {
                                                         String type = (String) hashMap.get("typePiece");
                                                         String adresse = (String) hashMap.get("chemin");
                                                         List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("composants");
-//                                                        List<HashMap<String, Object>> listHashMap = (List<HashMap<String, Object>>) hashMap.get("lesComposants");
                                                         lesPieces.add(new Piece(id,type,nom,adresse,listHashMap));
                                                     }
                                                 }

@@ -109,7 +109,7 @@
                 android:id="@+id/textAdmin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Admin"
+                android:text="Users"
                 android:textStyle="bold"
                 android:layout_marginStart="10dp"
                 android:textSize="16sp"

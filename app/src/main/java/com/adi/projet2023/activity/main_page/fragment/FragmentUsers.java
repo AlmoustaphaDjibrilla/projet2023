@@ -51,7 +51,6 @@ public class FragmentUsers extends Fragment {
                 lesUsers.add(u);
             }
         }
-
     }
 
     @Override

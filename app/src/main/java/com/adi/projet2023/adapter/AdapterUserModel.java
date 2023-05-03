@@ -20,8 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.DatabaseUtils;
+import com.adi.projet2023.Utils.LocalUtils;
 import com.adi.projet2023.activity.AjouterComposant;
 import com.adi.projet2023.activity.main_page.AffichageCommandeUser;
+import com.adi.projet2023.activity.main_page.MainPage;
 import com.adi.projet2023.creation.CreationLocal;
 import com.adi.projet2023.model.local.Local;
 import com.adi.projet2023.model.user.UserModel;
@@ -146,14 +148,26 @@ public class AdapterUserModel extends RecyclerView.Adapter<AffichageUserModel>{
                             intent.putExtra("userEnCours",userModel);
                             context.startActivity(intent);
                             break;
-
                         case "retirer":
                             CreationLocal.retirerUserLocal(userModel, localEnCours);
+                            LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
+                                @Override
+                                public void onSuccess(Local local) {
+                                    // Aller vers Main Page avec local mis a jour
+                                    Intent intent = new Intent(context.getApplicationContext(), MainPage.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    intent.putExtra("localId",local);
+                                    context.startActivity(intent);
+                                }
+                            }, new OnFailureListener() {
+                                @Override
+                                public void onFailure(@org.checkerframework.checker.nullness.qual.NonNull Exception e) {
+                                    // Erreur lors de la recuperation du local mis a jour
+                                    Toast.makeText(context.getApplicationContext(), "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                             Toast.makeText(context, userModel.getNom()+" retiré du local "+localEnCours.getNomLocal(), Toast.LENGTH_SHORT).show();
-                            lesUsers.remove(userModel);
-                            notifyDataSetChanged();
                             break;
-
                         default:
                             break;
                     }

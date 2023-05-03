@@ -8,13 +8,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.cardview.widget.CardView
-        android:backgroundTint="@color/lavender"
         android:id="@+id/cardViewModeleUser"
-        android:layout_width="395dp"
-        android:layout_height="173dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="15dp"
         android:layout_marginRight="8dp"
+        android:backgroundTint="@color/lavender"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
@@ -32,8 +32,8 @@
                 android:layout_width="101dp"
                 android:layout_height="103dp"
                 android:layout_marginStart="4dp"
-                android:src="@drawable/icon_profil"
                 android:layout_marginTop="16dp"
+                android:src="@drawable/icon_profil"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/icon_profil" />
@@ -79,12 +79,12 @@
 
             <TextView
                 android:id="@+id/dateEnregistrementUserModel"
-                android:layout_width="133dp"
-                android:layout_height="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:textColor="#4b4b4b"
                 android:fontFamily="@font/calibri"
                 android:textAlignment="textEnd"
+                android:textColor="#4b4b4b"
                 app:layout_constraintStart_toEndOf="@+id/textView7"
                 app:layout_constraintTop_toTopOf="@+id/textView7" />
         </androidx.constraintlayout.widget.ConstraintLayout>
