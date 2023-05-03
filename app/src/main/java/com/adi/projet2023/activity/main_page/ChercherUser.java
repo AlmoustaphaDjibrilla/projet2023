@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adi.projet2023.R;
+import com.adi.projet2023.Utils.LocalUtils;
 import com.adi.projet2023.activity.ActivityRegisterUser;
 import com.adi.projet2023.creation.CreationLocal;
 import com.adi.projet2023.model.local.Local;
@@ -198,5 +199,21 @@ public class ChercherUser extends AppCompatActivity {
 
     private void ajouterUserLocal(UserModel userModel, Local local){
         CreationLocal.ajouterUserALocal(userModel, local);
+        LocalUtils.getLocalById(local.getIdLocal(), new OnSuccessListener<Local>() {
+            @Override
+            public void onSuccess(Local local) {
+                // Aller vers Main Page avec local mis a jour
+                Intent intent = new Intent(getApplicationContext(), MainPage.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("localId",local);
+                startActivity(intent);
+            }
+        }, new OnFailureListener() {
+            @Override
+            public void onFailure(@org.checkerframework.checker.nullness.qual.NonNull Exception e) {
+                // Erreur lors de la recuperation du local mis a jour
+                Toast.makeText(getApplicationContext(), "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
