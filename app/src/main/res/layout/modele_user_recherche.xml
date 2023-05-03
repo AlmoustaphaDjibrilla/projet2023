@@ -9,8 +9,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewModeleUser"
-        android:layout_width="395dp"
-        android:layout_height="253dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="15dp"
         android:layout_marginRight="8dp"
@@ -28,8 +28,8 @@
 
             <ImageView
                 android:id="@+id/profilUserTrouve"
-                android:layout_width="101dp"
-                android:layout_height="103dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_marginStart="4dp"
                 android:src="@drawable/icon_profil"
                 android:layout_marginTop="16dp"
@@ -78,7 +78,7 @@
 
             <TextView
                 android:id="@+id/dateEnregistrementUserSupprime"
-                android:layout_width="133dp"
+                android:layout_width="wrap_content"
                 android:layout_height="18dp"
                 android:layout_marginStart="20dp"
                 android:textColor="#4b4b4b"
@@ -89,7 +89,7 @@
 
             <TextView
                 android:id="@+id/uidUserSupprime"
-                android:layout_width="133dp"
+                android:layout_width="wrap_content"
                 android:layout_height="18dp"
                 android:layout_marginStart="32dp"
                 android:fontFamily="@font/calibri"

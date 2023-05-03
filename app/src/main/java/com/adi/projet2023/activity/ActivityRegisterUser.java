@@ -1,15 +1,16 @@
 package com.adi.projet2023.activity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.adi.projet2023.R;
 import com.adi.projet2023.model.user.UserModel;
@@ -17,6 +18,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthSettings;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -51,7 +53,6 @@ public class ActivityRegisterUser extends AppCompatActivity {
                     String mail = txtMail.getText().toString();
                     String password = txtPassword.getText().toString();
                     String telephone = txtTelephone.getText().toString();
-
                     ajouterUserModel(mail, password, nom, telephone);
 
                 }
@@ -88,26 +89,25 @@ public class ActivityRegisterUser extends AppCompatActivity {
      * @param nom le nom de l'user
      * @param telephone son num de tel
      */
-    private void ajouterUserModel(@NonNull String mail, @NonNull String password, @Nullable String nom, @Nullable String telephone){
-        if (mail==null || mail.equals("")){
+    private void ajouterUserModel(@NonNull String mail, @NonNull String password, @Nullable String nom, @Nullable String telephone) {
+        if (mail==null || mail.equals("")) {
             txtMail.setError("Veuillez saisir le mail");
             return;
         }
-        if (password== null || password.equals("")){
+        if (password== null || password.equals("")) {
             txtPassword.setError("Veuillez saisir le password");
         }
-
         mAuth.createUserWithEmailAndPassword(mail, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        firebaseUser= mAuth.getCurrentUser();
+                        firebaseUser= authResult.getUser();
                         UserModel userModel= new UserModel(mail, password, nom, telephone);
                         userModel.setUid(firebaseUser.getUid());
                         userModel.setAdmin(false);
                         userModel.setUser(true);
                         addUserModelInDatabase(userModel);
-                        Toast.makeText(getApplicationContext(), userModel.getEmail()+" ajouté avec succès", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), userModel.getNom()+" ajouté avec succès", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 })

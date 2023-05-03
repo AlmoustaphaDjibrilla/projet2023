@@ -341,6 +341,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
         Map<String, Object> composant_valeur = new HashMap<>();
         composant_valeur.put("Temperature", 0);
         composant_valeur.put("Humidite", 0);
+        composant_valeur.put("Presence", 0);
         ref.updateChildren(composant_valeur);
 
     }
