@@ -2,6 +2,7 @@ package com.adi.projet2023.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -197,6 +198,9 @@ public class LoginActivity extends Activity implements Serializable {
                         public void onSuccess(AuthResult authResult) {
                             firebaseUser= mAuth.getCurrentUser();
                             startActivity(new Intent(getApplicationContext(), ChoixLocalActivity.class));
+                            SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+                            prefs.edit().putString("adminEmail", mail).apply();
+                            prefs.edit().putString("adminPassword", password).apply();
                             finish();
                         }
                     })

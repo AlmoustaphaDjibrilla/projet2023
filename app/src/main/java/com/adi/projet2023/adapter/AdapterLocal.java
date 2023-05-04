@@ -94,8 +94,7 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
                     intent.putExtra("localId",local);
                     context.startActivity(intent);
                     }
-                }
-        );
+                });
 
         holder.layoutLocal.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

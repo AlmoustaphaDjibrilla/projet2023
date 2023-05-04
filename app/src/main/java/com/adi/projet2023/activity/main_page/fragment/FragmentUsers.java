@@ -37,6 +37,7 @@ public class FragmentUsers extends Fragment {
     ExtendedFloatingActionButton actions;
     Boolean visibles;
     ImageView imgQuitterFragmentUsers;
+    View view;
 
     public FragmentUsers(){
 
@@ -59,9 +60,15 @@ public class FragmentUsers extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        initActionsButton(view);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.fragment_users, container, false);
+        view= inflater.inflate(R.layout.fragment_users, container, false);
 
         initListOfUsers(view);
         initActionsButton(view);

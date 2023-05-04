@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.DatabaseUtils;
 import com.adi.projet2023.Utils.LocalUtils;
 import com.adi.projet2023.activity.AjouterComposant;
+import com.adi.projet2023.activity.ChoixLocalActivity;
 import com.adi.projet2023.activity.main_page.AffichageCommandeUser;
 import com.adi.projet2023.activity.main_page.MainPage;
 import com.adi.projet2023.creation.CreationLocal;
@@ -35,14 +37,15 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AdapterUserModel extends RecyclerView.Adapter<AffichageUserModel>{
-    final String PATH_USERS_DATABASE= "Users";
-
-    final String ACTION_RETIRER= "retirer";
-    final String ACTION_AFFICHER_HISTORIQUE= "historique";
     Local localEnCours;
 
     Context context;
@@ -86,16 +89,6 @@ public class AdapterUserModel extends RecyclerView.Adapter<AffichageUserModel>{
 
         holder.cardUserModel.setOnClickListener(
                 v->{
-                    verifierAdminUser(userCourant, ACTION_AFFICHER_HISTORIQUE);
-                }
-        );
-
-        holder.cardUserModel.setOnLongClickListener(
-                view -> {
-                    final AlertDialog dialog = dialogWarning.create();
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    alertMessage.setText("Voulez-vous retirer l'utilisateur "+userCourant.getNom()+" ?");
-
                     String userId = FirebaseAuth.getInstance()
                             .getCurrentUser()
                             .getUid();
@@ -103,28 +96,49 @@ public class AdapterUserModel extends RecyclerView.Adapter<AffichageUserModel>{
                         @Override
                         public void onValueReceived(UserModel value) {
                             if(value.isAdmin()){
-                                dialog.show();
+                                Intent intent= new Intent(context.getApplicationContext(), AffichageCommandeUser.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("userEnCours",userCourant);
+                                context.startActivity(intent);
                             }
                         }
                     });
-                    final_suppression.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialog.cancel();
-                            verifierAdminUser(userCourant, ACTION_RETIRER);
-                        }
-                    });
+                });
 
-                    cancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialog.cancel();
+        holder.cardUserModel.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                String userId = FirebaseAuth.getInstance()
+                        .getCurrentUser()
+                        .getUid();
+                DatabaseUtils.getUser(userId, UserModel.class, new DatabaseUtils.OnValueReceivedListener<UserModel>() {
+                    @Override
+                    public void onValueReceived(UserModel value) {
+                        if(value.isAdmin()){
+                            final AlertDialog dialog = dialogWarning.create();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alertMessage.setText("Voulez-vous retirer l'utilisateur "+userCourant.getNom()+" ?");
+                            dialog.show();
+                            final_suppression.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialog.cancel();
+                                    retirerUserLocal(userCourant);
+                                    lesUsers.remove(userCourant);
+                                }
+                            });
+                            cancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialog.cancel();
+                                }
+                            });
                         }
-                    });
-                    return true;
-                }
-        );
-
+                    }
+                });
+                return true;
+            }
+        });
     }
 
     @Override
@@ -132,51 +146,55 @@ public class AdapterUserModel extends RecyclerView.Adapter<AffichageUserModel>{
         return lesUsers.size();
     }
 
-    private void verifierAdminUser(UserModel userModel, String actionAFaire){
+    private void retirerUserLocal(UserModel userARetirer){
 
-        String userId = FirebaseAuth.getInstance()
-            .getCurrentUser()
-            .getUid();
-        DatabaseUtils.getUser(userId, UserModel.class, new DatabaseUtils.OnValueReceivedListener<UserModel>() {
+        Map<String, Object> user= new HashMap<>();
+        user.put("uid", userARetirer.getUid());
+        user.put("password", userARetirer.getPassword());
+        user.put("email", userARetirer.getEmail());
+        user.put("nom", userARetirer.getNom());
+        user.put("dateEnregistrement", userARetirer.getDateEnregistrement());
+        user.put("admin", userARetirer.isAdmin());
+        user.put("user", userARetirer.isUser());
+
+        CollectionReference localRef = FirebaseFirestore.getInstance().collection("Local");
+        Query req = localRef.whereEqualTo("idLocal", localEnCours.getIdLocal());
+        req.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onValueReceived(UserModel value) {
-                if(value.isAdmin()){
-                    switch (actionAFaire){
-                        case "historique":
-                            Intent intent= new Intent(context.getApplicationContext(), AffichageCommandeUser.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("userEnCours",userModel);
-                            context.startActivity(intent);
-                            break;
-                        case "retirer":
-                            CreationLocal.retirerUserLocal(userModel, localEnCours);
-                            LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
-                                @Override
-                                public void onSuccess(Local local) {
-                                    // Aller vers Main Page avec local mis a jour
-                                    Intent intent = new Intent(context.getApplicationContext(), MainPage.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    intent.putExtra("localId",local);
-                                    context.startActivity(intent);
-                                }
-                            }, new OnFailureListener() {
-                                @Override
-                                public void onFailure(@org.checkerframework.checker.nullness.qual.NonNull Exception e) {
-                                    // Erreur lors de la recuperation du local mis a jour
-                                    Toast.makeText(context.getApplicationContext(), "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                            Toast.makeText(context, userModel.getNom()+" retiré du local "+localEnCours.getNomLocal(), Toast.LENGTH_SHORT).show();
-                            break;
-                        default:
-                            break;
+            public void onSuccess(QuerySnapshot querySnapshot) {
+                DocumentSnapshot localDoc = querySnapshot.getDocuments().get(0);
+                List<Map<String, Object>> lesUsers = (List<Map<String, Object>>) localDoc.get("lesUsers");
+
+                boolean trouve = false;
+                for (Map<String, Object> user : lesUsers) {
+                    if (user.get("uid").equals(userARetirer.getUid())) {
+                        lesUsers.remove(user);
+                        trouve = true;
+                        break;
                     }
                 }
-                else {
-                    return;
+                if(trouve){
+                    localDoc.getReference().update("lesUsers",lesUsers)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(context, userARetirer.getNom()+" retiré du local "+localEnCours.getNomLocal(), Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(context, ChoixLocalActivity.class);
+                                    context.startActivity(intent);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(context," Echec de la suppression ", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 }
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("TAG",e.getMessage());
+            }
         });
-
     }
 }

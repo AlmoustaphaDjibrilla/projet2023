@@ -107,10 +107,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/listUsers"
                     android:layout_width="match_parent"
@@ -125,7 +121,6 @@
                     app:contentPadding="16dp">
 
                 </androidx.recyclerview.widget.RecyclerView>
-            </RelativeLayout>
         </ScrollView>
     </LinearLayout>
 

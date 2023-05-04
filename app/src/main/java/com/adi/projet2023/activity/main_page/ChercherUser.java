@@ -2,12 +2,15 @@ package com.adi.projet2023.activity.main_page;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +21,7 @@ import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.LocalUtils;
 import com.adi.projet2023.activity.ActivityRegisterUser;
 import com.adi.projet2023.activity.ChoixLocalActivity;
+import com.adi.projet2023.activity.main_page.fragment.FragmentUsers;
 import com.adi.projet2023.creation.CreationLocal;
 import com.adi.projet2023.model.local.Local;
 import com.adi.projet2023.model.user.UserModel;
@@ -25,11 +29,16 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ChercherUser extends AppCompatActivity {
 
@@ -182,10 +191,13 @@ public class ChercherUser extends AppCompatActivity {
                             btnAddUser.setOnClickListener(
                                     v->{
                                         Toast.makeText(ChercherUser.this, userModel.getNom()+" ajouté", Toast.LENGTH_SHORT).show();
-                                        ajouterUserLocal(userModel,localEnCours);
                                         dialog.dismiss();
+                                        ajouterUserLocal(userModel);
                                     }
                             );
+                        }
+                        else{
+                            Toast.makeText(ChercherUser.this, " L'utilisateur n'existe pas", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
@@ -193,28 +205,52 @@ public class ChercherUser extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getApplicationContext(), "Erreur...", Toast.LENGTH_LONG).show();
-
                     }
                 });
     }
 
-    private void ajouterUserLocal(UserModel userModel, Local local){
-        CreationLocal.ajouterUserALocal(userModel, local);
-        LocalUtils.getLocalById(localEnCours.getIdLocal(), new OnSuccessListener<Local>() {
+    private void ajouterUserLocal(UserModel userAAjouter){
+
+        Map<String, Object> newUser= new HashMap<>();
+        newUser.put("uid", userAAjouter.getUid());
+        newUser.put("password", userAAjouter.getPassword());
+        newUser.put("email", userAAjouter.getEmail());
+        newUser.put("nom", userAAjouter.getNom());
+        newUser.put("dateEnregistrement", userAAjouter.getDateEnregistrement());
+        newUser.put("admin", userAAjouter.isAdmin());
+        newUser.put("user", userAAjouter.isUser());
+
+        CollectionReference localRef = FirebaseFirestore.getInstance().collection("Local");
+        Query req = localRef.whereEqualTo("idLocal", localEnCours.getIdLocal());
+        req.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(Local local) {
-                // Aller vers Main Page avec local mis a jour
-                Intent intent = new Intent(getApplicationContext(), MainPage.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("localId",local);
-                startActivity(intent);
+            public void onSuccess(QuerySnapshot querySnapshot) {
+                DocumentSnapshot localDoc = querySnapshot.getDocuments().get(0);
+                List<Map<String, Object>> lesUsers = (List<Map<String, Object>>) localDoc.get("lesUsers");
+                if (lesUsers == null) {
+                    lesUsers = new ArrayList<>();
+                }
+                lesUsers.add(newUser);
+                localDoc.getReference().update("lesUsers",lesUsers)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Intent intent = new Intent(getApplicationContext(), ChoixLocalActivity.class);
+                                startActivity(intent);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
             }
-        }, new OnFailureListener() {
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@org.checkerframework.checker.nullness.qual.NonNull Exception e) {
-                // Erreur lors de la recuperation du local mis a jour
-                Toast.makeText(getApplicationContext(), "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFailure(@NonNull Exception e) {
+                Log.d("TAG",e.getMessage());
             }
         });
+
     }
 }
