@@ -3,6 +3,7 @@ package com.adi.projet2023.activity.main_page.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -57,13 +58,9 @@ public class FragmentHome extends Fragment {
     LinearLayout layout;
     ViewGroup root;
 
-    ImageView imgQuitterMainPage;
+    ImageView imgQuitterMainPage, imgLogout;
+    AlertDialog.Builder builder;
 
-    ImageButton cancel;
-    Button final_suppression;
-    TextView alertMessage;
-
-    AlertDialog.Builder dialogWarning;
 
     public FragmentHome(){
 
@@ -81,12 +78,7 @@ public class FragmentHome extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dialogSupprimerPiece= new Dialog(this.getContext());
-        View alertDialogCustomiser = LayoutInflater.from(getContext()).inflate(R.layout.dialog_alert_customiser,null);
-        dialogWarning= new AlertDialog.Builder(getContext());
-        dialogWarning.setView(alertDialogCustomiser);
-        cancel = (ImageButton) alertDialogCustomiser.findViewById(R.id.cancel_button);
-        alertMessage = (TextView) alertDialogCustomiser.findViewById(R.id.alert_message);
-        final_suppression = (Button) alertDialogCustomiser.findViewById(R.id.final_delete_button);
+        builder = new AlertDialog.Builder(this.getContext());
     }
 
     @Override
@@ -97,7 +89,6 @@ public class FragmentHome extends Fragment {
         recuperer_temperature_humidite();
 
         btnAddPiece = root.findViewById(R.id.addPiece);
-
         titreLocal= root.findViewById(R.id.titreLocal);
         titreLocal.setText(localEnCours.getNomLocal());
 
@@ -105,6 +96,13 @@ public class FragmentHome extends Fragment {
         imgQuitterMainPage.setOnClickListener(
                 view -> getActivity().finish()
         );
+        imgLogout = root.findViewById(R.id.imgLogout);
+        imgLogout.setOnClickListener(
+                view -> {
+                    FirebaseAuth.getInstance().signOut();
+                }
+        );
+
         gridPiece = root.findViewById(R.id.GridPieces);
         afficher_pieces(piecesList);
         return root;
@@ -210,23 +208,24 @@ public class FragmentHome extends Fragment {
                                                     nbrComposants= lesComposants.size();
 
                                                 dialogSupprimerPiece.dismiss();
-                                                final AlertDialog dialog = dialogWarning.create();
-                                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                                alertMessage.setText("Cette piece contient "+nbrComposants+" composant(s)\nVoulez-vous vraiment la supprimer?");
-                                                dialog.show();
-                                                final_suppression.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        dialog.cancel();
-                                                        suppressionPiece(pieceEncours);
-                                                    }
-                                                });
-                                                cancel.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
+                                                builder
+                                                        .setTitle("Attention")
+                                                        .setMessage("Cette pièce contient "+nbrComposants+" composant(s)\nVoulez-vous vraiment la supprimer?")
+                                                        .setPositiveButton("Supprimer", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                                dialogInterface.dismiss();
+                                                                suppressionPiece(pieceEncours);
+                                                            }
+                                                        })
+                                                        .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                                dialogInterface.cancel();
+                                                            }
+                                                        })
+                                                        .setIcon(R.drawable.icon_warning)
+                                                        .show();
                                             });
                                 }
                             }

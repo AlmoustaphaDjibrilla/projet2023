@@ -48,9 +48,6 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
 
     TextView txtTypeLocal, txtNomLocal, txtQuartierLocal, txtVilleLocal, txtDateEnregistrementLocal;
     Button btnSupprimerLocal;
-    ImageButton cancel;
-    Button final_suppression;
-    TextView alertMessage;
 
     AlertDialog.Builder dialogWarning;
 
@@ -65,13 +62,7 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
         AffichageLocal affichageLocal= new AffichageLocal(LayoutInflater.from(context).inflate(R.layout.modele_local, parent, false));
 
         dialogSupprimerLocal= new Dialog(context);
-
-        View alertDialogCustomiser = LayoutInflater.from(context).inflate(R.layout.dialog_alert_customiser,null);
         dialogWarning= new AlertDialog.Builder(context);
-        dialogWarning.setView(alertDialogCustomiser);
-        cancel = (ImageButton) alertDialogCustomiser.findViewById(R.id.cancel_button);
-        alertMessage = (TextView) alertDialogCustomiser.findViewById(R.id.alert_message);
-        final_suppression = (Button) alertDialogCustomiser.findViewById(R.id.final_delete_button);
 
         dialogSupprimerLocal.setContentView(R.layout.layout_supprimer_local);
 
@@ -115,24 +106,25 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
                                 nbrPiece= lesPieces.size();
 
                             dialogSupprimerLocal.dismiss();
-                            final AlertDialog dialog = dialogWarning.create();
-                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                            alertMessage.setText("Ce local contient "+nbrPiece+" pièce(s)\nVoulez-vous vraiment le supprimer?");
-                            dialog.show();
-                            final_suppression.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    dialog.cancel();
-                                    supprimerLocal(local);
-                                }
-                            });
-
-                            cancel.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    dialog.cancel();
-                                }
-                            });
+                            dialogWarning.setTitle("Attention")
+                                    .setMessage("Ce local contient "+nbrPiece+" pièce(s)\nVoulez-vous vraiment le supprimer?")
+                                    .setCancelable(true)
+                                    .setPositiveButton("Supprimer", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+                                            supprimerLocal(local);
+                                        }
+                                    })
+                                    .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+                                            dialogSupprimerLocal.dismiss();
+                                        }
+                                    })
+                                    .setIcon(R.drawable.icon_warning)
+                                    .show();
 
                         });
 

@@ -53,30 +53,20 @@ public class AdapterUserModel extends RecyclerView.Adapter<AffichageUserModel>{
     LayoutInflater inflater;
 
     Dialog dialogSupprimerUser;
-    ImageButton cancel;
-    Button final_suppression;
-    TextView alertMessage;
 
-    AlertDialog.Builder dialogWarning;
+    AlertDialog.Builder builder;
 
     public AdapterUserModel(Context context, ArrayList<UserModel> lesUsers, Local localEnCours) {
         this.context = context;
         this.lesUsers = lesUsers;
         this.localEnCours= localEnCours;
+        builder= new AlertDialog.Builder(context);
     }
 
     @NonNull
     @Override
     public AffichageUserModel onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         AffichageUserModel affichageUserModel= new AffichageUserModel(LayoutInflater.from(context).inflate(R.layout.modele_user, parent, false));
-
-        dialogSupprimerUser= new Dialog(context);
-        View alertDialogCustomiser = LayoutInflater.from(context).inflate(R.layout.dialog_alert_customiser,null);
-        dialogWarning= new AlertDialog.Builder(context);
-        dialogWarning.setView(alertDialogCustomiser);
-        cancel = (ImageButton) alertDialogCustomiser.findViewById(R.id.cancel_button);
-        alertMessage = (TextView) alertDialogCustomiser.findViewById(R.id.alert_message);
-        final_suppression = (Button) alertDialogCustomiser.findViewById(R.id.final_delete_button);
 
         return affichageUserModel;
     }
@@ -115,24 +105,26 @@ public class AdapterUserModel extends RecyclerView.Adapter<AffichageUserModel>{
                     @Override
                     public void onValueReceived(UserModel value) {
                         if(value.isAdmin()){
-                            final AlertDialog dialog = dialogWarning.create();
-                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                            alertMessage.setText("Voulez-vous retirer l'utilisateur "+userCourant.getNom()+" ?");
-                            dialog.show();
-                            final_suppression.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    dialog.cancel();
-                                    retirerUserLocal(userCourant);
-                                    lesUsers.remove(userCourant);
-                                }
-                            });
-                            cancel.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    dialog.cancel();
-                                }
-                            });
+                            builder
+                                    .setCancelable(true)
+                                    .setTitle("Retrait d'un utilisateur")
+                                    .setMessage("Voulez-vous retirer l'utilisateur "+userCourant.getNom()+" ?")
+                                    .setPositiveButton("Retirer", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            retirerUserLocal(userCourant);
+                                            retirerUserLocal(userCourant);
+                                            lesUsers.remove(userCourant);
+                                        }
+                                    })
+                                    .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.cancel();
+                                        }
+                                    })
+                                    .setIcon(R.drawable.icon_warning)
+                                    .show();
                         }
                     }
                 });
