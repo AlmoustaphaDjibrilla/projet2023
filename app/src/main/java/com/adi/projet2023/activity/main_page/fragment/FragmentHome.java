@@ -231,7 +231,6 @@ public class FragmentHome extends Fragment {
                                 }
                             }
                         });
-
                         return true;
                     }
                 });
@@ -366,7 +365,6 @@ public class FragmentHome extends Fragment {
             }
         });
     }
-
 
     private void suppressionPiece(Piece pieceEncours){
         supprimer_piece(pieceEncours.getIdPiece());

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.DatabaseUtils;
+import com.adi.projet2023.Utils.VerificationNom;
 import com.adi.projet2023.adapter.AdapterLocal;
 import com.adi.projet2023.creation.CreationLocal;
 import com.adi.projet2023.databinding.ActivityChoixLocalBinding;
@@ -300,35 +301,85 @@ public class ChoixLocalActivity extends AppCompatActivity {
 
         switch (typeLocal){
             case MAISON:
-                Maison maison= new Maison(nomLocal, quartierLocal, villeLocal);
-                CreationLocal.creationMaison(maison);
-                ajouter_local_a_realTime("/"+maison.getNomLocal().toLowerCase());
-                lesLocaux.add(maison);
-                updateListViewOfLocals();
-                Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+                VerificationNom.verifier_nom_local(nomLocal, new OnSuccessListener<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean exist) {
+                        if(exist){
+                            Maison maison= new Maison(nomLocal, quartierLocal, villeLocal);
+                            CreationLocal.creationMaison(maison);
+                            ajouter_local_a_realTime("/"+maison.getNomLocal().toLowerCase());
+                            lesLocaux.add(maison);
+                            updateListViewOfLocals();
+                            Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "Un Local existe deja avec le nom saisi !", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    }
+                }, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Erreur survenue: Merci de reessayer " , Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
                 break;
 
             case ENTREPRISE:
-                Entreprise entreprise= new Entreprise(nomLocal, quartierLocal, villeLocal);
-                CreationLocal.creationEntreprise(entreprise);
-                ajouter_local_a_realTime("/"+entreprise.getNomLocal().toLowerCase());
-                lesLocaux.add(entreprise);
-                updateListViewOfLocals();
-                Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+                VerificationNom.verifier_nom_local(nomLocal, new OnSuccessListener<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean exist) {
+                        if(exist){
+                            Entreprise entreprise= new Entreprise(nomLocal, quartierLocal, villeLocal);
+                            CreationLocal.creationEntreprise(entreprise);
+                            ajouter_local_a_realTime("/"+entreprise.getNomLocal().toLowerCase());
+                            lesLocaux.add(entreprise);
+                            updateListViewOfLocals();
+                            Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "Un Local existe deja avec le nom saisi !", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    }
+                }, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Erreur survenue: Merci de reessayer " , Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
                 break;
 
             case AUTRE:
-                AutreLocal autreLocal= new AutreLocal(nomLocal, quartierLocal, villeLocal);
-                CreationLocal.creationAutreLocal(autreLocal);
-                ajouter_local_a_realTime("/"+autreLocal.getNomLocal().toLowerCase());
-                lesLocaux.add(autreLocal);
-                updateListViewOfLocals();
-                Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+                VerificationNom.verifier_nom_local(nomLocal, new OnSuccessListener<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean exist) {
+                        if(exist){
+                            AutreLocal autreLocal= new AutreLocal(nomLocal, quartierLocal, villeLocal);
+                            CreationLocal.creationAutreLocal(autreLocal);
+                            ajouter_local_a_realTime("/"+autreLocal.getNomLocal().toLowerCase());
+                            lesLocaux.add(autreLocal);
+                            updateListViewOfLocals();
+                            Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "Un Local existe deja avec le nom saisi !", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    }
+                }, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Erreur survenue: Merci de reessayer " , Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
                 break;
-
             default:
                 Toast.makeText(getApplicationContext(), "Error...", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
@@ -343,7 +394,6 @@ public class ChoixLocalActivity extends AppCompatActivity {
         composant_valeur.put("Humidite", 0);
         composant_valeur.put("Presence", 0);
         ref.updateChildren(composant_valeur);
-
     }
 
     private void afficherLocalEnFonctionUser(FirebaseUser firebaseUser){

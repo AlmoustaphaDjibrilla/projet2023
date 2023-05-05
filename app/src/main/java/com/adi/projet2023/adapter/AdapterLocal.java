@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adi.projet2023.R;
@@ -195,7 +196,7 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
                             //Suppression du Local en cours
                             CreationLocal.supprimerLocal(local);
                             lesLocaux.remove(local);
-                            LocalUtils.supprimer_composant_local_realTime(local);
+                            LocalUtils.supprimer_local_realTime(local);
                             notifyDataSetChanged();
                             Toast.makeText(context, local.getNomLocal()+" supprimé..", Toast.LENGTH_SHORT).show();
                         }

@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.LocalUtils;
+import com.adi.projet2023.Utils.VerificationNom;
 import com.adi.projet2023.activity.main_page.MainPage;
 import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.local.Local;
@@ -108,8 +109,25 @@ public class AjouterComposant extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(verifier_champ()){
-                    ajouterComposant();
-                    finish();
+                    VerificationNom.verifier_nom_composant(nomComposantEdit.getText().toString(), localEnCours, pieceEnCours, new OnSuccessListener<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean exist) {
+                          if(exist){
+                              Toast.makeText(getApplicationContext(), "Un composant existe deja avec le nom saisi !", Toast.LENGTH_SHORT).show();
+                              finish();
+                          }
+                          else{
+                              ajouterComposant();
+                              finish();
+                          }
+                        }
+                    }, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "Erreur survenue: Merci de reessayer " , Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    });
                 }
             }
         });

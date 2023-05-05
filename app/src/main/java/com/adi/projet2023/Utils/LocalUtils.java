@@ -102,6 +102,12 @@ public class LocalUtils {
         ref.child("Temperature").removeValue();
     }
 
+    private static void supprimer_route_presense(Local local){
+        String chemin= "/"+local.getNomLocal().toLowerCase();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(chemin);
+        ref.child("Presence").removeValue();
+    }
+
     private static void supprimer_route_hum(Local local){
         String chemin= "/"+local.getNomLocal().toLowerCase();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(chemin);
@@ -113,10 +119,10 @@ public class LocalUtils {
         }
     }
 
-    public  static void supprimer_composant_local_realTime(Local local){
+    public  static void supprimer_local_realTime(Local local){
         supprimer_route_temp(local);
         supprimer_route_hum(local);
-
+        supprimer_route_presense(local);
         if(local.getLesPieces()!=null){
             for(int i =0;i<local.getLesPieces().size();i++){
                 supprimer_composant_piece_realTime(local.getLesPieces().get(i));
