@@ -29,6 +29,7 @@ import com.adi.projet2023.Utils.LocalUtils;
 import com.adi.projet2023.Utils.DatabaseUtils;
 import com.adi.projet2023.activity.AjoutPieceActivity;
 import com.adi.projet2023.activity.Composants;
+import com.adi.projet2023.activity.LoginActivity;
 import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.composant.Composant;
 import com.adi.projet2023.model.local.Local;
@@ -99,7 +100,8 @@ public class FragmentHome extends Fragment {
         imgLogout = root.findViewById(R.id.imgLogout);
         imgLogout.setOnClickListener(
                 view -> {
-                    FirebaseAuth.getInstance().signOut();
+                    logout();
+                    getActivity().finish();
                 }
         );
 
@@ -108,7 +110,15 @@ public class FragmentHome extends Fragment {
         return root;
     }
 
-    public void afficher_pieces(List<Piece> piecesList){
+    private void logout(){
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+
+    private void afficher_pieces(List<Piece> piecesList){
         LayoutInflater inflater = LayoutInflater.from(getContext());
         int marginPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
         if(piecesList != null && piecesList.size()!=0){

@@ -91,43 +91,68 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
         holder.layoutLocal.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                remplirChamps(local);
+                String userId= FirebaseAuth.getInstance()
+                        .getCurrentUser()
+                        .getUid();
 
-                dialogSupprimerLocal.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialogSupprimerLocal.setCancelable(true);
-                dialogSupprimerLocal.show();
+                DocumentReference documentReference=
+                        FirebaseFirestore.getInstance()
+                                .collection(PATH_USERS_DATABASE)
+                                .document(userId);
 
-                btnSupprimerLocal.setOnClickListener(
-                        v->{
+                documentReference
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                UserModel userModel= documentSnapshot.toObject(UserModel.class);
 
-                            List<Piece> lesPieces = local.getLesPieces();
-                            int nbrPiece=0;
-                            if (lesPieces!=null)
-                                nbrPiece= lesPieces.size();
+                                //Vérifier si le user courant est un admin
+                                if (userModel.isAdmin()){
+                                    remplirChamps(local);
 
-                            dialogSupprimerLocal.dismiss();
-                            dialogWarning.setTitle("Attention")
-                                    .setMessage("Ce local contient "+nbrPiece+" pièce(s)\nVoulez-vous vraiment le supprimer?")
-                                    .setCancelable(true)
-                                    .setPositiveButton("Supprimer", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            dialogInterface.dismiss();
-                                            supprimerLocal(local);
-                                        }
-                                    })
-                                    .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            dialogInterface.dismiss();
-                                            dialogSupprimerLocal.dismiss();
-                                        }
-                                    })
-                                    .setIcon(R.drawable.icon_warning)
-                                    .show();
+                                    dialogSupprimerLocal.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    dialogSupprimerLocal.setCancelable(true);
+                                    dialogSupprimerLocal.show();
 
+                                    btnSupprimerLocal.setOnClickListener(
+                                            v->{
+
+                                                List<Piece> lesPieces = local.getLesPieces();
+                                                int nbrPiece=0;
+                                                if (lesPieces!=null)
+                                                    nbrPiece= lesPieces.size();
+
+                                                dialogSupprimerLocal.dismiss();
+                                                dialogWarning.setTitle("Attention")
+                                                        .setMessage("Ce local contient "+nbrPiece+" pièce(s)\nVoulez-vous vraiment le supprimer?")
+                                                        .setCancelable(true)
+                                                        .setPositiveButton("Supprimer", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                                dialogInterface.dismiss();
+                                                                supprimerLocal(local);
+                                                            }
+                                                        })
+                                                        .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                                dialogInterface.dismiss();
+                                                                dialogSupprimerLocal.dismiss();
+                                                            }
+                                                        })
+                                                        .setIcon(R.drawable.icon_warning)
+                                                        .show();
+                                            });
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(context, "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
+                            }
                         });
-
                 return true;
             }
         });
@@ -166,44 +191,12 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
     }
 
     private void supprimerLocal(Local local){
-        String userId= FirebaseAuth.getInstance()
-                .getCurrentUser()
-                .getUid();
-
-        DocumentReference documentReference=
-                FirebaseFirestore.getInstance()
-                        .collection(PATH_USERS_DATABASE)
-                        .document(userId);
-
-        documentReference
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        UserModel userModel= documentSnapshot.toObject(UserModel.class);
-
-                        //Vérifier si le user courant est un admin
-                        if (userModel.isAdmin()){
-
-                            //Suppression du Local en cours
-                            CreationLocal.supprimerLocal(local);
-                            lesLocaux.remove(local);
-                            LocalUtils.supprimer_local_realTime(local);
-                            notifyDataSetChanged();
-                            Toast.makeText(context, local.getNomLocal()+" supprimé..", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            Toast.makeText(context, "Vous n'êtes pas admin", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, "Problème rencontré!!!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        dialogSupprimerLocal.dismiss();
+        //Suppression du Local en cours
+        CreationLocal.supprimerLocal(local);
+        lesLocaux.remove(local);
+        LocalUtils.supprimer_local_realTime(local);
+        LocalUtils.supprimer_historique_local(local);
+        notifyDataSetChanged();
+        Toast.makeText(context, local.getNomLocal()+" supprimé..", Toast.LENGTH_SHORT).show();
     }
 }

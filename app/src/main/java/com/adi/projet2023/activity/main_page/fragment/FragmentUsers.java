@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.DatabaseUtils;
 import com.adi.projet2023.activity.ActivityRegisterUser;
+import com.adi.projet2023.activity.CommandesParLocalActivity;
 import com.adi.projet2023.activity.main_page.ChercherUser;
 import com.adi.projet2023.adapter.AdapterUserModel;
 import com.adi.projet2023.model.local.Local;
@@ -149,6 +150,16 @@ public class FragmentUsers extends Fragment {
         btnAddUser.setOnClickListener(
                 v->{
                     Intent intent= new Intent(getContext(), ActivityRegisterUser.class);
+                    startActivity(intent);
+                    btnAddUser.setVisibility(View.GONE);
+                    btnSearchUser.setVisibility(View.GONE);
+                    btnHistoriquesUsers.setVisibility(View.GONE);
+                    actions.shrink();
+                });
+        btnHistoriquesUsers.setOnClickListener(
+                v->{
+                    Intent intent= new Intent(getContext(), CommandesParLocalActivity.class);
+                    intent.putExtra("IdLocal", localEnCours.getIdLocal());
                     startActivity(intent);
                     btnAddUser.setVisibility(View.GONE);
                     btnSearchUser.setVisibility(View.GONE);

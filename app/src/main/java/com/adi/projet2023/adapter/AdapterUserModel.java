@@ -172,6 +172,7 @@ public class AdapterUserModel extends RecyclerView.Adapter<AffichageUserModel>{
                                 public void onSuccess(Void unused) {
                                     Toast.makeText(context, userARetirer.getNom()+" retiré du local "+localEnCours.getNomLocal(), Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(context, ChoixLocalActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     context.startActivity(intent);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {

@@ -279,7 +279,7 @@ public class Composants extends AppCompatActivity {
                 switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     composantEnCours.setEtat(isChecked);
                     String etat = isChecked ? "ON" : "OFF";
-                    Commande commande= new Commande(composantEnCours);
+                    Commande commande= new Commande(composantEnCours, localEnCours.getIdLocal());
                     if (etat.equals("ON"))
                         commande.setDetail_commande(DETAIL_ALLUMAGE);
                     else
@@ -340,7 +340,7 @@ public class Composants extends AppCompatActivity {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                         composantEnCours.setValeur(progress);
-                        Commande commande= new Commande(composantEnCours);
+                        Commande commande= new Commande(composantEnCours, localEnCours.getIdLocal());
                         if(composantEnCours.getTypeComposant().equals("PORTE")){
                             if (progress==0){
                                 commande.setDetail_commande("FERMETURE");

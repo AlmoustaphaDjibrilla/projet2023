@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.adi.projet2023.R;
 import com.adi.projet2023.activity.CommandesUserActivity;
+import com.adi.projet2023.model.local.Local;
 import com.adi.projet2023.model.user.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,6 +26,7 @@ public class FragmentProfil extends Fragment {
 
     FirebaseUser firebaseUser;
     UserModel userModel;
+    String idLocalEncours;
 
     TextView txtNomUser1, txtNomUser2, txtMailUser1, txtMailUser2, txtDateEnregistrementUser;
     ImageView imgProfilUser;
@@ -35,6 +37,12 @@ public class FragmentProfil extends Fragment {
 
     public FragmentProfil() {
         // Required empty public constructor
+    }
+
+    public FragmentProfil(Local local) {
+        if( local!=null){
+            idLocalEncours= local.getIdLocal();
+        }
     }
 
 
@@ -62,6 +70,7 @@ public class FragmentProfil extends Fragment {
         historiquelUser.setOnClickListener(
                 v->{
                     Intent intentHistorique= new Intent(getContext(), CommandesUserActivity.class);
+                    intentHistorique.putExtra("IdLocal",idLocalEncours);
                     startActivity(intentHistorique);
                 }
         );

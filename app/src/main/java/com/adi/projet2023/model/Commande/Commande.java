@@ -16,17 +16,19 @@ public class Commande implements Serializable {
     private String date_commande;
     private String heure_commande;
     private String detail_commande;
+    private String local;
 
     public Commande() {
     }
 
-    public Commande(Composant composant) {
+    public Commande(Composant composant, String local) {
         if (composant!=null)
             this.nomComposant= composant.getNomComposant();
         this.composant = composant;
         LocalDate date= LocalDate.now();
         this.date_commande= date.toString();
         this.heure_commande= LocalTime.now().toString();
+        this.local = local;
     }
 
     public UserModel getUserModel() {
@@ -47,6 +49,14 @@ public class Commande implements Serializable {
 
     public Composant getComposant() {
         return composant;
+    }
+
+    public String getLocal() {
+        return local;
+    }
+
+    public void setLocal(String local) {
+        this.local = local;
     }
 
     public void setComposant(Composant composant) {
@@ -92,6 +102,7 @@ public class Commande implements Serializable {
                 ", emailUser='" + emailUser + '\'' +
                 ", composant=" + composant +
                 ", nomComposant='" + nomComposant + '\'' +
+                ", local='" + local + '\'' +
                 ", date_commande='" + date_commande + '\'' +
                 ", heure_commande='" + heure_commande + '\'' +
                 ", detail_commande='" + detail_commande + '\'' +

@@ -97,7 +97,7 @@
                         android:layout_below="@+id/linearLayout"
                         android:layout_marginTop="30dp"
                         android:fontFamily="@font/print_clearly"
-                        android:text="Historique de mes commandes"
+                        android:text="Historique des commandes"
                         android:textAlignment="center"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold"

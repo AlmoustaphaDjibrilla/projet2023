@@ -89,7 +89,7 @@ public class MainPage extends AppCompatActivity {
                 // Verifier si layout selectionner ou pas
                 if(selection!=2){
                     //Afficher profile
-                    remplacementFragment(new FragmentProfil());
+                    remplacementFragment(new FragmentProfil(localEnCours));
 
                     //deselection des autres sauf profil
                     textHome.setVisibility(View.GONE);

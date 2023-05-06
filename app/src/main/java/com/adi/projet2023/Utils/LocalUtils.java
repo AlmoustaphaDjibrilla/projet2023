@@ -1,5 +1,7 @@
 package com.adi.projet2023.Utils;
 
+import com.adi.projet2023.adapter.AdapterListCommandes;
+import com.adi.projet2023.model.Commande.Commande;
 import com.adi.projet2023.model.Piece.Piece;
 import com.adi.projet2023.model.local.Local;
 import com.adi.projet2023.model.local.TypeLocal;
@@ -12,6 +14,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,6 +133,24 @@ public class LocalUtils {
             }
         }
 
+    }
+
+    public static void supprimer_historique_local(Local local){
+        CollectionReference collectionReference=
+                FirebaseFirestore.getInstance()
+                        .collection("Commandes");
+
+        collectionReference.whereEqualTo("local",local.getIdLocal())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                            documentSnapshot.getReference().delete();
+                        }
+
+                    }
+                });
     }
 
 }

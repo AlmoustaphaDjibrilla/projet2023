@@ -236,6 +236,7 @@ public class ChercherUser extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void unused) {
                                 Intent intent = new Intent(getApplicationContext(), ChoixLocalActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
