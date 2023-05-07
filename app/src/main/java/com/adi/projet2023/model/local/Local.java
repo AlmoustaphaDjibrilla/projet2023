@@ -44,7 +44,7 @@ public class Local implements Serializable{
         LocalDate date= LocalDate.now();
         this.dateEnregistrement= date.toString();
         this.adresseLocal= nomLocal.toLowerCase().replaceAll(" ", "");
-        this.idLocal=UUID.randomUUID().toString();
+        this.idLocal= adresseLocal;
     }
 
     public String getIdLocal() {

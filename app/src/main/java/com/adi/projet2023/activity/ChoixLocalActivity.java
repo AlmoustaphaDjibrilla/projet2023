@@ -307,7 +307,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
                         if(exist){
                             Maison maison= new Maison(nomLocal, quartierLocal, villeLocal);
                             CreationLocal.creationMaison(maison);
-                            ajouter_local_a_realTime("/"+maison.getNomLocal().toLowerCase());
+                            ajouter_local_a_realTime("/"+maison.getIdLocal());
                             lesLocaux.add(maison);
                             updateListViewOfLocals();
                             Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
@@ -334,7 +334,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
                         if(exist){
                             Entreprise entreprise= new Entreprise(nomLocal, quartierLocal, villeLocal);
                             CreationLocal.creationEntreprise(entreprise);
-                            ajouter_local_a_realTime("/"+entreprise.getNomLocal().toLowerCase());
+                            ajouter_local_a_realTime("/"+entreprise.getIdLocal());
                             lesLocaux.add(entreprise);
                             updateListViewOfLocals();
                             Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
@@ -361,7 +361,7 @@ public class ChoixLocalActivity extends AppCompatActivity {
                         if(exist){
                             AutreLocal autreLocal= new AutreLocal(nomLocal, quartierLocal, villeLocal);
                             CreationLocal.creationAutreLocal(autreLocal);
-                            ajouter_local_a_realTime("/"+autreLocal.getNomLocal().toLowerCase());
+                            ajouter_local_a_realTime("/"+autreLocal.getIdLocal());
                             lesLocaux.add(autreLocal);
                             updateListViewOfLocals();
                             Toast.makeText(getApplicationContext(), nomLocal+" added successfully", Toast.LENGTH_SHORT).show();
