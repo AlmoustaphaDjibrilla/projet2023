@@ -81,10 +81,10 @@ public class AdapterLocal extends RecyclerView.Adapter<AffichageLocal> {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                    Intent intent = new Intent(context.getApplicationContext(), MainPage.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("localId",local);
-                    context.startActivity(intent);
+                        Intent intent = new Intent(context.getApplicationContext(), MainPage.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("localId",local);
+                        context.startActivity(intent);
                     }
                 });
 
