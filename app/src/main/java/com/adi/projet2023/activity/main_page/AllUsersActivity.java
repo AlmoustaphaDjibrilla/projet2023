@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.adi.projet2023.R;
+import com.adi.projet2023.adapter.AdapterDisplayAllUsers;
 import com.adi.projet2023.adapter.AdapterUserModel;
 import com.adi.projet2023.model.user.UserModel;
 import com.google.firebase.firestore.CollectionReference;
@@ -47,13 +48,9 @@ public class AllUsersActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot documentSnapshot: v){
                                 var user= documentSnapshot.toObject(UserModel.class);
                                 lesUsers.add(user);
-                                Toast.makeText(this, user.getEmail(), Toast.LENGTH_SHORT).show();
                             }
 
-                            for (var user: lesUsers){
-                                Toast.makeText(this, user.getEmail(), Toast.LENGTH_SHORT).show();
-                            }
-                            var adapterUserModel= new AdapterUserModel(this, lesUsers, null);
+                            var adapterUserModel= new AdapterDisplayAllUsers(this, lesUsers);
                             listAllUsers.setAdapter(adapterUserModel);
                         });
     }
@@ -61,6 +58,7 @@ public class AllUsersActivity extends AppCompatActivity {
     private void init(){
         listAllUsers= findViewById(R.id.listAllUsers);
         listAllUsers.setLayoutManager(new LinearLayoutManager(this.getApplicationContext()));
+        listAllUsers.setClickable(false);
         imgQuitter= findViewById(R.id.imgQuitterAllUsers);
 
         collectionUsers= FirebaseFirestore.getInstance().collection(PATH_USER_DATABASE);
