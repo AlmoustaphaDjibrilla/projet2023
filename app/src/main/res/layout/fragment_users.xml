@@ -93,6 +93,18 @@
         app:layout_constraintStart_toStartOf="@+id/search_user_fab"
         app:srcCompat="@drawable/historiques" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/allUsers_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/white"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@id/historique_fab"
+        app:layout_constraintEnd_toEndOf="@id/historique_fab"
+        app:layout_constraintStart_toStartOf="@id/historique_fab"
+        app:srcCompat="@drawable/icon_group_users"/>
+
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"

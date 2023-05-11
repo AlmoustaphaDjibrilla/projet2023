@@ -18,6 +18,7 @@ import com.adi.projet2023.R;
 import com.adi.projet2023.Utils.DatabaseUtils;
 import com.adi.projet2023.activity.ActivityRegisterUser;
 import com.adi.projet2023.activity.CommandesParLocalActivity;
+import com.adi.projet2023.activity.main_page.AllUsersActivity;
 import com.adi.projet2023.activity.main_page.ChercherUser;
 import com.adi.projet2023.adapter.AdapterUserModel;
 import com.adi.projet2023.model.local.Local;
@@ -34,7 +35,7 @@ public class FragmentUsers extends Fragment {
     Local localEnCours;
     ArrayList<UserModel> lesUsers;
     RecyclerView listUsers;
-    FloatingActionButton btnAddUser, btnSearchUser, btnHistoriquesUsers;
+    FloatingActionButton btnAddUser, btnSearchUser, btnHistoriquesUsers, btnAllUsers;
     ExtendedFloatingActionButton actions;
     Boolean visibles;
     ImageView imgQuitterFragmentUsers;
@@ -95,9 +96,12 @@ public class FragmentUsers extends Fragment {
         btnAddUser = view.findViewById(R.id.add_user_fab);
         btnSearchUser= view.findViewById(R.id.search_user_fab);
         btnHistoriquesUsers = view.findViewById(R.id.historique_fab);
+        btnAllUsers= view.findViewById(R.id.allUsers_fab);
+
         btnAddUser.setVisibility(View.GONE);
         btnSearchUser.setVisibility(View.GONE);
         btnHistoriquesUsers.setVisibility(View.GONE);
+        btnAllUsers.setVisibility(View.GONE);
 
         visibles=false;
 
@@ -122,6 +126,7 @@ public class FragmentUsers extends Fragment {
                     btnAddUser.show();
                     btnSearchUser.show();
                     btnHistoriquesUsers.show();
+                    btnAllUsers.show();
                     actions.extend();
 
                     visibles=true;
@@ -130,6 +135,7 @@ public class FragmentUsers extends Fragment {
                     btnAddUser.hide();
                     btnSearchUser.hide();
                     btnHistoriquesUsers.hide();
+                    btnAllUsers.hide();
                     actions.shrink();
 
                     visibles=false;
@@ -145,6 +151,7 @@ public class FragmentUsers extends Fragment {
                     btnAddUser.setVisibility(View.GONE);
                     btnSearchUser.setVisibility(View.GONE);
                     btnHistoriquesUsers.setVisibility(View.GONE);
+                    btnAddUser.setVisibility(View.GONE);
                     actions.shrink();
                 });
         btnAddUser.setOnClickListener(
@@ -154,6 +161,7 @@ public class FragmentUsers extends Fragment {
                     btnAddUser.setVisibility(View.GONE);
                     btnSearchUser.setVisibility(View.GONE);
                     btnHistoriquesUsers.setVisibility(View.GONE);
+                    btnAddUser.setVisibility(View.GONE);
                     actions.shrink();
                 });
         btnHistoriquesUsers.setOnClickListener(
@@ -164,8 +172,20 @@ public class FragmentUsers extends Fragment {
                     btnAddUser.setVisibility(View.GONE);
                     btnSearchUser.setVisibility(View.GONE);
                     btnHistoriquesUsers.setVisibility(View.GONE);
+                    btnAddUser.setVisibility(View.GONE);
                     actions.shrink();
                 });
+        btnAllUsers.setOnClickListener(
+                view1 -> {
+                    Intent intentAllUsers= new Intent(getContext(), AllUsersActivity.class);
+                    startActivity(intentAllUsers);
+                    btnAddUser.setVisibility(View.GONE);
+                    btnSearchUser.setVisibility(View.GONE);
+                    btnHistoriquesUsers.setVisibility(View.GONE);
+                    btnAddUser.setVisibility(View.GONE);
+                    actions.shrink();
+                }
+        );
 
     }
 }

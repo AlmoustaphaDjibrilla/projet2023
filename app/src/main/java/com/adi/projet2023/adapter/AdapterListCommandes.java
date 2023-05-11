@@ -70,7 +70,7 @@ public class AdapterListCommandes extends BaseAdapter {
         txtDetailCommande.setText(detailCommande);
 
 
-        if (detailCommande.contains(detail_allumer_ampoule)){
+        if (detailCommande.contains(detail_allumer_ampoule) || detailCommande.contains("OUVERTURE") || detailCommande.contains("MARCHE")){
             String typeComposant= commandeEnCours.getComposant().getTypeComposant();
 
             switch (typeComposant){
@@ -98,7 +98,7 @@ public class AdapterListCommandes extends BaseAdapter {
             }
 
         }
-        else if (detailCommande.contains(detail_extinction_ampoule)){
+        else if (detailCommande.contains(detail_extinction_ampoule) || detailCommande.contains("FERMETURE") || detailCommande.contains("ARRET")){
             String typeComposant= commandeEnCours.getComposant().getTypeComposant();
 
             switch (typeComposant){
