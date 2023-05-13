@@ -151,6 +151,7 @@ public class FragmentUsers extends Fragment {
                     btnAddUser.setVisibility(View.GONE);
                     btnSearchUser.setVisibility(View.GONE);
                     btnHistoriquesUsers.setVisibility(View.GONE);
+                    btnAllUsers.setVisibility(View.GONE);
                     btnAddUser.setVisibility(View.GONE);
                     actions.shrink();
                 });
@@ -162,6 +163,7 @@ public class FragmentUsers extends Fragment {
                     btnSearchUser.setVisibility(View.GONE);
                     btnHistoriquesUsers.setVisibility(View.GONE);
                     btnAddUser.setVisibility(View.GONE);
+                    btnAllUsers.setVisibility(View.GONE);
                     actions.shrink();
                 });
         btnHistoriquesUsers.setOnClickListener(
@@ -173,6 +175,7 @@ public class FragmentUsers extends Fragment {
                     btnSearchUser.setVisibility(View.GONE);
                     btnHistoriquesUsers.setVisibility(View.GONE);
                     btnAddUser.setVisibility(View.GONE);
+                    btnAllUsers.setVisibility(View.GONE);
                     actions.shrink();
                 });
         btnAllUsers.setOnClickListener(
@@ -183,6 +186,7 @@ public class FragmentUsers extends Fragment {
                     btnSearchUser.setVisibility(View.GONE);
                     btnHistoriquesUsers.setVisibility(View.GONE);
                     btnAddUser.setVisibility(View.GONE);
+                    btnAllUsers.setVisibility(View.GONE);
                     actions.shrink();
                 }
         );
