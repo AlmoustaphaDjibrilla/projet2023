@@ -1,15 +1,12 @@
 package com.adi.projet2023.activity.main_page.fragment;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -148,44 +145,36 @@ public class FragmentUsers extends Fragment {
                     Intent intent= new Intent(getContext(), ChercherUser.class);
                     intent.putExtra("localEnCours", localEnCours);
                     startActivity(intent);
-                    btnAddUser.setVisibility(View.GONE);
-                    btnSearchUser.setVisibility(View.GONE);
-                    btnHistoriquesUsers.setVisibility(View.GONE);
-                    btnAddUser.setVisibility(View.GONE);
-                    actions.shrink();
+                    ajusterFloatingButton();
                 });
         btnAddUser.setOnClickListener(
                 v->{
                     Intent intent= new Intent(getContext(), ActivityRegisterUser.class);
                     startActivity(intent);
-                    btnAddUser.setVisibility(View.GONE);
-                    btnSearchUser.setVisibility(View.GONE);
-                    btnHistoriquesUsers.setVisibility(View.GONE);
-                    btnAddUser.setVisibility(View.GONE);
-                    actions.shrink();
+                    ajusterFloatingButton();
                 });
         btnHistoriquesUsers.setOnClickListener(
                 v->{
                     Intent intent= new Intent(getContext(), CommandesParLocalActivity.class);
                     intent.putExtra("IdLocal", localEnCours.getIdLocal());
                     startActivity(intent);
-                    btnAddUser.setVisibility(View.GONE);
-                    btnSearchUser.setVisibility(View.GONE);
-                    btnHistoriquesUsers.setVisibility(View.GONE);
-                    btnAddUser.setVisibility(View.GONE);
-                    actions.shrink();
+                    ajusterFloatingButton();
                 });
         btnAllUsers.setOnClickListener(
                 view1 -> {
                     Intent intentAllUsers= new Intent(getContext(), AllUsersActivity.class);
                     startActivity(intentAllUsers);
-                    btnAddUser.setVisibility(View.GONE);
-                    btnSearchUser.setVisibility(View.GONE);
-                    btnHistoriquesUsers.setVisibility(View.GONE);
-                    btnAddUser.setVisibility(View.GONE);
-                    actions.shrink();
+                    ajusterFloatingButton();
                 }
         );
 
+    }
+
+    private void ajusterFloatingButton() {
+        btnAddUser.setVisibility(View.GONE);
+        btnSearchUser.setVisibility(View.GONE);
+        btnHistoriquesUsers.setVisibility(View.GONE);
+        btnAllUsers.setVisibility(View.GONE);
+        actions.shrink();
     }
 }
