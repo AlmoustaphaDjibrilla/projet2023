@@ -55,7 +55,6 @@ public class CreationLocal {
                 FirebaseFirestore.getInstance()
                         .collection(PATH_LOCAL_DATABASES)
                         .document(local.getIdLocal());
-
         docLocalSupp.delete();
     }
 

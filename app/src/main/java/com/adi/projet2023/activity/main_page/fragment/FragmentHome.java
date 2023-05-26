@@ -380,4 +380,6 @@ public class FragmentHome extends Fragment {
         LocalUtils.supprimer_composant_piece_realTime(pieceEncours);
         dialogSupprimerPiece.dismiss();
     }
+
+
 }

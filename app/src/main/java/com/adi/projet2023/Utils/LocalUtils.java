@@ -132,7 +132,6 @@ public class LocalUtils {
                 supprimer_composant_piece_realTime(local.getLesPieces().get(i));
             }
         }
-
     }
 
     public static void supprimer_historique_local(Local local){

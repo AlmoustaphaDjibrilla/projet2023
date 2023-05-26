@@ -217,11 +217,13 @@ public class MainPage extends AppCompatActivity {
                 Long presenceValue=(Long) snapshot.getValue();
                 val= presenceValue;
                 //Nouvelle intrusion
-                if (presenceValue==1) {
-                    notification();
-                    vibrationTelephone();
-                    sonnerieTelephone();
-                    reference.setValue(0L);
+                if(presenceValue!=null){
+                    if (presenceValue==1) {
+                        notification();
+                        vibrationTelephone();
+                        sonnerieTelephone();
+                        reference.setValue(0L);
+                    }
                 }
             }
 
