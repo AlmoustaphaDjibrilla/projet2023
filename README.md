@@ -16,7 +16,7 @@ Duplicata du pfe2023 en vue d'apporter de nouvelles améliorations
 
 - 💬 Ask me about **Spring Boot , JavaFX, Android**
 
-- 📫 How to reach me **almoustaphadjibrillaidrissa@gmailcom**
+- 📫 How to reach me **almoustaphadjibrillaidrissa@gmail.com**
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
