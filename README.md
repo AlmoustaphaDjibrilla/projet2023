@@ -6,15 +6,15 @@ Duplicata du pfe2023 en vue d'apporter de nouvelles améliorations
 
 - 🔭 I’m currently working on [DRC_CNSS](https://github.com/AlmoustaphaDjibrilla/DRC_CNSS)
 
-- 🌱 I’m currently learning **Spring Boot, JavaFX, Android**
+- 🌱 I’m currently learning **Spring Boot, Deep learning, Computer vision, Thymeleaf**
 
-- 👯 I’m looking to collaborate on [Projet Bibliotheque Lycees Niger](https://github.com/AlmoustaphaDjibrilla/Projet_Bibliotheque_Spring_Boot_JavaFX)
+- 👯 I’m looking to collaborate on [Projet Bulletin Lycees Niger](https://github.com/AlmoustaphaDjibrilla/Projet_Bulletin)
 
-- 🤝 I’m looking for help with [Projet Bibliotheque Lycees Niger](https://github.com/AlmoustaphaDjibrilla/Projet_Bibliotheque_Spring_Boot_JavaFX)
+- 🤝 I’m looking for help with [Projet Bulletin Lycees Niger](https://github.com/AlmoustaphaDjibrilla/Projet_Bulletin)
 
 - 👨‍💻 All of my projects are available at [https://github.com/AlmoustaphaDjibrilla](https://github.com/AlmoustaphaDjibrilla)
 
-- 💬 Ask me about **Spring Boot , JavaFX, Android**
+- 💬 Ask me about **Spring Boot, Computer vision, Thymeleaf**
 
 - 📫 How to reach me **almoustaphadjibrillaidrissa@gmail.com**
 
